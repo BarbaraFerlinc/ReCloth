@@ -1,9 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <>
+      <div className="fixed" style={{ top: "1rem", left: "1rem" }}>
+        <Link to="/">
+          <button
+            className="bg-blueGray-800 text-white active:bg-blueGray-600 font-bold uppercase p-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+        </Link>
+      </div>
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-screen">
           <div className="w-full lg:w-4/12 px-4">
@@ -54,7 +72,7 @@ export default function Login() {
                     </label>
                     <input
                       type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                     />
                   </div>
@@ -66,12 +84,25 @@ export default function Login() {
                     >
                       Password
                     </label>
+
                     <input
-                      type="password"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      type={showPassword ? "text" : "password"}
+                      className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                     />
+                    <button
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-0 text-blueGray-500"
+                      style={{ top: "66%", paddingRight: "1rem", transform: "translateY(-50%)" }}
+                      type="button"
+                    >
+                      <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                    </button>
+
+
+
                   </div>
+
                   <div>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
@@ -101,13 +132,13 @@ export default function Login() {
                 <a
                   href="#pablo"
                   onClick={(e) => e.preventDefault()}
-                  className="text-blueGray-200"
+                  className="text-blueGray-800"
                 >
                   <small>Forgot password?</small>
                 </a>
               </div>
               <div className="w-1/2 text-right">
-                <Link to="/auth/register" className="text-blueGray-200">
+                <Link to="/auth/register" className="text-blueGray-800">
                   <small>Create new account</small>
                 </Link>
               </div>
