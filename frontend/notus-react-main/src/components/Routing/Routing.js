@@ -6,6 +6,8 @@ import "assets/styles/tailwind.css";
 import Index from "views/Index.js";
 import Login from "views/auth/Login";
 import { useState } from "react";
+import Profile from "views/Profile";
+import Register from "views/auth/Register";
 
 const Routing = () => {
 
@@ -62,12 +64,28 @@ const Routing = () => {
                 exact
                 render={(props) => <Index {...props} seznamOglasov={seznamOglasov} />}
             />
-            <Route path="/login" exact component={Login} />
-            {/* add redirect for first page */}
-            <Redirect from="*" to="/" />
-        </Switch>
-
-    )
+            <Route
+                path="/login"
+                exact
+                render={(props) => (
+                    <div className="bg-blueGray-200 min-h-screen">
+                        <Login {...props} />
+                    </div>
+                )}
+            />
+            <Route
+                path="/register"
+                exact
+                render={(props) => (
+                    <div className="bg-blueGray-200 min-h-screen">
+                        <Register {...props} />
+                    </div>
+                )
+                }
+            />
+            < Redirect from="*" to="/" />
+        </Switch >
+    );
 }
 
 export default Routing;
