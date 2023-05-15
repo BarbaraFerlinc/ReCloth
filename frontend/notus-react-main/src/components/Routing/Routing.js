@@ -86,7 +86,11 @@ const Routing = () => {
             <Route
                 path="/objavaOglasa"
                 exact
-                render={(props) => <ObjavaOglasa {...props} dodaj={handleAdd} />}
+                render={(props) => (
+                    <div className="bg-blueGray-200 min-h-screen">
+                        <ObjavaOglasa {...props} dodaj={handleAdd} />
+                    </div>
+                )}
             />
             <Route
                 path="/login"
