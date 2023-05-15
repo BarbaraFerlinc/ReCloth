@@ -8,3 +8,5 @@ module.exports = require('knex')({
         database: 'recloth_db'
     }
 });
+
+// to je connection

@@ -114,14 +114,4 @@ router.put('/:id', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri posodabljanju oglasa v bazi', details: error.message });
     }
 });
-
-
-
-
-
-
-// metode
-// shrani (post)/uredi (post - shrani)/zbrisi (delete) artikel
-// get en artikel
-
 module.exports = router;

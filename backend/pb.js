@@ -82,14 +82,14 @@ async function baza(){
         {naziv: 'Dodatki'}
     ]
 
-    const način_plačila = [
+    const nacin_placila = [
         {naziv: 'Skreditno kartico'},
         {naziv: 'Po prevzemu'}
     ]
 
     await knex('kategorija').insert(kategorija).then(() => console.log('Vstavljena kategorija.'))
     .catch((err) => {console.log(err); throw err});
-    await knex('način_plačila').insert(način_plačila).then(() => console.log('Vstavljen način_plačila.'))
+    await knex('nacin_placila').insert(nacin_placila).then(() => console.log('Vstavljen način_plačila.'))
     .catch((err) => {console.log(err); throw err});
 
     knex.destroy();
