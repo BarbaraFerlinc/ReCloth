@@ -47,9 +47,11 @@ export default function Navbar(props) {
               </Link>
             </li>
             <li className="flex items-center">
-              <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded-full outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                Sign up
-              </button>
+              <Link to="/register">
+                <button className="text-blueGray-500 bg-transparent border border-solid border-blueGray-500 hover:bg-blueGray-500 hover:text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded-full outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                  Sign up
+                </button>
+              </Link>
             </li>
             <li className="flex items-center">
               <Link
