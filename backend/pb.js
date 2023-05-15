@@ -37,8 +37,8 @@ async function baza(){
         table.string('lokacija').notNullable();
         table.boolean('za_zamenjavo').notNullable();
         table.varchar('slika').notNullable();
-        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
-        table.integer('fk_kategorija_id').references('id').inTable('kategorija').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
+        table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela oglas ustvarjena.'))
     .catch((err) => {console.log(err); throw err});
 
