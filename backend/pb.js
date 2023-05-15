@@ -44,7 +44,7 @@ async function baza(){
         table.integer('cena').notNullable();
         table.string('lokacija').notNullable();
         table.boolean('za_zamenjavo').notNullable();
-        table.varchar('slika');
+        table.varchar('slika').notNullable();
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
         table.integer('fk_kategorija_id').references('id').inTable('kategorija').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela oglas ustvarjena.'))

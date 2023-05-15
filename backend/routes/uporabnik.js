@@ -12,6 +12,6 @@ var knex = require('knex')({
 });
 
 // metode
-// shrani (post)/uredi (post - shrani)/zbrisi (delete) uporabnika
+// shrani (post - registracija ?)/uredi (post - shrani)/zbrisi (delete) uporabnika
 
 module.exports = router;

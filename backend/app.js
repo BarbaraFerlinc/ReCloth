@@ -6,7 +6,6 @@ const cors = require('cors');
 
 // routerji
 var artikelRouter = require('./routes/artikel');
-var indexRouter = require('./routes/index');
 var kategorijaRouter = require('./routes/kategorija');
 var nakupRouter = require('./routes/nakup');
 var pogovorRouter = require('./routes/pogovor');
@@ -26,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // uporaba routerjev
 app.use(cors());
 app.use('/artikel/', artikelRouter);
-app.use('/', indexRouter);
 app.use('/kategorija/', kategorijaRouter);
 app.use('/nakup/', nakupRouter);
 app.use('/pogovor/', pogovorRouter);

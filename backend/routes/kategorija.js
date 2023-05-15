@@ -13,5 +13,6 @@ var knex = require('knex')({
 
 // metode
 // get vse kategorije
+// filtriranje artiklov glede na kategorijo (get)
 
 module.exports = router;
