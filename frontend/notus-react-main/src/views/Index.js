@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -8,19 +9,35 @@ import Footer from "components/Footers/Footer.js";
 
 
 export default function Index({ seznamOglasov }) {
-  console.log(seznamOglasov);
+  const [imageSrcs, setImageSrcs] = useState({});
 
-  const getImageSrc = (oglas) => {
-    let reader = new FileReader();
-    let src = "";
-    reader.onloadend = function () {
-      src = reader.result;
-    }
-    if (oglas.slika && oglas.slika[0]) {
-      reader.readAsDataURL(oglas.slika[0]);
-    }
-    return src;
-  }
+  useEffect(() => {
+    const promises = seznamOglasov.map(oglas => {
+      return new Promise((resolve, reject) => {
+        if (oglas.slika && oglas.slika[0]) {
+          if (!(oglas.slika[0] instanceof Blob) && !(oglas.slika[0] instanceof File)) {
+            console.log('oglas.slika[0] is not a Blob or File', oglas.slika[0]);
+            resolve({ id: oglas.id, src: '' });
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onloadend = () => resolve({ id: oglas.id, src: reader.result});
+          reader.onerror = reject;
+          reader.readAsDataURL(oglas.slika[0]);
+        } else {
+          resolve({ id: oglas.id, src: '' });
+        }
+      });
+    });
+
+    Promise.all(promises)
+      .then(images => {
+        const newImageSrcs = images.reduce((acc, { id, src }) => ({ ...acc, [id]: src }), {});
+        setImageSrcs(newImageSrcs);
+      })
+      .catch(console.error);
+  }, [seznamOglasov]);
 
   return (
     <>
@@ -30,7 +47,7 @@ export default function Index({ seznamOglasov }) {
         <div className="container mx-auto">
           <div className="flex flex-wrap -mx-4">
             {seznamOglasov?.map((oglas, index) => {
-              const imageSrc = getImageSrc(oglas)
+              const imageSrc = imageSrcs[oglas.id];
               return (
                 <div
                   key={oglas.id}

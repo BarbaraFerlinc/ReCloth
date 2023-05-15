@@ -13,14 +13,14 @@ const initialState = {
     kategorija: "",
     //prodajalec: "",
     slika: [],
-    slika: "",
-
 }
 
 
 export default function ObjavaOglasa({ dodaj }) {
     const [oglas, setOglas] = useState(initialState);
     const [zamenjava, setZamenjava] = useState(false);
+    const [errors, setErrors] = useState({ slika: [] });
+
 
 
     const kategorija = [
@@ -53,12 +53,58 @@ export default function ObjavaOglasa({ dodaj }) {
         { naziv: '164' },
     ];
 
+    const validateForm = () => {
+        let formErrors = {};
+        let formIsValid = true;
+
+        if (!oglas.naslov) {
+            formIsValid = false;
+            formErrors["naslov"] = "Prosimo, vnesite naslov oglasa.";
+        }
+
+        if (!oglas.opis) {
+            formIsValid = false;
+            formErrors["opis"] = "Prosimo, vnesite opis oglasa.";
+        }
+
+        if (!oglas.velikost) {
+            formIsValid = false;
+            formErrors["velikost"] = "Prosimo, izberite velikost.";
+        }
+
+        if (!oglas.kategorija) {
+            formIsValid = false;
+            formErrors["kategorija"] = "Prosimo, izberite kategorijo.";
+        }
+
+        if (!oglas.cena || oglas.cena <= 0) {
+            formIsValid = false;
+            formErrors["cena"] = "Prosimo, vnesite veljavno ceno.";
+        }
+
+        if (!oglas.lokacija) {
+            formIsValid = false;
+            formErrors["lokacija"] = "Prosimo, vnesite lokacijo.";
+        }
+
+        if (!oglas.slika || oglas.slika.length === 0) {
+            formIsValid = false;
+            formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
+        }
+
+        setErrors(formErrors);
+        return formIsValid;
+    }
+
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dodaj(oglas);
-        setOglas(initialState);
+        if (validateForm()) {
+            dodaj(oglas);
+            setOglas(initialState);
+            setErrors({});
+        }
     }
 
     const handleChange = (e) => {
@@ -77,10 +123,25 @@ export default function ObjavaOglasa({ dodaj }) {
     }
 
     const handleFileChange = (e) => {
-        setOglas({
-            ...oglas,
-            slika: [...e.target.files]
+        let fileErrors = [];
+        let files = [...e.target.files];
+
+        files.forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                fileErrors.push(`Datoteka "${file.name}" ni veljavna slika.`);
+            }
         });
+
+        if (fileErrors.length > 0) {
+
+            setErrors(prevState => ({ ...prevState, slika: fileErrors }));
+        } else {
+            setOglas({
+                ...oglas,
+                slika: files
+            });
+            setErrors(prevState => ({ ...prevState, slika: [] }));
+        }
     }
 
     return (
@@ -124,6 +185,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                             placeholder="Naslov"
                                             name="naslov" id="naslov" value={oglas.naslov} onChange={handleChange}
                                         />
+                                        <small className="text-red-500">{errors.naslov}</small>
                                     </div>
                                     <div className="relative w-full mb-3">
                                         <label
@@ -135,6 +197,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                         <input type="text" placeholder="Opis" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                             name="opis" id="opis" value={oglas.opis} onChange={handleChange}
                                         />
+                                        <small className="text-red-500">{errors.opis}</small>
                                     </div>
                                     <br></br>
                                     <div className="flex justify-between">
@@ -155,6 +218,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                         <option key={index} value={v.naziv}>{v.naziv}</option>
                                                     ))}
                                                 </select>
+                                                <small className="text-red-500">{errors.velikost}</small>
                                             </div>
                                         </div>
                                         <div className="w-1/2 px-2">
@@ -174,6 +238,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                         <option key={index} value={k.naziv}>{k.naziv}</option>
                                                     ))}
                                                 </select>
+                                                <small className="text-red-500">{errors.kategorija}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -190,6 +255,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     placeholder={zamenjava ? 'Okvirna cena' : 'Cena'}
                                                     name="cena" id="cena" value={oglas.cena} onChange={handleChange}
                                                 />
+                                                <small className="text-red-500">{errors.cena}</small>
                                             </div>
                                         </div>
                                         < div className="w-1/2 px-2">
@@ -206,6 +272,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     placeholder="Lokacija"
                                                     name="lokacija" id="lokacija" value={oglas.lokacija} onChange={handleChange}
                                                 />
+                                                <small className="text-red-500">{errors.lokacija}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -227,6 +294,8 @@ export default function ObjavaOglasa({ dodaj }) {
                                             onChange={handleFileChange}
                                             className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                         />
+                                        {Array.isArray(errors.slika) && errors.slika.map((error, index) => <small key={index} className="text-red-500">{error}</small>)}
+
                                     </div>
 
 
