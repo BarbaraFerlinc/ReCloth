@@ -1,9 +1,9 @@
 var knex = require('knex')({
-    client: 'mysql',
+    client: 'mysql2',
     connection: {
         host: '127.0.0.1',
         user: 'root',
-        password: "root",
+        password: 'root',
         database: 'recloth_db'
     }
 });
@@ -44,9 +44,9 @@ async function baza(){
         table.integer('cena').notNullable();
         table.string('lokacija').notNullable();
         table.boolean('za_zamenjavo').notNullable();
-        table.blob('slika').notNullable();
-        table.integer('id_prodajalca').references('id').inTable('uporabnik').notNullable();
-        table.integer('id_kategorije').references('id').inTable('kategorija').notNullable();
+        table.varchar('slika');
+        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_kategorija_id').references('id').inTable('kategorija').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela oglas ustvarjena.'))
     .catch((err) => {console.log(err); throw err});
 
@@ -58,16 +58,16 @@ async function baza(){
 
     await knex.schema.createTable('nakup', (table) => {
         table.increments('id');
-        table.integer('id_način_plačila').references('id').inTable('način_plačila').notNullable();
-        table.integer('id_oglasa').references('id').inTable('oglas').notNullable();
-        table.integer('id_prodajalca').references('id').inTable('uporabnik').notNullable();
+        table.integer('fk_način_plačila_id').references('id').inTable('način_plačila').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_oglas_id').references('id').inTable('oglas').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_uporabni_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela nakup ustvarjena.'))
     .catch((err) => {console.log(err); throw err});
 
     await knex.schema.createTable('obvestilo', (table) => {
         table.increments('id');
-        table.integer('id_oglasa').references('id').inTable('oglas').notNullable();
-        table.integer('id_uporabnika').references('id').inTable('uporabnik').notNullable();
+        table.integer('fk_oglas_id').references('id').inTable('oglas').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela obvestilo ustvarjena.'))
     .catch((err) => {console.log(err); throw err});
 
@@ -75,7 +75,7 @@ async function baza(){
         table.increments('id');
         table.integer('ocena').notNullable();
         table.string('komentar').notNullable();
-        table.integer('id_nakupa').references('id').inTable('nakup').notNullable();
+        table.integer('fk_nakup_id').references('id').inTable('nakup').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela ocena ustvarjena.'))
     .catch((err) => {console.log(err); throw err});
 

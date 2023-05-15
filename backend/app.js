@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // uporaba routerjev
+app.use(cors());
 app.use('/artikel/', artikelRouter);
 app.use('/', indexRouter);
 app.use('/kategorija/', kategorijaRouter);
@@ -33,8 +34,6 @@ app.use('/prijava', prijavaRouter);
 app.use('/profil/', profilRouter);
 app.use('/registracija/', registracijaRouter);
 app.use('/uporabnik/', uporabnikRouter);
-
-// baza() ??
 
 app.listen(9000);
 module.exports = app;
