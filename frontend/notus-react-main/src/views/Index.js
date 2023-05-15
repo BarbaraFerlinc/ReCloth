@@ -7,8 +7,9 @@ import Footer from "components/Footers/Footer.js";
 
 
 
-export default function Index({seznamOglasov}) {
-  console.log(seznamOglasov)
+export default function Index({ seznamOglasov }) {
+  console.log(seznamOglasov);
+
   return (
     <>
       <IndexNavbar />
@@ -27,18 +28,19 @@ export default function Index({seznamOglasov}) {
                       <img
                         alt="..."
                         className="w-full align-middle rounded-lg"
-                        src={oglas.image}
+                        src={oglas.slika}
                         style={{ width: "100%", height: "auto", objectFit: "cover" }}
                       />
                     </Link>
                     <div className="mt-4">
                       <h5 className="card-title text-xl font-bold">
                         <Link to={`/oglass/${oglas.id}`} className="card-link text-black">
-                          {oglas.name}
+                          {oglas.naslov}
                         </Link>
                       </h5>
-                      <p className="card-text mt-2 text-gray-600">{oglas.description}</p>
-                      <h6 className="card-subtitle mt-2 text-black">{oglas.price}</h6>
+                      <p className="card-text mt-2 text-gray-600">{oglas.opis}</p>
+                      <h6 className="card-subtitle mt-2 text-black">{oglas.cena} €</h6>
+                      <h6 className="card-subtitle mt-2 text-black">{oglas.zamenjava === true ? "Zamenjava" : "Nakup po ceni"}</h6>              
                     </div>
                   </div>
                   <div className="px-4 py-2">
