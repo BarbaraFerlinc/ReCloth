@@ -1,14 +1,18 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import Index from "views/Index.js";
 import Login from "views/auth/Login";
-import { useState } from "react";
 import ObjavaOglasa from "views/ObjavaOglasa";
 import Profile from "views/Profile";
 import Register from "views/auth/Register";
+import { useEffect, useState } from "react";
+import api from "services/api";
+import Podrobnosti from "views/Podrobnosti";
+
+
+
 
 const Routing = () => {
 
@@ -66,6 +70,20 @@ const Routing = () => {
 
 
     const [seznamOglasov, setSeznamOglasov] = useState(poljeOglasov);
+    const [seznam, setSeznam] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        api.get('/artikel/vsi')
+            .then((res) => {
+                setSeznam(res.data);
+            })
+            .catch((err) => {
+                setError(err);
+            });
+    }, []);
+
+
 
 
     const handleAdd = (oglas) => {
@@ -81,7 +99,12 @@ const Routing = () => {
             <Route
                 path="/"
                 exact
-                render={(props) => <Index {...props} seznamOglasov={seznamOglasov} />}
+                render={(props) => <Index {...props} seznamOglasov={seznam} />}
+            />
+            <Route
+                path="/oglas/:id"
+                exact
+                render={(props) => <Podrobnosti {...props} seznamOglasov={seznam} />}
             />
             <Route
                 path="/objavaOglasa"
