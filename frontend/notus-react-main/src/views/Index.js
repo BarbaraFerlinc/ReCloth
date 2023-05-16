@@ -91,9 +91,7 @@ export default function Index({ seznamOglasov }) {
                           Več
                         </button>
                       </Link>
-
                     </div>
-
                   </div>
                 </div>
               )
