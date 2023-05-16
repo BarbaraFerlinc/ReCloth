@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import api from "services/api";
 
 
 const initialState = {
-    id: 0,
     naslov: "",
-    opis: "",
     velikost: "",
+    opis: "",
     cena: 0,
     lokacija: "",
-    kategorija: "",
-    //prodajalec: "",
-    slika: [],
+    za_zamenjavo: 1,
+    slika: "",
+    fk_uporabnik_id: 0,
+    fk_kategorija_id: 1,
+
 }
 
 
@@ -21,18 +23,22 @@ export default function ObjavaOglasa({ dodaj }) {
     const [zamenjava, setZamenjava] = useState(false);
     const [errors, setErrors] = useState({ slika: [] });
 
+    const [kategorija, setKategorija] = useState([]);
 
+    useEffect(() => {
+        const fetchKategorije = async () => {
+            try {
+                const response = await api.get('/kategorija/vsi');
+                console.log(response)
+                setKategorija(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju kategorij", error);
+            }
+        };
 
-    const kategorija = [
-        { naziv: 'Otroške majice' },
-        { naziv: 'Otroške hlače' },
-        { naziv: 'Kratke majice' },
-        { naziv: 'Majice' },
-        { naziv: 'Kratke hlače' },
-        { naziv: 'Dolge hlače' },
-        { naziv: 'Obleke' },
-        { naziv: 'Dodatki' }
-    ];
+        fetchKategorije();
+    }, []);
+
 
     const velikosti = [
         { naziv: 'XS' },
@@ -74,7 +80,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
         if (!oglas.kategorija) {
             formIsValid = false;
-            formErrors["kategorija"] = "Prosimo, izberite kategorijo.";
+            formErrors["fk_kategorija_id"] = "Prosimo, izberite kategorijo.";
         }
 
         if (!oglas.cena || oglas.cena <= 0) {
@@ -92,57 +98,93 @@ export default function ObjavaOglasa({ dodaj }) {
             formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
         }
 
+        if (oglas.cena < 0 || oglas.cena > 10000) {
+            formIsValid = false;
+            formErrors["cena"] = "Prosimo, vnesite veljavno ceno.";
+        }
+
         setErrors(formErrors);
         return formIsValid;
     }
 
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            dodaj(oglas);
-            setOglas(initialState);
             setErrors({});
+        } else {
+            try {
+                const response = await api.post('/artikel/dodaj', {
+                    naslov: oglas.naslov,
+                    velikost: oglas.velikost,
+                    opis: oglas.opis,
+                    cena: Number(oglas.cena),
+                    lokacija: oglas.lokacija,
+                    za_zamenjavo: oglas.za_zamenjavo,
+                    slika: oglas.slika,
+                    fk_uporabnik_id: oglas.fk_uporabnik_id,
+                    fk_kategorija_id: oglas.fk_kategorija_id
+                });
+                if (response.status === 200) {
+                    alert("Oglas uspešno objavljen!");
+                } else {
+                    alert("Napaka pri objavi oglasa!");
+                }
+            } catch (error) {
+                console.error("Napaka pri posredovanju zahteve POST", error);
+            }
+            setOglas(initialState);
+
         }
     }
+
 
     const handleChange = (e) => {
         if (e.target.id === 'zamenjava') {
             setZamenjava(!zamenjava);
         }
         const { value, name } = e.target
+        let valueToUse = value;
+        if (name === "fk_kategorija_id") {
+            const selectedKategorija = kategorija.find(k => k.id == value);
+            if (selectedKategorija) {
+                valueToUse = selectedKategorija.id;
+            }
+        }
+
         setOglas((prevState) => {
             const nextState = {
                 ...prevState,
-                id: prevState.id++,
-                [name]: name === "zamenjava" ? true : value,
+                [name]: name === "zamenjava" ? true : valueToUse,
+                slika: "dsad",
+                fk_uporabnik_id: 1,
             };
             return nextState;
         })
     }
 
-    const handleFileChange = (e) => {
-        let fileErrors = [];
-        let files = [...e.target.files];
+    // const handleFileChange = (e) => {
+    //     let fileErrors = [];
+    //     let files = [...e.target.files];
 
-        files.forEach(file => {
-            if (!file.type.startsWith('image/')) {
-                fileErrors.push(`Datoteka "${file.name}" ni veljavna slika.`);
-            }
-        });
+    //     files.forEach(file => {
+    //         if (!file.type.startsWith('image/')) {
+    //             fileErrors.push(`Datoteka "${file.name}" ni veljavna slika.`);
+    //         }
+    //     });
 
-        if (fileErrors.length > 0) {
+    //     if (fileErrors.length > 0) {
 
-            setErrors(prevState => ({ ...prevState, slika: fileErrors }));
-        } else {
-            setOglas({
-                ...oglas,
-                slika: files
-            });
-            setErrors(prevState => ({ ...prevState, slika: [] }));
-        }
-    }
+    //         setErrors(prevState => ({ ...prevState, slika: fileErrors }));
+    //     } else {
+    //         setOglas({
+    //             ...oglas,
+    //             //slika: files
+    //         });
+    //         setErrors(prevState => ({ ...prevState, slika: [] }));
+    //     }
+    // }
 
     return (
         <>
@@ -227,15 +269,15 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     Kategorija
                                                 </label>
                                                 <select
-                                                    name="kategorija"
-                                                    id="kategorija"
-                                                    value={oglas.kategorija}
+                                                    name="fk_kategorija_id"
+                                                    id="fk_kategorija_id"
+                                                    value={oglas.fk_kategorija_id}
                                                     onChange={handleChange}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
                                                     <option value="">Izberite kategorijo</option>
                                                     {kategorija.map((k, index) => (
-                                                        <option key={index} value={k.naziv}>{k.naziv}</option>
+                                                        <option key={index} value={k.id}>{k.naziv}</option>
                                                     ))}
                                                 </select>
                                                 <small className="text-red-500">{errors.kategorija}</small>
@@ -279,7 +321,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
 
 
-                                    <div className="relative w-full mb-3">
+                                    {/* <div className="relative w-full mb-3">
                                         <label
                                             className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             htmlFor="slike"
@@ -296,7 +338,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                         />
                                         {Array.isArray(errors.slika) && errors.slika.map((error, index) => <small key={index} className="text-red-500">{error}</small>)}
 
-                                    </div>
+                                    </div> */}
 
 
                                     <div className="text-center mt-6">
