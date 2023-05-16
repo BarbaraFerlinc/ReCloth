@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import api from "services/api";
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -10,6 +11,11 @@ import Footer from "components/Footers/Footer.js";
 
 export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});
+  const [error, setError] = useState(null);
+
+
+
+
 
   useEffect(() => {
     const promises = seznamOglasov.map(oglas => {
@@ -22,7 +28,7 @@ export default function Index({ seznamOglasov }) {
           }
 
           const reader = new FileReader();
-          reader.onloadend = () => resolve({ id: oglas.id, src: reader.result});
+          reader.onloadend = () => resolve({ id: oglas.id, src: reader.result });
           reader.onerror = reject;
           reader.readAsDataURL(oglas.slika[0]);
         } else {
@@ -38,6 +44,17 @@ export default function Index({ seznamOglasov }) {
       })
       .catch(console.error);
   }, [seznamOglasov]);
+
+  useEffect(() => {
+    api.get('/artikel/vsi')
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        setError(err);
+
+      });
+  }, []);
 
   return (
     <>
