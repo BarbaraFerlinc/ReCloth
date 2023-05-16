@@ -29,8 +29,6 @@ router.post('/dodaj', async (req, res) => {
     }
 });
 
-
-
 router.get('/vsi', async (req, res) => {
     try {
         const oglasi = await knex('oglas').select('*');
@@ -40,8 +38,6 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasov iz baze', details: error.message });
     }
 });
-
-
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
@@ -57,8 +53,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-
-
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -73,8 +67,6 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri brisanju oglasa iz baze', details: error.message });
     }
 });
-
-
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
@@ -114,4 +106,19 @@ router.put('/:id', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri posodabljanju oglasa v bazi', details: error.message });
     }
 });
+
+router.get('/kategorija/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const oglas = await knex('oglas').select('*').where('fk_kategorija_id', id);
+        if (oglas.length === 0) {
+            return res.status(404).json({ error: 'Oglas s to kategorijo ne obstaja' });
+        }
+        res.status(200).json(oglas);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju oglasa iz baze', details: error.message });
+    }
+});
+
 module.exports = router;
