@@ -11,7 +11,7 @@ const initialState = {
     cena: 0,
     lokacija: "",
     za_zamenjavo: 1,
-    slika: "",
+    slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
 
@@ -22,7 +22,6 @@ export default function ObjavaOglasa({ dodaj }) {
     const [oglas, setOglas] = useState(initialState);
     const [zamenjava, setZamenjava] = useState(false);
     const [errors, setErrors] = useState({ slika: [] });
-
     const [kategorija, setKategorija] = useState([]);
 
     useEffect(() => {
@@ -78,14 +77,14 @@ export default function ObjavaOglasa({ dodaj }) {
             formErrors["velikost"] = "Prosimo, izberite velikost.";
         }
 
-        if (!oglas.kategorija) {
+        if (!oglas.fk_kategorija_id) {
             formIsValid = false;
             formErrors["fk_kategorija_id"] = "Prosimo, izberite kategorijo.";
         }
 
-        if (!oglas.cena || oglas.cena <= 0) {
+        if (!oglas.cena || oglas.cena <= 0 || oglas.cena > 1000) {
             formIsValid = false;
-            formErrors["cena"] = "Prosimo, vnesite veljavno ceno.";
+            formErrors["cena"] = "Prosimo, vnesite veljavno ceno (med 1 in 1000).";
         }
 
         if (!oglas.lokacija) {
@@ -97,52 +96,58 @@ export default function ObjavaOglasa({ dodaj }) {
             formIsValid = false;
             formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
         }
-
-        if (oglas.cena < 0 || oglas.cena > 10000) {
-            formIsValid = false;
-            formErrors["cena"] = "Prosimo, vnesite veljavno ceno.";
-        }
-        if (oglas.kategorija === "") {
-            formIsValid = false;
-            formErrors["fk_kategorija_id"] = "Prosimo, izberite kategorijo.";
-        }
-
         setErrors(formErrors);
         return formIsValid;
     }
 
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(oglas);
+        console.log(validateForm());
+
         if (validateForm()) {
-            setErrors({});
-        } else {
             try {
-                const response = await api.post('/artikel/dodaj', {
-                    naslov: oglas.naslov,
-                    velikost: oglas.velikost,
-                    opis: oglas.opis,
-                    cena: Number(oglas.cena),
-                    lokacija: oglas.lokacija,
-                    za_zamenjavo: oglas.za_zamenjavo,
-                    slika: oglas.slika,
-                    fk_uporabnik_id: oglas.fk_uporabnik_id,
-                    fk_kategorija_id: oglas.fk_kategorija_id
+                const formData = new FormData();
+                formData.append("naslov", oglas.naslov);
+                formData.append("velikost", oglas.velikost);
+                formData.append("opis", oglas.opis);
+                formData.append("cena", Number(oglas.cena));
+                formData.append("lokacija", oglas.lokacija);
+                formData.append("za_zamenjavo", oglas.za_zamenjavo);
+                formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
+                formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
+
+                if (oglas.slika) {
+                    if (Array.isArray(oglas.slika)) {
+                        oglas.slika.forEach((slika) => {
+                            formData.append("slika", slika);
+                        });
+                    } else {
+                        formData.append("slika", oglas.slika);
+                    }
+                }
+
+                const response = await api.post("/artikel/dodaj", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
                 });
+
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
+
+                setOglas(initialState);
+                setErrors({})
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
             dodaj(oglas);
             setOglas(initialState);
         }
-    }
-
+    };
 
     const handleChange = (e) => {
         if (e.target.id === 'zamenjava') {
@@ -161,35 +166,33 @@ export default function ObjavaOglasa({ dodaj }) {
             const nextState = {
                 ...prevState,
                 [name]: name === "zamenjava" ? true : valueToUse,
-                slika: "dsad",
                 fk_uporabnik_id: 1,
             };
             return nextState;
         })
     }
 
-    // const handleFileChange = (e) => {
-    //     let fileErrors = [];
-    //     let files = [...e.target.files];
+    const handleFileChange = (e) => {
+        let fileErrors = [];
+        let files = Array.from(e.target.files);
 
-    //     files.forEach(file => {
-    //         if (!file.type.startsWith('image/')) {
-    //             fileErrors.push(`Datoteka "${file.name}" ni veljavna slika.`);
-    //         }
-    //     });
+        files.forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                fileErrors.push(`Datoteka "${file.name}" ni veljavna slika.`);
+            }
+        });
 
-    //     if (fileErrors.length > 0) {
-
-    //         setErrors(prevState => ({ ...prevState, slika: fileErrors }));
-    //     } else {
-    //         setOglas({
-    //             ...oglas,
-    //             //slika: files
-    //         });
-    //         setErrors(prevState => ({ ...prevState, slika: [] }));
-    //     }
-    // }
-
+        if (fileErrors.length > 0) {
+            setErrors(prevState => ({ ...prevState, slika: fileErrors }));
+        } else {
+            setOglas({
+                ...oglas,
+                slika: files
+            });
+            setErrors(prevState => ({ ...prevState, slika: [] }));
+        }
+    }
+    console.log(errors.slika)
     return (
         <>
             <IndexNavbar />
@@ -320,10 +323,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                             </div>
                                         </div>
                                     </div>
-
-
-
-                                    {/* <div className="relative w-full mb-3">
+                                    <div className="relative w-full mb-3">
                                         <label
                                             className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             htmlFor="slike"
@@ -339,9 +339,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                             className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                         />
                                         {Array.isArray(errors.slika) && errors.slika.map((error, index) => <small key={index} className="text-red-500">{error}</small>)}
-
-                                    </div> */}
-
+                                    </div>
 
                                     <div className="text-center mt-6">
                                         <button
