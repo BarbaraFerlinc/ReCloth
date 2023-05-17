@@ -87,7 +87,6 @@ export default function Index({ seznamOglasov }) {
                         </h5>
                         <p className="card-text mt-2 text-gray-600">{oglas.opis}</p>
                         <h6 className="card-subtitle mt-2 text-black">{oglas.cena} €</h6>
-                        {/*  <h6 className="card-subtitle mt-2 text-black">{oglas.zamenjava === true ? "Zamenjava" : "Nakup po ceni"}</h6>   */}
                       </div>
                     </div>
                     <div className="px-4 py-2">

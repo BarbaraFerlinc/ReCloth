@@ -17,9 +17,8 @@ export default function Podrobnosti({ seznamOglasov }) {
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
 
-    console.log(seznamOglasov);
     console.log(izbira);
-    
+
 
     return (
         <>
@@ -30,7 +29,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                     className="absolute top-0 w-full h-full bg-center bg-cover"
                     style={{
                         backgroundImage:
-                            "url('https://images.pexels.com/photos/250288/pexels-photo-250288.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
+                            "url('https://images.pexels.com/photos/285437/pexels-photo-285437.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
                     }}
                 >
                     <span
@@ -67,9 +66,22 @@ export default function Podrobnosti({ seznamOglasov }) {
                                             {izbira?.opis}
 
                                         </p>
-                                        <button className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                                            Kupi
-                                        </button>
+                                        <div className="flex justify-center mt-10">
+                                            <button
+                                                className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                type="button"
+                                            >
+                                                Kupi
+                                            </button>
+                                            {izbira?.za_zamenjavo === 1 && (
+                                                <button
+                                                    className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                    type="button"
+                                                >
+                                                    Zamenjaj
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -80,16 +92,6 @@ export default function Podrobnosti({ seznamOglasov }) {
             <Footer></Footer>
         </>
     );
-
-
-
-
-
-
-
-
-
-
 
 
 }
