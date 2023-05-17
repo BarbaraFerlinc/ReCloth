@@ -1,13 +1,24 @@
+var multer = require('multer');
 var express = require('express');
 var router = express.Router();
 var knex = require('../knexConfig');
+var path = require('path');
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../uploads'))
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
 
+var upload = multer({ storage: storage });
 
-router.post('/dodaj', async (req, res) => {
-    const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, slika, fk_uporabnik_id, fk_kategorija_id } = req.body;
+router.post('/dodaj', upload.array('slika'), async (req, res) => {
+    const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, fk_uporabnik_id, fk_kategorija_id } = req.body;
 
-    if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo || !slika) {
+    if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
@@ -19,13 +30,27 @@ router.post('/dodaj', async (req, res) => {
             cena: cena,
             lokacija: lokacija,
             za_zamenjavo: za_zamenjavo,
-            slika: slika,
             fk_uporabnik_id: fk_uporabnik_id,
             fk_kategorija_id: fk_kategorija_id
         });
+        console.log(novOglas)
+
+        if (req.files) {
+            console.log(req.files)
+            console.log(novOglas[0])
+            for (let i = 0; i < req.files.length; i++) {
+                console.log("sem pridem")
+                await knex('slika').insert({
+                    pot: req.files[i].path,
+                    fk_oglas_id: novOglas[0]
+                });
+            }
+        }
+
         res.status(200).json({ message: 'ok', oglas: novOglas });
     } catch (error) {
-        res.status(500).json({ error: 'Napaka pri vstavljanju oglasa v bazo', details: error.message });
+        console.error(error)
+        res.status(500).json({ error: 'Napaka pri shranjevanju oglasa' });
     }
 });
 
@@ -74,7 +99,7 @@ router.put('/:id', async (req, res) => {
 
 
     if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo || !slika) {
-        return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena'});
+        return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
     const oglas = await knex('oglas').where({ id: id }).first();
@@ -100,7 +125,7 @@ router.put('/:id', async (req, res) => {
                 fk_kategorija_id: fk_kategorija_id
             });
 
-            
+
         res.status(200).json({ message: 'Uspešno posodobljen oglas.', oglas: req.body });
     } catch (error) {
         res.status(500).json({ error: 'Napaka pri posodabljanju oglasa v bazi', details: error.message });
@@ -121,4 +146,23 @@ router.get('/kategorija/:id', async (req, res) => {
     }
 });
 
+router.get('/:id/slike', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ error: 'ID oglasa je obvezen' });
+    }
+
+    try {
+        const slike = await knex('slika').where({ fk_oglas_id: id });
+
+        if (!slike.length) {
+            return res.status(404).json({ error: 'Za ta oglas ni najdenih slik' });
+        }
+
+        res.status(200).json({ slike });
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju slik' });
+    }
+});
 module.exports = router;
