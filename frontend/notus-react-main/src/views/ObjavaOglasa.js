@@ -144,6 +144,8 @@ export default function ObjavaOglasa({ dodaj }) {
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
+            dodaj(oglas);
+            setOglas(initialState);
         }
     };
 
@@ -154,7 +156,7 @@ export default function ObjavaOglasa({ dodaj }) {
         const { value, name } = e.target
         let valueToUse = value;
         if (name === "fk_kategorija_id") {
-            const selectedKategorija = kategorija.find(k => k.id == value);
+            const selectedKategorija = kategorija.find(k => k.id === value);
             if (selectedKategorija) {
                 valueToUse = selectedKategorija.id;
             }
@@ -260,7 +262,6 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     onChange={handleChange}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
-                                                    <option value="">Izberite velikost</option>
                                                     {velikosti.map((v, index) => (
                                                         <option key={index} value={v.naziv}>{v.naziv}</option>
                                                     ))}
@@ -280,7 +281,6 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     onChange={handleChange}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
-                                                    <option value="">Izberite kategorijo</option>
                                                     {kategorija.map((k, index) => (
                                                         <option key={index} value={k.id}>{k.naziv}</option>
                                                     ))}

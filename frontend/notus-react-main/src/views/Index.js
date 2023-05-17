@@ -18,7 +18,6 @@ export default function Index({ seznamOglasov }) {
 
 
 
-
   /*   useEffect(() => {
       const promises = seznamOglasov.map(oglas => {
         return new Promise((resolve, reject) => {

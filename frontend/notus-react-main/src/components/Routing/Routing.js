@@ -70,17 +70,22 @@ const Routing = () => {
 
 
     const [seznamOglasov, setSeznamOglasov] = useState(poljeOglasov);
-    const [seznam, setSeznam] = useState(null);
+    const [seznam, setSeznam] = useState([]);
     const [error, setError] = useState(null);
 
+
+
     useEffect(() => {
-        api.get('/artikel/vsi')
-            .then((res) => {
-                setSeznam(res.data);
-            })
-            .catch((err) => {
-                setError(err);
-            });
+        const fetchArtikle = async () => {
+            try {
+                const response = await api.get('/artikel/vsi');
+                console.log(response.data)
+                setSeznam(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju oglasov", error);
+            }
+        };
+        fetchArtikle();
     }, []);
 
 
@@ -88,9 +93,20 @@ const Routing = () => {
 
     const handleAdd = (oglas) => {
         console.log(oglas);
-        let posodobljeniOglasi = Array.from(seznamOglasov);
+        let posodobljeniOglasi = Array.from(seznam);
         posodobljeniOglasi.push(oglas);
-        setSeznamOglasov(posodobljeniOglasi);
+        setSeznam(posodobljeniOglasi);
+
+        const fetchArtikle = async () => {
+            try {
+                const response = await api.get('/artikel/vsi');
+                console.log(response.data)
+                setSeznam(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju oglasov", error);
+            }
+        };
+        fetchArtikle();
     }
 
 
