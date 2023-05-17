@@ -13,6 +13,8 @@ export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});
   const [error, setError] = useState(null);
 
+
+
   console.log(seznamOglasov);
 
 
@@ -54,9 +56,13 @@ export default function Index({ seznamOglasov }) {
       <IndexNavbar />
       <section className="pt-20 pb-15 px-4 md:px-0">
         <br></br>
-        <div className="container mx-auto">
+        {seznamOglasov.length === 0 ? (
+          <div className="text-center my-8">
+            <h2 className="text-2xl font-bold text-gray-800">Ni oglasov za prikaz!</h2>
+          </div>
+        ) : (
           <div className="flex flex-wrap -mx-4">
-            {seznamOglasov?.map((oglas, index) => {
+            {seznamOglasov.map((oglas, index) => {
               const imageSrc = imageSrcs[oglas.id];
               return (
                 <div
@@ -96,7 +102,7 @@ export default function Index({ seznamOglasov }) {
               )
             })}
           </div>
-        </div>
+        )}
       </section >
       <Footer />
     </>
