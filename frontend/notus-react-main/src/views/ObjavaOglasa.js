@@ -196,6 +196,7 @@ export default function ObjavaOglasa({ dodaj }) {
     return (
         <>
             <IndexNavbar />
+            <br></br>
 
             <div className="container mx-auto px-4 pt-20">
                 <div className="flex content-center items-center justify-center h-screen">
@@ -294,12 +295,12 @@ export default function ObjavaOglasa({ dodaj }) {
                                         < div className="w-1/2 px-2">
                                             <div className="relative w-full mb-3">
                                                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                                                    {zamenjava ? 'Okvirna cena' : 'Cena'}
+                                                    {zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
                                                 </label>
                                                 <input
                                                     type="number"
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                                    placeholder={zamenjava ? 'Okvirna cena' : 'Cena'}
+                                                    placeholder={zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
                                                     name="cena" id="cena" value={oglas.cena} onChange={handleChange}
                                                 />
                                                 <small className="text-red-500">{errors.cena}</small>
@@ -338,9 +339,11 @@ export default function ObjavaOglasa({ dodaj }) {
                                             onChange={handleFileChange}
                                             className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                         />
-                                        {Array.isArray(errors.slika) && errors.slika.map((error, index) => <small key={index} className="text-red-500">{error}</small>)}
-                                    </div>
+                                        <small className="text-red-500">
+                                            {Array.isArray(errors.slika) ? errors.slika[0] : errors.slika}
+                                        </small>
 
+                                    </div>
                                     <div className="text-center mt-6">
                                         <button
                                             className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
@@ -355,6 +358,7 @@ export default function ObjavaOglasa({ dodaj }) {
                     </div>
                 </div>
             </div>
+            <br></br>
             <Footer />
         </>
     )

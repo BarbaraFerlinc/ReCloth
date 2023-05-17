@@ -1,7 +1,7 @@
 var knex = require('./knexConfig');
 
 async function baza() {
-    
+
     await knex.schema.dropTableIfExists('slika').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('ocena').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('obvestilo').catch((err) => { console.log(err); throw err });
@@ -38,7 +38,6 @@ async function baza() {
         table.integer('cena').notNullable();
         table.string('lokacija').notNullable();
         table.boolean('za_zamenjavo').notNullable();
-        table.varchar('slika').notNullable();
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
         table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela oglas ustvarjena.'))

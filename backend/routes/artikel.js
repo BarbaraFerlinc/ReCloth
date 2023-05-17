@@ -57,6 +57,17 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
 router.get('/vsi', async (req, res) => {
     try {
         const oglasi = await knex('oglas').select('*');
+
+        // Loop through each ad to get the images
+        for (let i = 0; i < oglasi.length; i++) {
+            const slike = await knex('slika')
+                .select('pot')
+                .where('fk_oglas_id', '=', oglasi[i].id);
+
+            // Add the images to the ad object
+            oglasi[i].slike = slike.map(slika => slika.pot);
+        }
+
         res.status(200).json(oglasi);
     }
     catch (error) {
