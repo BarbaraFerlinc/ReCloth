@@ -19,6 +19,7 @@ export default function Podrobnosti({ seznamOglasov }) {
 
     console.log(seznamOglasov);
     console.log(izbira);
+    
 
     return (
         <>
