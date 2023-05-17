@@ -6,11 +6,11 @@ import api from "services/api";
 
 const initialState = {
     naslov: "",
-    velikost: "",
+    velikost: "XS",
     opis: "",
     cena: 0,
     lokacija: "",
-    za_zamenjavo: 1,
+    za_zamenjavo: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
@@ -20,9 +20,9 @@ const initialState = {
 
 export default function ObjavaOglasa({ dodaj }) {
     const [oglas, setOglas] = useState(initialState);
-    const [zamenjava, setZamenjava] = useState(false);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
+    const [zamenjava, setZamenjava] = useState(false);
 
     useEffect(() => {
         const fetchKategorije = async () => {
@@ -150,13 +150,13 @@ export default function ObjavaOglasa({ dodaj }) {
     };
 
     const handleChange = (e) => {
-        if (e.target.id === 'zamenjava') {
-            setZamenjava(!zamenjava);
-        }
-        const { value, name } = e.target
+        const { value, name, type, checked } = e.target;
         let valueToUse = value;
-        if (name === "fk_kategorija_id") {
-            const selectedKategorija = kategorija.find(k => k.id === value);
+
+        if (type === "checkbox" && name === "za_zamenjavo") {
+            valueToUse = checked ? 1 : 0;
+        } else if (name === "fk_kategorija_id") {
+            const selectedKategorija = kategorija.find((k) => k.id === value);
             if (selectedKategorija) {
                 valueToUse = selectedKategorija.id;
             }
@@ -165,12 +165,13 @@ export default function ObjavaOglasa({ dodaj }) {
         setOglas((prevState) => {
             const nextState = {
                 ...prevState,
-                [name]: name === "zamenjava" ? true : valueToUse,
+                [name]: valueToUse,
                 fk_uporabnik_id: 1,
             };
             return nextState;
-        })
-    }
+        });
+    };
+
 
     const handleFileChange = (e) => {
         let fileErrors = [];
@@ -218,7 +219,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="zamenjava" id="zamenjava" value={oglas.zamenjava} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
                                     </div>
 

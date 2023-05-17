@@ -79,7 +79,6 @@ const Routing = () => {
         const fetchArtikle = async () => {
             try {
                 const response = await api.get('/artikel/vsi');
-                console.log(response.data)
                 setSeznam(response.data);
             } catch (error) {
                 console.error("Napaka pri pridobivanju oglasov", error);
