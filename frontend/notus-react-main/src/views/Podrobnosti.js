@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik slik
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 export default function Podrobnosti({ seznamOglasov }) {
@@ -17,79 +20,94 @@ export default function Podrobnosti({ seznamOglasov }) {
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
 
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    };
+
     console.log(izbira);
+    console.log(izbira?.slike)
 
 
     return (
         <>
-            <IndexNavbar></IndexNavbar>
-
-            <section className="relative block h-500-px">
-                <div
-                    className="absolute top-0 w-full h-full bg-center bg-cover"
-                    style={{
-                        backgroundImage:
-                            "url('https://images.pexels.com/photos/285437/pexels-photo-285437.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
-                    }}
-                >
-                    <span
-                        id="blackOverlay"
-                        className="w-full h-full absolute opacity-50 bg-black"
-                    ></span>
-                </div>
-            </section>
+            <IndexNavbar fixed={true} />
             <section className="relative py-16 bg-blueGray-200">
                 <div className="container mx-auto px-4">
-                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full md:w-3/4 mx-auto mt-24 mb-4 shadow-xl rounded-lg">
                         <div className="px-6">
-                            <div className="flex flex-wrap justify-center">
-                            </div>
                             <div className="text-center mt-12">
                                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
                                     {izbira?.naslov}
                                 </h3>
-                                <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
+                                <div className="mb-2 text-blueGray-600 mt-4">
+                                    <i className="fas fa-map-marker mr-2 text-lg text-blueGray-400"></i>
                                     {izbira?.lokacija}
                                 </div>
-                                <div className="mb-2 text-blueGray-600 mt-10 uppercase">
-                                    Velikost: <b>{izbira?.velikost}</b>
+                                <div className="mb-2 text-blueGray-600 mt-4">
+                                    <i className="fas fa-ruler-combined mr-2 text-lg text-blueGray-400"></i>
+                                    {izbira?.velikost}
                                 </div>
-                                <div className="mb-2 text-blueGray-600 uppercase">
-                                    Cena: <b>{izbira?.cena} €</b>
+                                <div className="mb-2 text-blueGray-600 mt-4">
+                                    <i className="fas fa-euro-sign mr-2 text-lg text-blueGray-400"></i>
+                                    {izbira?.cena}
                                 </div>
-                            </div>
-                            <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                                <div className="flex flex-wrap justify-center">
-                                    <div className="w-full lg:w-9/12 px-4">
-                                        <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                                            {izbira?.opis}
-
-                                        </p>
-                                        <div className="flex justify-center mt-10">
-                                            <button
-                                                className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                type="button"
-                                            >
-                                                Kupi
-                                            </button>
-                                            {izbira?.za_zamenjavo === 1 && (
-                                                <button
-                                                    className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                    type="button"
-                                                >
-                                                    Zamenjaj
-                                                </button>
-                                            )}
-                                        </div>
+                                <div className="mb-2 text-blueGray-600 mt-4">
+                                    <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
+                                    {izbira?.opis}
+                                </div>
+                                <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
+                                    <div className="px-6">
+                                        <section className="relative block" style={{ height: "60vh" }}>
+                                            <br></br><br></br><br></br>
+                                            <Slider {...settings}>
+                                                {izbira?.slike.map((slika, index) => {
+                                                    const slikaPath = slika.split("\\uploads\\")[1];
+                                                    return (
+                                                        <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                            <img
+                                                                alt={`slika-${index}`}
+                                                                className="w-full align-middle rounded-lg"
+                                                                src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                style={{
+                                                                    objectFit: "cover",
+                                                                    height: "40vh",
+                                                                    width: "40%",
+                                                                    margin: "auto",
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+                                            </Slider>
+                                        </section>
                                     </div>
+                                </div>
+                                <div className="flex justify-center mt-10 mb-8">
+                                    <button
+                                        className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        type="button"
+                                    >
+                                        Kupi
+                                    </button>
+                                    {izbira?.za_zamenjavo === 1 && (
+                                        <button
+                                            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            type="button"
+                                        >
+                                            Zamenjaj
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <Footer></Footer>
+            <Footer />
         </>
     );
 

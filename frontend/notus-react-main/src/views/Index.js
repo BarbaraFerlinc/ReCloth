@@ -31,7 +31,6 @@ export default function Index({ seznamOglasov }) {
         ) : (
           <div className="flex flex-wrap -mx-4">
             {seznamOglasov.map((oglas, index) => {
-              // Izloči del poti, ki je pred mapi uploads
               const slikaPath = oglas.slike[0].split("\\uploads\\")[1];
               return (
                 <div
@@ -45,7 +44,8 @@ export default function Index({ seznamOglasov }) {
                           alt="..."
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
-                          style={{ width: "50%", height: "auto", objectFit: "cover", marginLeft: "auto", marginRight: "auto"}}
+                          //naj bo slika manjša
+                          style={{objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto"}}
                         />
                       </Link>
                       <div className="mt-4">
@@ -74,12 +74,7 @@ export default function Index({ seznamOglasov }) {
       <br></br>
       <Footer />
     </>
-  );
-
-
-
-
-
+  )
 
 
 
