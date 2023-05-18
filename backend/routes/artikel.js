@@ -56,7 +56,9 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
 
 router.get('/vsi', async (req, res) => {
     try {
-        const oglasi = await knex('oglas').select('*');
+        const oglasi = await knex('oglas')
+            .select('oglas.*', 'kategorija.naziv as kategorijaNaziv')
+            .join('kategorija', 'oglas.fk_kategorija_id', 'kategorija.id');
 
         // Loop through each ad to get the images
         for (let i = 0; i < oglasi.length; i++) {
@@ -69,11 +71,11 @@ router.get('/vsi', async (req, res) => {
         }
 
         res.status(200).json(oglasi);
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasov iz baze', details: error.message });
     }
 });
+
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
@@ -157,6 +159,8 @@ router.get('/kategorija/:id', async (req, res) => {
     }
 });
 
+
+
 router.get('/:id/slike', async (req, res) => {
     const { id } = req.params;
 
@@ -176,4 +180,14 @@ router.get('/:id/slike', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju slik' });
     }
 });
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
