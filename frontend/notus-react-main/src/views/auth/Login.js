@@ -1,15 +1,39 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { UserAuth } from "context/AuthContext";
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { signIn } = UserAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('')
+    if (password.length > 5) {
+      try {
+        await signIn(email, password);
+        
+        // more se se naret da se redirecta na profil
+      } catch (er) {
+        setError(er.message);
+        console.log(er.message);
+      }
+    } else {
+      window.alert("Geslo mora biti dolgo vsaj 6 znakov");
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   return (
     <>
       <div className="fixed" style={{ top: "1rem", left: "1rem" }}>
@@ -62,7 +86,7 @@ export default function Login() {
                 <div className="text-blueGray-400 text-center mb-3 font-bold">
                   <small>Or sign in with credentials</small>
                 </div>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -74,6 +98,7 @@ export default function Login() {
                       type="email"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
@@ -84,11 +109,11 @@ export default function Login() {
                     >
                       Password
                     </label>
-
                     <input
                       type={showPassword ? "text" : "password"}
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       onClick={togglePasswordVisibility}
@@ -98,9 +123,6 @@ export default function Login() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
-
-
-
                   </div>
 
                   <div>
@@ -119,7 +141,7 @@ export default function Login() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="submit"
                     >
                       Sign In
                     </button>
@@ -138,7 +160,7 @@ export default function Login() {
                 </a>
               </div>
               <div className="w-1/2 text-right">
-                <Link to="/auth/register" className="text-blueGray-800">
+                <Link to="/register" className="text-blueGray-800">
                   <small>Create new account</small>
                 </Link>
               </div>
