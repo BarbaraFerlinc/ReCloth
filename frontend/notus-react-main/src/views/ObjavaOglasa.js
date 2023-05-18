@@ -193,7 +193,8 @@ export default function ObjavaOglasa({ dodaj }) {
             setErrors(prevState => ({ ...prevState, slika: [] }));
         }
     }
-    console.log(errors.slika)
+    //console.log(errors.slika)
+
     return (
         <>
             <IndexNavbar />

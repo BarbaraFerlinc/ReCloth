@@ -1,28 +1,96 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-
-
+import api from "services/api";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-
-
-
 
 export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});
   const [error, setError] = useState(null);
-  console.log(seznamOglasov)
+  const [kategorije, setKategorije] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedZamenjava, setSelectedZamenjava] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [selectedVelikost, setSelectedVelikost] = useState("");
 
+
+
+  console.log(seznamOglasov);
+
+
+  const filteredOglasi = seznamOglasov.filter(oglas =>
+    (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
+    (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
+    (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
+    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
+  );
+
+
+
+  useEffect(() => {
+    const fetchKategorije = async () => {
+      try {
+        const response = await api.get('/kategorija/vsi');
+        setKategorije(response.data);
+      } catch (error) {
+        console.error("Napaka pri pridobivanju kategorij", error);
+      }
+    };
+
+    fetchKategorije();
+  }, []);
+
+  console.log(seznamOglasov);
+  console.log(typeof (selectedZamenjava));
 
   return (
     <>
-      <IndexNavbar />
-      <section className="pt-20 pb-15 px-4 md:px-0">
+
+      <IndexNavbar fixed={true}></IndexNavbar>
+      <div className="flex justify-start items-center mb-8 px-4 pt-20">
+        <select
+          value={selectedCategory}
+          onChange={e => setSelectedCategory(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+        >
+          <option value="">Vse</option>
+          {kategorije.map(kategorija => (
+            <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
+          ))}
+        </select>
+        <select
+          value={selectedZamenjava}
+          onChange={e => setSelectedZamenjava(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+        >
+          <option value="">Način nakupa</option>
+          <option value="0">Fiksna cena</option>
+          <option value="1">Možna zamenjava</option>
+        </select>
+        <select
+          value={selectedVelikost}
+          onChange={e => setSelectedVelikost(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+        >
+          <option value="">Velikost</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+
+        <input
+          type="text"
+          value={searchLocation}
+          onChange={e => setSearchLocation(e.target.value)}
+          placeholder="Vnesite lokacijo"
+          className="px-4 py-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+
+      <section className="pt-10 pb-15 px-4 md:px-0">
         <br></br>
         {seznamOglasov.length === 0 ? (
           <div className="text-center my-8">
@@ -30,8 +98,7 @@ export default function Index({ seznamOglasov }) {
           </div>
         ) : (
           <div className="flex flex-wrap -mx-4">
-            {seznamOglasov.map((oglas, index) => {
-              // Izloči del poti, ki je pred mapi uploads
+            {filteredOglasi.map((oglas, index) => {
               const slikaPath = oglas.slike[0].split("\\uploads\\")[1];
               return (
                 <div
@@ -45,7 +112,7 @@ export default function Index({ seznamOglasov }) {
                           alt="..."
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
-                          style={{ width: "50%", height: "auto", objectFit: "cover", marginLeft: "auto", marginRight: "auto"}}
+                          style={{ width: "50%", height: "auto", objectFit: "cover", marginLeft: "auto", marginRight: "auto" }}
                         />
                       </Link>
                       <div className="mt-4">
@@ -55,6 +122,8 @@ export default function Index({ seznamOglasov }) {
                           </Link>
                         </h5>
                         <h6 className="card-subtitle mt-2 text-black">{oglas.cena} €</h6>
+                        <h6 className="card-subtitle mt-2 text-black">{oglas.kategorijaNaziv}</h6>
+                        <h6 className="card-subtitle mt-2 text-black">{oglas.za_zamenjavo}</h6>
                       </div>
                     </div>
                     <div className="px-4 py-2">
@@ -66,24 +135,14 @@ export default function Index({ seznamOglasov }) {
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         )}
-      </section >
+      </section>
+
       <br></br>
       <Footer />
     </>
   );
-
-
-
-
-
-
-
-
-
-
-
 }
