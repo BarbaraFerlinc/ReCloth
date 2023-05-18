@@ -1,9 +1,15 @@
 import React from "react";
+import { UserAuth } from "context/AuthContext";
 
 import Navbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footers/Footer.js";
 
 export default function Profile() {
+
+  const {user, logout} = UserAuth();
+
+  // gre skozi vse uporabnike iz baze, ce je user.email == uporabnik.email potem se pokaze profil ??
+
   return (
     <>
       <Navbar transparent />

@@ -10,6 +10,7 @@ import Register from "views/auth/Register";
 import { useEffect, useState } from "react";
 import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
+import { AuthContextProvider } from "context/AuthContext";
 
 
 
@@ -109,48 +110,51 @@ const Routing = () => {
     }
 
 
-    return (
-        <Switch>
-            <Route
-                path="/"
-                exact
-                render={(props) => <Index {...props} seznamOglasov={seznam} />}
-            />
-            <Route
-                path="/oglas/:id"
-                exact
-                render={(props) => <Podrobnosti {...props} seznamOglasov={seznam} />}
-            />
-            <Route
-                path="/objavaOglasa"
-                exact
-                render={(props) => (
-                    <div className="bg-blueGray-200 min-h-screen">
-                        <ObjavaOglasa {...props} dodaj={handleAdd} />
-                    </div>
-                )}
-            />
-            <Route
-                path="/login"
-                exact
-                render={(props) => (
-                    <div className="bg-blueGray-200 min-h-screen">
-                        <Login {...props} />
-                    </div>
-                )}
-            />
-            <Route
-                path="/register"
-                exact
-                render={(props) => (
-                    <div className="bg-blueGray-200 min-h-screen">
-                        <Register {...props} />
-                    </div>
-                )
-                }
-            />
-            < Redirect from="*" to="/" />
-        </Switch >
+    return (<>
+        <AuthContextProvider>
+            <Switch>
+                <Route
+                    path="/"
+                    exact
+                    render={(props) => <Index {...props} seznamOglasov={seznam} />}
+                />
+                <Route
+                    path="/oglas/:id"
+                    exact
+                    render={(props) => <Podrobnosti {...props} seznamOglasov={seznam} />}
+                />
+                <Route
+                    path="/objavaOglasa"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <ObjavaOglasa {...props} dodaj={handleAdd} />
+                        </div>
+                    )}
+                />
+                <Route
+                    path="/login"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Login {...props} />
+                        </div>
+                    )}
+                />
+                <Route
+                    path="/register"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Register {...props} />
+                        </div>
+                    )
+                    }
+                />
+                < Redirect from="*" to="/" />
+            </Switch >
+        </AuthContextProvider>
+    </> 
     );
 }
 

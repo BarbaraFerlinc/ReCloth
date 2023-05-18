@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
+import { UserAuth } from "context/AuthContext";
 import api from "services/api";
 
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
+import Footer from "components/Footers/Footer.js";
 
 const initialState = {
     naslov: "",
@@ -17,12 +18,15 @@ const initialState = {
 
 }
 
-
 export default function ObjavaOglasa({ dodaj }) {
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
     const [zamenjava, setZamenjava] = useState(false);
+
+    const {user} = UserAuth();
+
+    // najdi uporabnika z enakim mailom v bazi ??
 
     useEffect(() => {
         const fetchKategorije = async () => {
