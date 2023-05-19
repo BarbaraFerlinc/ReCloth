@@ -16,10 +16,7 @@ export default function Index({ seznamOglasov }) {
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
 
-
-
   console.log(seznamOglasov);
-
 
   const filteredOglasi = seznamOglasov.filter(oglas =>
     (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
@@ -27,8 +24,6 @@ export default function Index({ seznamOglasov }) {
     (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
     oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
   );
-
-
 
   useEffect(() => {
     const fetchKategorije = async () => {

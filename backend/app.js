@@ -9,9 +9,7 @@ var artikelRouter = require('./routes/artikel');
 var kategorijaRouter = require('./routes/kategorija');
 var nakupRouter = require('./routes/nakup');
 var pogovorRouter = require('./routes/pogovor');
-var prijavaRouter = require('./routes/prijava');
 var profilRouter = require('./routes/profil');
-var registracijaRouter = require('./routes/registracija');
 var uporabnikRouter = require('./routes/uporabnik');
 
 const app = express();
@@ -22,15 +20,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// uporaba routerjev
 app.use(cors());
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+
+// uporaba routerjev
 app.use('/artikel/', artikelRouter);
 app.use('/kategorija/', kategorijaRouter);
 app.use('/nakup/', nakupRouter);
 app.use('/pogovor/', pogovorRouter);
-app.use('/prijava', prijavaRouter);
 app.use('/profil/', profilRouter);
-app.use('/registracija/', registracijaRouter);
 app.use('/uporabnik/', uporabnikRouter);
 
 // Dodajanje statične poti za dostop do slik

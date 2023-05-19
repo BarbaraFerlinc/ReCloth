@@ -12,9 +12,6 @@ import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
 
-
-
-
 const Routing = () => {
 
     const poljeOglasov = [
@@ -68,13 +65,9 @@ const Routing = () => {
         },
     ];
 
-
-
     const [seznamOglasov, setSeznamOglasov] = useState(poljeOglasov);
     const [seznam, setSeznam] = useState([]);
     const [error, setError] = useState(null);
-
-
 
     useEffect(() => {
         const fetchArtikle = async () => {
@@ -87,9 +80,6 @@ const Routing = () => {
         };
         fetchArtikle();
     }, []);
-
-
-
 
     const handleAdd = (oglas) => {
         console.log(oglas);
@@ -108,7 +98,6 @@ const Routing = () => {
         };
         fetchArtikle();
     }
-
 
     return (<>
         <AuthContextProvider>
@@ -147,6 +136,16 @@ const Routing = () => {
                     render={(props) => (
                         <div className="bg-blueGray-200 min-h-screen">
                             <Register {...props} />
+                        </div>
+                    )
+                    }
+                />
+                <Route
+                    path="/profile"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Profile {...props} />
                         </div>
                     )
                     }

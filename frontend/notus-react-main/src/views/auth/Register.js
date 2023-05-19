@@ -1,10 +1,12 @@
-
 import React, { useState } from "react";
+import { UserAuth } from "context/AuthContext";
+import api from "services/api";
+
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { UserAuth } from "context/AuthContext";
+import { useHistory } from "react-router-dom";
 import Footer from "components/Footers/Footer";
 
 const initialState = {
@@ -15,51 +17,123 @@ const initialState = {
   posta: "",
   drzava: "",
   email: "",
-  geslo: ""
+  geslo: "geslo"
 }
 
 export default function Register() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const [user, setUser] = useState(initialState);
+  const [errors, setErrors] = useState({});
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { createUser } = UserAuth();
+  const history = useHistory();
+
+  const {createUser} = UserAuth();
+
+  const validateForm = () => {
+    let formErrors = {};
+    let formIsValid = true;
+    console.log(user)
+
+    if (!user.ime) {
+        formIsValid = false;
+        formErrors["ime"] = "Prosimo, vnesite ime.";
+    }
+
+    if (!user.priimek) {
+        formIsValid = false;
+        formErrors["priimek"] = "Prosimo, vnesite priimek.";
+    }
+
+    if (!user.telefon) {
+        formIsValid = false;
+        formErrors["telefon"] = "Prosimo, vnesite telefonsko stevilko.";
+    }
+
+    if (!user.naslov) {
+        formIsValid = false;
+        formErrors["naslov"] = "Prosimo, vnesite naslov.";
+    }
+
+    if (!user.posta) {
+        formIsValid = false;
+        formErrors["posta"] = "Prosimo, vnesite postno stevilko.";
+    }
+
+    if (!user.drzava) {
+        formIsValid = false;
+        formErrors["drzava"] = "Prosimo, vnesite drzavo.";
+    }
+
+    if (!email) {
+      formIsValid = false;
+      formErrors["email"] = "Prosimo, vnesite email.";
+    }
+
+    if (!password) {
+        formIsValid = false;
+        formErrors["geslo"] = "Prosimo, vnesite geslo.";
+    }
+
+    if (password && password.length < 6) {
+      formIsValid = false;
+      formErrors["geslo"] = "Prosimo, vnesite geslo z vsaj 6 znaki.";
+  }
+    setErrors(formErrors);
+    return formIsValid;
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (password.length > 5) {
-      try {
-        // dodaj user v bazo - to se se more naret
-        user.email = email;
+    
+    if (validateForm()) {
 
-        // se doda na firebase
-        await createUser(email, password);
+        try {
+          user.email = email;
 
-        // more se se naret da se redirecta na profil
-      } catch (er) {
-        setError(er.message);
-        console.log(er.message);
-      }
-    } else {
-      window.alert("Geslo mora biti dolgo vsaj 6 znakov");
+          console.log(user);
+
+          const response = await api.post("/uporabnik/dodaj", user, {
+              headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+              },
+          });
+
+          if (response.status === 200) {
+              alert("Uporabnik uspešno registriran!");
+          } else {
+              alert("Napaka pri registraciji!");
+          }
+
+          setUser(initialState);
+          setErrors({});
+          
+          await createUser(email, password);
+
+          history.push("/");
+        } catch (er) {
+          setError(er.message);
+          console.log(er.message);
+        }
     }
   }
 
   const handleChange = (e) => {
     const { value, name } = e.target;
-    let valueToUse = value;
 
     setUser((prevState) => {
-      const nextState = {
-        ...prevState,
-        [name]: valueToUse
-      };
-      return nextState;
+        const nextState = {
+            ...prevState,
+            [name]: value,
+        };
+        console.log(nextState)
+        return nextState;
     });
   };
 
@@ -105,8 +179,11 @@ export default function Register() {
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="First Name"
+                      name="ime"
+                      id="ime"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.ime}</small>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -120,8 +197,11 @@ export default function Register() {
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Last Name"
+                      name="priimek"
+                      id="priimek"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.priimek}</small>
                   </div>
                   <div className="relative w-full mb-3">
                     <label
@@ -134,13 +214,16 @@ export default function Register() {
                       type="tel"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Phone"
+                      name="telefon"
+                      id="telefon"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.telefon}</small>
                   </div>
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="address"
+                      htmlFor="adress"
                     >
                       Address
                     </label>
@@ -148,8 +231,11 @@ export default function Register() {
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Address"
+                      name="naslov"
+                      id="naslov"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.naslov}</small>
                   </div>
                   <div className="relative w-full mb-3">
                     <label
@@ -162,8 +248,11 @@ export default function Register() {
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Postal Code"
+                      name="posta"
+                      id="posta"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.posta}</small>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -177,8 +266,11 @@ export default function Register() {
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Country"
+                      name="drzava"
+                      id="drzava"
                       onChange={handleChange}
                     />
+                    <small className="text-red-500">{errors.drzava}</small>
                   </div>
                   <div className="relative w-full mb-3">
                     <label
@@ -193,6 +285,7 @@ export default function Register() {
                       placeholder="Email"
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                    <small className="text-red-500">{errors.email}</small>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -217,6 +310,7 @@ export default function Register() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
+                    <small className="text-red-500">{errors.geslo}</small>
                   </div>
 
                   <div className="text-center mt-6">
@@ -245,4 +339,3 @@ export default function Register() {
     </>
   );
 }
-
