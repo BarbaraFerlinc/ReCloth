@@ -112,8 +112,7 @@ export default function Index({ seznamOglasov }) {
                           alt="..."
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
-                          //naj bo slika manjša
-                          style={{objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto"}}
+                          style={{ objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto" }}
                         />
                       </Link>
                       <div className="mt-4">
