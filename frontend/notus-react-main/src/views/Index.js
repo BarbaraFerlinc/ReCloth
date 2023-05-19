@@ -5,13 +5,8 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
-
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-
-
-
 
 export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});

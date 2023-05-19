@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserAuth } from "context/AuthContext";
+import { useHistory } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -13,14 +14,15 @@ export default function Login() {
   const [error, setError] = useState('');
   const { signIn } = UserAuth();
 
+  const history = useHistory();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('')
     if (password.length > 5) {
       try {
         await signIn(email, password);
-        
-        // more se se naret da se redirecta na profil
+        history.push("/");
       } catch (er) {
         setError(er.message);
         console.log(er.message);
