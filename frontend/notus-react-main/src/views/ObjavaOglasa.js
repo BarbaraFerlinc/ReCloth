@@ -23,10 +23,23 @@ export default function ObjavaOglasa({ dodaj }) {
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
     const [zamenjava, setZamenjava] = useState(false);
+    const [uporabnikovId, setUporabnikovId] = useState(0)
 
-    const {user} = UserAuth();
+    const { user } = UserAuth();
 
-    // najdi uporabnika z enakim mailom v bazi ??
+    useEffect(() => {
+        const uporabnikovEmail = user.email;
+
+        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+            .then(res => {
+                const userId = res.data.userId;
+                setUporabnikovId(userId);
+                console.log("Uporabnikov ID je: ", userId);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, [user]);
 
     useEffect(() => {
         const fetchKategorije = async () => {
@@ -170,7 +183,7 @@ export default function ObjavaOglasa({ dodaj }) {
             const nextState = {
                 ...prevState,
                 [name]: valueToUse,
-                fk_uporabnik_id: 1,
+                fk_uporabnik_id: uporabnikovId,
             };
             return nextState;
         });
