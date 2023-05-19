@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom";
+import Footer from "components/Footers/Footer";
 
 const initialState = {
   ime: "",
@@ -134,7 +135,7 @@ export default function Register() {
         console.log(nextState)
         return nextState;
     });
-};
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -152,7 +153,8 @@ export default function Register() {
           </button>
         </Link>
       </div>
-      <div className="container mx-auto px-4 h-full">
+      <br></br><br></br>
+      <div className="container mx-auto px-4 pt-20">
         <div className="flex content-center items-center justify-center h-screen">
           <div className="w-full lg:w-6/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
@@ -332,6 +334,8 @@ export default function Register() {
           </div>
         </div>
       </div>
+      <br></br><br></br><br></br><br></br>
+      <Footer />
     </>
   );
 }
