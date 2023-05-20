@@ -29,6 +29,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
     useEffect(() => {
         const uporabnikovEmail = user.email;
+        console.log("Uporabnikov email je: ", uporabnikovEmail)
 
         api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
             .then(res => {
