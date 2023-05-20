@@ -28,6 +28,10 @@ export default function Index({ seznamOglasov }) {
     oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
   );
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
 
 
   useEffect(() => {
@@ -43,14 +47,12 @@ export default function Index({ seznamOglasov }) {
     fetchKategorije();
   }, []);
 
-  console.log(seznamOglasov);
-  console.log(typeof (selectedZamenjava));
 
   return (
     <>
 
       <IndexNavbar fixed={true}></IndexNavbar>
-      <div className="flex justify-start items-center mb-8 px-4 pt-20">
+      <div className="flex items-center mb-8 px-4 pt-20 ml-4">
         <select
           value={selectedCategory}
           onChange={e => setSelectedCategory(e.target.value)}
@@ -64,7 +66,7 @@ export default function Index({ seznamOglasov }) {
         <select
           value={selectedZamenjava}
           onChange={e => setSelectedZamenjava(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+          className="px-10 py-2 border border-gray-300 rounded-md mr-4"
         >
           <option value="">Način nakupa</option>
           <option value="0">Fiksna cena</option>
@@ -73,11 +75,25 @@ export default function Index({ seznamOglasov }) {
         <select
           value={selectedVelikost}
           onChange={e => setSelectedVelikost(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+          className="px-10 py-2 border border-gray-300 rounded-md mr-4"
         >
           <option value="">Velikost</option>
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
           <option value="L">L</option>
           <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+          <option value="110">110</option>
+          <option value="116">116</option>
+          <option value="122">122</option>
+          <option value="128">128</option>
+          <option value="134">134</option>
+          <option value="140">140</option>
+          <option value="146">146</option>
+          <option value="152">152</option>
+          <option value="158">158</option>
+          <option value="164">164</option>
         </select>
 
         <input
@@ -87,6 +103,28 @@ export default function Index({ seznamOglasov }) {
           placeholder="Vnesite lokacijo"
           className="px-4 py-2 border border-gray-300 rounded-md"
         />
+
+        <div className="flex-grow"></div>
+
+        <button
+          onClick={handleRefresh}
+          style={{
+            backgroundColor: "#FFBF00",
+            color: "white",
+            border: "none",
+            borderRadius: "20px",
+            padding: "10px 20px",
+            fontSize: "16px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s ease",
+            marginLeft: "15px"
+          }}
+          type="button"
+        >
+          Prikaži vse
+        </button>
       </div>
 
 
@@ -113,7 +151,7 @@ export default function Index({ seznamOglasov }) {
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
                           //naj bo slika manjša
-                          style={{objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto"}}
+                          style={{ objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto" }}
                         />
                       </Link>
                       <div className="mt-4">
@@ -123,8 +161,8 @@ export default function Index({ seznamOglasov }) {
                           </Link>
                         </h5>
                         <h6 className="card-subtitle mt-2 text-black">{oglas.cena} €</h6>
-                        <h6 className="card-subtitle mt-2 text-black">{oglas.kategorijaNaziv}</h6>
-                        <h6 className="card-subtitle mt-2 text-black">{oglas.za_zamenjavo}</h6>
+                        {/* <h6 className="card-subtitle mt-2 text-black">{oglas.kategorijaNaziv}</h6>
+                        <h6 className="card-subtitle mt-2 text-black">{oglas.za_zamenjavo}</h6> */}
                       </div>
                     </div>
                     <div className="px-4 py-2">
@@ -133,10 +171,12 @@ export default function Index({ seznamOglasov }) {
                           Več
                         </button>
                       </Link>
+
                     </div>
                   </div>
                 </div>
               );
+
             })}
           </div>
         )}

@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
-
+import ProdajalecProfil from "components/ProdajalecProfil";
 
 
 
@@ -90,7 +90,6 @@ const Routing = () => {
 
 
 
-
     const handleAdd = (oglas) => {
         console.log(oglas);
         let posodobljeniOglasi = Array.from(seznam);
@@ -124,6 +123,12 @@ const Routing = () => {
                     render={(props) => <Podrobnosti {...props} seznamOglasov={seznam} />}
                 />
                 <Route
+                    path="/prodajalec/:id"
+                    exact
+                    render={() => <ProdajalecProfil />}
+                />
+
+                <Route
                     path="/objavaOglasa"
                     exact
                     render={(props) => (
@@ -154,7 +159,7 @@ const Routing = () => {
                 < Redirect from="*" to="/" />
             </Switch >
         </AuthContextProvider>
-    </> 
+    </>
     );
 }
 

@@ -57,8 +57,9 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
 router.get('/vsi', async (req, res) => {
     try {
         const oglasi = await knex('oglas')
-            .select('oglas.*', 'kategorija.naziv as kategorijaNaziv')
-            .join('kategorija', 'oglas.fk_kategorija_id', 'kategorija.id');
+            .select('oglas.*', 'kategorija.naziv as kategorijaNaziv', 'uporabnik.id as prodajalecID', 'uporabnik.ime', 'uporabnik.priimek')
+            .join('kategorija', 'oglas.fk_kategorija_id', 'kategorija.id')
+            .join('uporabnik', 'oglas.fk_uporabnik_id', 'uporabnik.id');
 
         // Loop through each ad to get the images
         for (let i = 0; i < oglasi.length; i++) {

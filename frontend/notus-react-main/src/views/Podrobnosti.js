@@ -6,7 +6,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik slik
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Route } from "react-router-dom/cjs/react-router-dom.min";
+import ProdajalecProfil from "components/ProdajalecProfil";
 
 export default function Podrobnosti({ seznamOglasov }) {
 
@@ -29,7 +31,7 @@ export default function Podrobnosti({ seznamOglasov }) {
     };
 
     console.log(izbira);
-    console.log(izbira?.slike)
+    //console.log(izbira?.slike)
 
 
     return (
@@ -59,6 +61,12 @@ export default function Podrobnosti({ seznamOglasov }) {
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
                                     {izbira?.opis}
                                 </div>
+                                <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
+                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                        <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>
+                                        {izbira?.ime} {izbira?.priimek}
+                                    </div>
+                                </Link>
                                 <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
                                     <div className="px-6">
                                         <section className="relative block" style={{ height: "60vh" }}>
@@ -106,8 +114,9 @@ export default function Podrobnosti({ seznamOglasov }) {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
             <Footer />
+
         </>
     );
 
