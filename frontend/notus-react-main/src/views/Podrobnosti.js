@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
-import ProdajalecProfil from "components/ProdajalecProfil";
+
 
 export default function Podrobnosti({ seznamOglasov }) {
 

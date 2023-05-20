@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import api from "services/api";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import "../components/Dropdown.css";
 
 export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});
@@ -44,13 +45,12 @@ export default function Index({ seznamOglasov }) {
 
   return (
     <>
-
       <IndexNavbar fixed={true}></IndexNavbar>
-      <div className="flex items-center mb-8 px-4 pt-20 ml-4">
+      <div className="flex items-center mb-8 px-4 pt-20 ml-4" style={{ marginLeft: "17px" }}>
         <select
           value={selectedCategory}
           onChange={e => setSelectedCategory(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md mr-4"
+          className="px-4 py-2 border border-gray-300 rounded-md mr-4 custom-select"
         >
           <option value="">Vse</option>
           {kategorije.map(kategorija => (
@@ -60,7 +60,7 @@ export default function Index({ seznamOglasov }) {
         <select
           value={selectedZamenjava}
           onChange={e => setSelectedZamenjava(e.target.value)}
-          className="px-10 py-2 border border-gray-300 rounded-md mr-4"
+          className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select"
         >
           <option value="">Način nakupa</option>
           <option value="0">Fiksna cena</option>
@@ -69,7 +69,7 @@ export default function Index({ seznamOglasov }) {
         <select
           value={selectedVelikost}
           onChange={e => setSelectedVelikost(e.target.value)}
-          className="px-10 py-2 border border-gray-300 rounded-md mr-4"
+          className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select"
         >
           <option value="">Velikost</option>
           <option value="XS">XS</option>
@@ -95,7 +95,7 @@ export default function Index({ seznamOglasov }) {
           value={searchLocation}
           onChange={e => setSearchLocation(e.target.value)}
           placeholder="Vnesite lokacijo"
-          className="px-4 py-2 border border-gray-300 rounded-md"
+          className="px-4 py-2 border border-gray-300 rounded-md custom-input"
         />
 
         <div className="flex-grow"></div>
