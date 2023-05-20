@@ -11,9 +11,12 @@ import { useEffect, useState } from "react";
 import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
+<<<<<<< HEAD
 import ProdajalecProfil from "components/ProdajalecProfil";
 
 
+=======
+>>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
 
 const Routing = () => {
 
@@ -68,13 +71,9 @@ const Routing = () => {
         },
     ];
 
-
-
     const [seznamOglasov, setSeznamOglasov] = useState(poljeOglasov);
     const [seznam, setSeznam] = useState([]);
     const [error, setError] = useState(null);
-
-
 
     useEffect(() => {
         const fetchArtikle = async () => {
@@ -88,8 +87,11 @@ const Routing = () => {
         fetchArtikle();
     }, []);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
     const handleAdd = (oglas) => {
         console.log(oglas);
         let posodobljeniOglasi = Array.from(seznam);
@@ -107,7 +109,6 @@ const Routing = () => {
         };
         fetchArtikle();
     }
-
 
     return (<>
         <AuthContextProvider>
@@ -152,6 +153,16 @@ const Routing = () => {
                     render={(props) => (
                         <div className="bg-blueGray-200 min-h-screen">
                             <Register {...props} />
+                        </div>
+                    )
+                    }
+                />
+                <Route
+                    path="/profile"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Profile {...props} />
                         </div>
                     )
                     }
