@@ -9,6 +9,7 @@ import api from "services/api";
 export default function Profile() {
 
   const [uporabnik, setUporabnik] = useState({});
+  const [uporabnikovId, setUporabnikovId] = useState(0);
 
   const {user} = UserAuth();
 
@@ -17,14 +18,27 @@ export default function Profile() {
   let artikli = [];
   
   useEffect(() => {
-    fetchUser(user.email);
-    steviloKomentarjev();
-    izracunajOceno();
-  }, [user.email]);
+    const uporabnikovEmail = user.email;
+    console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-  const fetchUser = async (email) => {
+    api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+        .then(res => {
+            const userId = res.data.userId;
+            setUporabnikovId(userId);
+            console.log("Uporabnikov ID je: ", userId);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+  }, [user]);
+
+  const steviloKomentarjev = () => {};
+
+  const izracunajOceno = () => {};
+
+  const fetchUser = async (id) => {
     try {
-      const response = await api.get(`/uporabnik/${email}`);
+      const response = await api.get(`/uporabnik/${id}`);
       console.log(response.data[0]);
       setUporabnik(response.data[0]);
     } catch (error) {
@@ -32,10 +46,11 @@ export default function Profile() {
     }
   };
 
-  const steviloKomentarjev = () => {};
-
-  const izracunajOceno = () => {};
-
+  useEffect(() => {
+    fetchUser(uporabnikovId);
+    steviloKomentarjev();
+    izracunajOceno();
+  }, [uporabnikovId]);
 
   return (
     <>

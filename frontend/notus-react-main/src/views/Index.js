@@ -29,8 +29,6 @@ export default function Index({ seznamOglasov }) {
     window.location.reload();
   };
 
-
-
   useEffect(() => {
     const fetchKategorije = async () => {
       try {
@@ -43,7 +41,6 @@ export default function Index({ seznamOglasov }) {
 
     fetchKategorije();
   }, []);
-
 
   return (
     <>
@@ -124,7 +121,6 @@ export default function Index({ seznamOglasov }) {
         </button>
       </div>
 
-
       <section className="pt-10 pb-15 px-4 md:px-0">
         <br></br>
         {seznamOglasov.length === 0 ? (
@@ -173,7 +169,6 @@ export default function Index({ seznamOglasov }) {
                   </div>
                 </div>
               );
-
             })}
           </div>
         )}
@@ -183,10 +178,4 @@ export default function Index({ seznamOglasov }) {
       <Footer />
     </>
   )
-
-
-
-
-
-
 }
