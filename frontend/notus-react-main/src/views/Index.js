@@ -25,15 +25,12 @@ export default function Index({ seznamOglasov }) {
     oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
   );
 
-<<<<<<< HEAD
   const handleRefresh = () => {
     window.location.reload();
   };
 
 
 
-=======
->>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
   useEffect(() => {
     const fetchKategorije = async () => {
       try {
@@ -150,10 +147,7 @@ export default function Index({ seznamOglasov }) {
                           alt="..."
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
-<<<<<<< HEAD
                           //naj bo slika manjša
-=======
->>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
                           style={{ objectFit: "cover", objectPosition: "center", maxHeight: "300px", minHeight: "300px", maxWidth: "300px", minWidth: "400px", margin: "auto" }}
                         />
                       </Link>

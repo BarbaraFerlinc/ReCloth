@@ -11,12 +11,9 @@ import { useEffect, useState } from "react";
 import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
-<<<<<<< HEAD
 import ProdajalecProfil from "components/ProdajalecProfil";
 
 
-=======
->>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
 
 const Routing = () => {
 
@@ -87,11 +84,8 @@ const Routing = () => {
         fetchArtikle();
     }, []);
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 1117bf68ec3febe5fef4a0fd0895c124ee70b6e6
     const handleAdd = (oglas) => {
         console.log(oglas);
         let posodobljeniOglasi = Array.from(seznam);
