@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
 
@@ -33,6 +33,21 @@ export default function Register() {
   const history = useHistory();
 
   const {createUser} = UserAuth();
+
+  const [uporabniki, setUporabniki] = useState([]);
+
+  useEffect(() => {
+    const fetchUporabnike = async () => {
+      try {
+        const response = await api.get('/uporabnik/vsi');
+        setUporabniki(response.data);
+      } catch (error) {
+        console.error("Napaka pri pridobivanju uporabnikov", error);
+      }
+    };
+
+    fetchUporabnike();
+  }, []);
 
   const validateForm = () => {
     let formErrors = {};
@@ -72,6 +87,13 @@ export default function Register() {
     if (!email) {
       formIsValid = false;
       formErrors["email"] = "Prosimo, vnesite email.";
+    }
+
+    for (let i = 0; i < uporabniki.length; i++) {
+      if (uporabniki[i].email == email) {
+        formIsValid = false;
+        formErrors["email"] = "Ta email je ze v uporabi.";
+      }
     }
 
     if (!password) {

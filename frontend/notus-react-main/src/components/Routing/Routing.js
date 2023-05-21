@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
-import ProdajalecProfil from "components/ProdajalecProfil";
+import ProdajalecProfil from "views/ProdajalecProfil";
 
 
 

@@ -45,10 +45,10 @@ router.get('/vsi', async (req, res) => {
     }
 });
 
-router.get('/:email', async (req, res) => {
-    const { email } = req.params;
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        const user = await knex('uporabnik').select('*').where('email', email);
+        const user = await knex('uporabnik').select('*').where('id', id);
         if (user.length === 0) {
             return res.status(404).json({ error: 'Uporabnik ne obstaja' });
         }
