@@ -120,8 +120,6 @@ export default function ObjavaOglasa({ dodaj }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(oglas);
-        console.log(validateForm());
 
         if (validateForm()) {
             try {
@@ -211,7 +209,6 @@ export default function ObjavaOglasa({ dodaj }) {
             setErrors(prevState => ({ ...prevState, slika: [] }));
         }
     }
-    //console.log(errors.slika)
 
     return (
         <>

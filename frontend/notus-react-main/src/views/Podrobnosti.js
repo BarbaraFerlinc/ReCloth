@@ -51,7 +51,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                 </div>
                                 <div className="mb-2 text-blueGray-600 mt-4">
                                     <i className="fas fa-ruler-combined mr-2 text-lg text-blueGray-400"></i>
-                                    {izbira?.velikost}
+                                    Velikost: {izbira?.velikost}
                                 </div>
                                 <div className="mb-2 text-blueGray-600 mt-4">
                                     <i className="fas fa-euro-sign mr-2 text-lg text-blueGray-400"></i>
@@ -59,7 +59,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                 </div>
                                 <div className="mb-2 text-blueGray-600 mt-4">
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
-                                    {izbira?.opis}
+                                    Opis: {izbira?.opis}
                                 </div>
                                 <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
                                     <div className="mb-2 text-blueGray-600 mt-4">
@@ -69,8 +69,8 @@ export default function Podrobnosti({ seznamOglasov }) {
                                 </Link>
                                 <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
                                     <div className="px-6">
-                                        <section className="relative block" style={{ height: "60vh" }}>
-                                            <br></br><br></br><br></br>
+                                        <section className="relative block" style={{ height: "70vh" }}>
+                          <br></br>
                                             <Slider {...settings}>
                                                 {izbira?.slike.map((slika, index) => {
                                                     const slikaPath = slika.split("\\uploads\\")[1];
@@ -82,7 +82,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                                                 src={`http://localhost:9000/uploads/${slikaPath}`}
                                                                 style={{
                                                                     objectFit: "cover",
-                                                                    height: "40vh",
+                                                                    height: "60vh",
                                                                     width: "40%",
                                                                     margin: "auto",
                                                                 }}
