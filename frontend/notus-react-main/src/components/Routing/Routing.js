@@ -13,8 +13,6 @@ import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
 
-
-
 const Routing = () => {
 
     const poljeOglasov = [

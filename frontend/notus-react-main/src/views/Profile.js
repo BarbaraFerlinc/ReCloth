@@ -3,33 +3,49 @@ import { useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 
 import Navbar from "components/Navbars/AuthNavbar.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import api from "services/api";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 export default function Profile() {
 
   const [uporabnik, setUporabnik] = useState({});
   const [uporabnikovId, setUporabnikovId] = useState(0);
 
-  const {user} = UserAuth();
+  const {user, logout} = UserAuth();
+
+  const history = useHistory();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log("use: " + user);
+      history.push("/login");
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
   let ocena = 0;
   let komentarji = [];
   let artikli = [];
   
   useEffect(() => {
-    const uporabnikovEmail = user.email;
-    console.log("Uporabnikov email je: ", uporabnikovEmail)
+    if (user) {
+      const uporabnikovEmail = user.email;
+      console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-    api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-        .then(res => {
-            const userId = res.data.userId;
-            setUporabnikovId(userId);
-            console.log("Uporabnikov ID je: ", userId);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+      api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+          .then(res => {
+              const userId = res.data.userId;
+              setUporabnikovId(userId);
+              console.log("Uporabnikov ID je: ", userId);
+          })
+          .catch(err => {
+              console.error(err);
+          });
+    }
   }, [user]);
 
   const steviloKomentarjev = () => {};
@@ -54,7 +70,7 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar transparent />
+    <IndexNavbar fixed={true}></IndexNavbar>
       <main className="profile-page">
         <section className="relative block h-500-px">
           <div
@@ -108,8 +124,9 @@ export default function Profile() {
                       <button
                         className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                         type="button"
+                        onClick={handleLogout}
                       >
-                        Connect
+                        Logout
                       </button>
                     </div>
                   </div>

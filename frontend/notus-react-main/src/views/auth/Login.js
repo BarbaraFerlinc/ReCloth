@@ -22,7 +22,7 @@ export default function Login() {
     if (password.length > 5) {
       try {
         await signIn(email, password);
-        history.push("/");
+        history.push("/profile");
       } catch (er) {
         setError(er.message);
         console.log(er.message);
