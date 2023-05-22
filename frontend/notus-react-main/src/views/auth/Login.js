@@ -44,7 +44,7 @@ export default function Login() {
       navigate("/profile")
     } catch (er) {
       if (er.message === "Firebase: Error (auth/user-not-found).") {
-        setPasswordError("Email or password is incorrect.");
+        setPasswordError("User with this email does not exist.");
       } else if (er.message === "Firebase: Error (auth/wrong-password).") {
         console.log("wrong password")
         setPasswordError("Email or password is incorrect.");

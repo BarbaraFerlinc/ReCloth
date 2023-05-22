@@ -34,7 +34,7 @@ async function baza() {
         table.increments('id');
         table.string('naslov').notNullable();
         table.string('velikost').notNullable();
-        table.string('opis').notNullable();
+        table.text('opis', 'longtext').notNullable();
         table.integer('cena').notNullable();
         table.string('lokacija').notNullable();
         table.boolean('za_zamenjavo').notNullable();
