@@ -12,8 +12,12 @@ export default function Profile() {
 
   const [uporabnik, setUporabnik] = useState({});
   const [uporabnikovId, setUporabnikovId] = useState(0);
+  const [oglasi, setOglasi] = useState([]);
+  const [profil, setProfil] = useState(null);
 
-  const {user, logout} = UserAuth();
+
+
+  const { user, logout } = UserAuth();
 
   const navigate = useNavigate();
 
@@ -30,27 +34,37 @@ export default function Profile() {
   let ocena = 0;
   let komentarji = [];
   let artikli = [];
-  
+
   useEffect(() => {
     if (user) {
       const uporabnikovEmail = user.email;
       console.log("Uporabnikov email je: ", uporabnikovEmail)
 
       api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-          .then(res => {
-              const userId = res.data.userId;
-              setUporabnikovId(userId);
-              console.log("Uporabnikov ID je: ", userId);
-          })
-          .catch(err => {
-              console.error(err);
-          });
+        .then(res => {
+          const userId = res.data.userId;
+          setUporabnikovId(userId);
+          console.log("Uporabnikov ID je: ", userId);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+
+      api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
+        .then(res => {
+          const uporabnik_profil = res.data.user;
+          setProfil(uporabnik_profil);
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   }, [user]);
 
-  const steviloKomentarjev = () => {};
+  const steviloKomentarjev = () => { };
 
-  const izracunajOceno = () => {};
+  const izracunajOceno = () => { };
 
   const fetchUser = async (id) => {
     try {
@@ -62,15 +76,28 @@ export default function Profile() {
     }
   };
 
+  const fetchOglasi = async (id) => {
+    try {
+      const response = await api.get(`/artikel/profil/${id}`);
+      //console.log(response.data);
+      setOglasi(response.data);
+    } catch (error) {
+      console.error("Napaka pri pridobivanju oglasov uporabnika", error);
+    }
+  };
+
+  console.log(oglasi);
+
   useEffect(() => {
     fetchUser(uporabnikovId);
+    fetchOglasi(uporabnikovId);
     steviloKomentarjev();
     izracunajOceno();
   }, [uporabnikovId]);
 
   return (
     <>
-    <IndexNavbar fixed={true}></IndexNavbar>
+      <IndexNavbar fixed={true}></IndexNavbar>
       <main className="profile-page">
         <section className="relative block h-500-px">
           <div
@@ -121,12 +148,10 @@ export default function Profile() {
                   </div>
                   <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                     <div className="py-6 px-3 mt-32 sm:mt-0">
-                      <button
-                        className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
+                      <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={handleLogout}
-                      >
-                        Logout
+                        onClick={handleLogout}>
+                        Odjava
                       </button>
                     </div>
                   </div>
@@ -150,7 +175,7 @@ export default function Profile() {
                       </div>
                       <div className="lg:mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          {artikli.length}
+                          {oglasi.length}
                         </span>
                         <span className="text-sm text-blueGray-400">
                           Artiklov
@@ -161,41 +186,66 @@ export default function Profile() {
                 </div>
                 <div className="text-center mt-12">
                   <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                    {uporabnik.ime} {uporabnik.priimek}
+                    {profil?.ime} {profil?.priimek}
                   </h3>
-                  <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
-                    {uporabnik.drzava}
+                  <div className="mb-2 text-blueGray-600 mt-4">
+                    <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
+                    {profil?.email}
                   </div>
-                  <div className="mb-2 text-blueGray-600 mt-10">
-                    <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                    Solution Manager - Creative Tim Officer
+                  <div className="mb-2 text-blueGray-600 mt-4">
+                    <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>
+                    {profil?.telefon}
                   </div>
-                  <div className="mb-2 text-blueGray-600">
-                    <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                    University of Computer Science
+                  <div className="mb-2 text-blueGray-600 mt-4">
+                    <i className="fas fa-map-marker mr-2 text-lg text-blueGray-400"></i>
+                    {profil?.naslov}, {profil?.posta}
+                  </div>
+                  <div className="mb-2 text-blueGray-600 mt-4">
+                    <i className="fas fa-flag mr-2 text-lg text-blueGray-400"></i>
+                    {profil?.drzava}
                   </div>
                 </div>
+
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
-                      <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        An artist of considerable range, Jenna the name taken by
-                        Melbourne-raised, Brooklyn-based Nick Murphy writes,
-                        performs and records all of his own music, giving it a
-                        warm, intimate feel with a solid groove structure. An
-                        artist of considerable range.
-                      </p>
-                      <a
-                        href="#pablo"
-                        className="font-normal text-lightBlue-500"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Show more
-                      </a>
+                      <div className="flex flex-wrap justify-center">
+                        <div className="w-full lg:w-9/12 px-4">
+                          <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Moji oglasi</h6>
+                          {oglasi && oglasi.length > 0 ? (
+                            <div className="flex justify-center">
+                              <table className="min-w-full divide-y divide-blueGray-200">
+                                <thead className="bg-blueGray-100">
+                                </thead>
+                                <tbody className="bg-white divide-y divide-blueGray-700">
+                                  {oglasi.map((oglas, index) => (
+                                    <tr key={oglas.id} className="bg-blueGray-50">
+                                      <td className="py-4 px-4">{oglas?.naslov}</td>
+                                      <td className="py-4 px-4">{oglas?.cena} €</td>
+                                      <td className="py-4 px-4">
+                                        <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                          Izbriši
+                                        </button>
+                                      </td>
+                                      <td className="py-4 px-4">
+                                        <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                          Uredi
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <p className="text-xl text-blueGray-500">Nimate objavljenih oglasov!</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
