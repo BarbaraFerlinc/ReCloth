@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
+import { Link } from "react-router-dom";
 
 import Navbar from "components/Navbars/AuthNavbar.js";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
@@ -239,12 +240,12 @@ export default function Profile({ izbris }) {
                           <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Moji oglasi</h6>
                           {oglasi && oglasi.length > 0 ? (
                             <div className="flex justify-center">
-                              <table className="min-w-full divide-y divide-blueGray-200">
-                                <thead className="bg-blueGray-100">
+                              <table className="min-w-full divide-y divide-blueGray-400">
+                                <thead className="bg-blueGray-400">
                                 </thead>
-                                <tbody className="bg-white divide-y divide-blueGray-700">
+                                <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
                                   {oglasi.map((oglas, index) => (
-                                    <tr key={oglas.id} className="bg-blueGray-50">
+                                    <tr key={oglas.id} className="bg-blueGray-200">
                                       <td className="py-4 px-4">{oglas?.naslov}</td>
                                       <td className="py-4 px-4">{oglas?.cena} €</td>
                                       <td className="py-4 px-4">
@@ -257,9 +258,11 @@ export default function Profile({ izbris }) {
                                         </button>
                                       </td>
                                       <td className="py-4 px-4">
-                                        <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                                          Uredi
-                                        </button>
+                                        <Link to={`/urejanje-oglasa/${oglas.id}`}>
+                                          <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                            Uredi
+                                          </button>
+                                        </Link>
                                       </td>
                                     </tr>
                                   ))}

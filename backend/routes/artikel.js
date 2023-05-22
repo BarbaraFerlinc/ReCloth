@@ -107,42 +107,43 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;
-    const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, slika, fk_uporabnik_id, fk_kategorija_id } = req.body;
 
 
-    if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo || !slika) {
+router.put('/:id', upload.array('slika'), async (req, res) => {
+    const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, fk_uporabnik_id, fk_kategorija_id } = req.body;
+
+    if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
-    const oglas = await knex('oglas').where({ id: id }).first();
-
-    if (!oglas) {
-        return res.status(404).json({ error: 'oglas ne obstaja' });
-    }
-
-
-
     try {
-        await knex('oglas')
-            .where({ id: id })
-            .update({
-                naslov: naslov,
-                velikost: velikost,
-                opis: opis,
-                cena: cena,
-                lokacija: lokacija,
-                za_zamenjavo: za_zamenjavo,
-                slika: slika,
-                fk_uporabnik_id: fk_uporabnik_id,
-                fk_kategorija_id: fk_kategorija_id
-            });
+        const posodobiOglas = await knex('oglas').where({ id: req.params.id }).update({
+            naslov: naslov,
+            velikost: velikost,
+            opis: opis,
+            cena: cena,
+            lokacija: lokacija,
+            za_zamenjavo: za_zamenjavo,
+            fk_uporabnik_id: fk_uporabnik_id,
+            fk_kategorija_id: fk_kategorija_id
+        });
 
+        if (req.files) {
 
-        res.status(200).json({ message: 'Uspešno posodobljen oglas.', oglas: req.body });
+            await knex('slika').where({ fk_oglas_id: req.params.id }).del();
+
+            for (let i = 0; i < req.files.length; i++) {
+                await knex('slika').insert({
+                    pot: req.files[i].path,
+                    fk_oglas_id: req.params.id
+                });
+            }
+        }
+
+        res.status(200).json({ message: 'ok', oglas: posodobiOglas });
     } catch (error) {
-        res.status(500).json({ error: 'Napaka pri posodabljanju oglasa v bazi', details: error.message });
+        console.error(error)
+        res.status(500).json({ error: 'Napaka pri posodabljanju oglasa' });
     }
 });
 

@@ -14,6 +14,7 @@ import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
+import UrejanjeOglasa from "views/UrejanjeOglasa";
 
 
 const Routing = () => {
@@ -42,7 +43,11 @@ const Routing = () => {
         }
     };
 
-    const handleAdd = (oglas) => {
+    const handleAdd = () => {
+        fetchArtikle();
+    }
+
+    const handleEdit = () => {
         fetchArtikle();
     }
 
@@ -61,6 +66,7 @@ const Routing = () => {
                 <Route path="" element={<PrivateRouting />}>
                     <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
+                    <Route path="/urejanje-oglasa/:id" element={<UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} />} />
                 </Route>
             </Routes>
         </AuthContextProvider>
