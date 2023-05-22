@@ -12,6 +12,8 @@ import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
+import Zamenjava from "views/Zamenjava";
+import Nakup from "views/Nakup";
 
 const Routing = () => {
 
@@ -81,8 +83,6 @@ const Routing = () => {
         };
         fetchArtikle();
     }, []);
-
-
 
     const handleAdd = (oglas) => {
         console.log(oglas);
@@ -155,6 +155,26 @@ const Routing = () => {
                     render={(props) => (
                         <div className="bg-blueGray-200 min-h-screen">
                             <Profile {...props} />
+                        </div>
+                    )
+                    }
+                />
+                <Route
+                    path="/zamenjava/:id"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Zamenjava {...props} />
+                        </div>
+                    )
+                    }
+                />
+                <Route
+                    path="/nakup/:id"
+                    exact
+                    render={(props) => (
+                        <div className="bg-blueGray-200 min-h-screen">
+                            <Nakup {...props} />
                         </div>
                     )
                     }

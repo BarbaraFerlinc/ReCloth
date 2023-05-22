@@ -5,26 +5,30 @@ import api from "services/api";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { HighlightSpanKind } from "typescript";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 const initialState = {
     naslov: "",
     velikost: "XS",
     opis: "",
-    cena: 0,
-    lokacija: "",
-    za_zamenjavo: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
-
+    fk_oglas_id: 0,
 }
 
-export default function ObjavaOglasa({ dodaj }) {
+export default function Zamenjava() {
+    const { id } = useParams();
+    let parsan_id;
+    if (id !== undefined) {
+        parsan_id = parseInt(id, 10);
+    } else {
+        parsan_id = undefined;
+    }
+
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
-    const [zamenjava, setZamenjava] = useState(false);
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
     const { user } = UserAuth();
@@ -59,6 +63,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
         fetchKategorije();
     }, []);
+
 
     const velikosti = [
         { naziv: 'XS' },
@@ -103,16 +108,6 @@ export default function ObjavaOglasa({ dodaj }) {
             formErrors["fk_kategorija_id"] = "Prosimo, izberite kategorijo.";
         }
 
-        if (!oglas.cena || oglas.cena <= 0 || oglas.cena > 1000) {
-            formIsValid = false;
-            formErrors["cena"] = "Prosimo, vnesite veljavno ceno (med 1 in 1000).";
-        }
-
-        if (!oglas.lokacija) {
-            formIsValid = false;
-            formErrors["lokacija"] = "Prosimo, vnesite lokacijo.";
-        }
-
         if (!oglas.slika || oglas.slika.length === 0) {
             formIsValid = false;
             formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
@@ -130,11 +125,9 @@ export default function ObjavaOglasa({ dodaj }) {
                 formData.append("naslov", oglas.naslov);
                 formData.append("velikost", oglas.velikost);
                 formData.append("opis", oglas.opis);
-                formData.append("cena", Number(oglas.cena));
-                formData.append("lokacija", oglas.lokacija);
-                formData.append("za_zamenjavo", oglas.za_zamenjavo);
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
+                formData.append("fk_oglas_id", parsan_id);
 
                 if (oglas.slika) {
                     if (Array.isArray(oglas.slika)) {
@@ -146,37 +139,37 @@ export default function ObjavaOglasa({ dodaj }) {
                     }
                 }
 
-                const response = await api.post("/artikel/dodaj", formData, {
+                const response = await api.post("/zamenjava/dodaj", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
                 });
 
                 if (response.status === 200) {
-                    alert("Oglas uspešno objavljen!");
+                    alert("Oglas uspešno poslan!");
                 } else {
-                    alert("Napaka pri objavi oglasa!");
+                    alert("Napaka pri posiljanju oglasa!");
                 }
 
                 setOglas(initialState);
                 setErrors({})
 
+                // more se poslat predlog prodajalcu
+
                 history.push("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            dodaj(oglas);
+            //dodaj(oglas);
             setOglas(initialState);
         }
     };
 
     const handleChange = (e) => {
-        const { value, name, type, checked } = e.target;
+        const { value, name } = e.target;
         let valueToUse = value;
 
-        if (type === "checkbox" && name === "za_zamenjavo") {
-            valueToUse = checked ? 1 : 0;
-        } else if (name === "fk_kategorija_id") {
+        if (name === "fk_kategorija_id") {
             const selectedKategorija = kategorija.find((k) => k.id === value);
             if (selectedKategorija) {
                 valueToUse = selectedKategorija.id;
@@ -192,7 +185,6 @@ export default function ObjavaOglasa({ dodaj }) {
             return nextState;
         });
     };
-
 
     const handleFileChange = (e) => {
         let fileErrors = [];
@@ -227,23 +219,17 @@ export default function ObjavaOglasa({ dodaj }) {
                             <div className="rounded-t mb-0 px-6 py-6">
                                 <div className="text-center mb-3">
                                     <h1 className="text-blueGray-500 font-bold">
-                                        Objava oglasa
+                                        Zamenjava
                                     </h1>
                                 </div>
                                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                             </div>
                             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                                 <div className="text-blueGray-400 text-center mb-3 font-bold">
-                                    <small>Vnesite podatke o oglasu</small>
+                                    <small>Vnesite podatke o artiklu za zamenjavo</small>
                                 </div>
 
                                 <form onSubmit={handleSubmit}>
-                                    <div className="relative w-full mb-3">
-                                        <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
-                                            <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
-                                    </div>
-
                                     <div className="relative w-full mb-3">
                                         <label
                                             className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -312,40 +298,6 @@ export default function ObjavaOglasa({ dodaj }) {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        < div className="w-1/2 px-2">
-                                            <div className="relative w-full mb-3">
-                                                <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-                                                    {zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                                    placeholder={zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
-                                                    name="cena" id="cena" value={oglas.cena} onChange={handleChange}
-                                                />
-                                                <small className="text-red-500">{errors.cena}</small>
-                                            </div>
-                                        </div>
-                                        < div className="w-1/2 px-2">
-                                            <div className="relative w-full mb-3">
-                                                <label
-                                                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                                                    htmlFor="grid-password"
-                                                >
-                                                    Lokacija
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                                    placeholder="Lokacija"
-                                                    name="lokacija" id="lokacija" value={oglas.lokacija} onChange={handleChange}
-                                                />
-                                                <small className="text-red-500">{errors.lokacija}</small>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div className="relative w-full mb-3">
                                         <label
                                             className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -364,14 +316,13 @@ export default function ObjavaOglasa({ dodaj }) {
                                         <small className="text-red-500">
                                             {Array.isArray(errors.slika) ? errors.slika[0] : errors.slika}
                                         </small>
-
                                     </div>
                                     <div className="text-center mt-6">
                                         <button
                                             className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                                             type="submit"
                                         >
-                                            Objavi
+                                            Poslji
                                         </button>
                                     </div>
                                 </form>
@@ -384,5 +335,4 @@ export default function ObjavaOglasa({ dodaj }) {
             <Footer />
         </>
     )
-
 }

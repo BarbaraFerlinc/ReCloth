@@ -77,7 +77,6 @@ router.get('/vsi', async (req, res) => {
     }
 });
 
-
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -111,7 +110,6 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, slika, fk_uporabnik_id, fk_kategorija_id } = req.body;
 
-
     if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo || !slika) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
@@ -121,8 +119,6 @@ router.put('/:id', async (req, res) => {
     if (!oglas) {
         return res.status(404).json({ error: 'oglas ne obstaja' });
     }
-
-
 
     try {
         await knex('oglas')
@@ -160,8 +156,6 @@ router.get('/kategorija/:id', async (req, res) => {
     }
 });
 
-
-
 router.get('/:id/slike', async (req, res) => {
     const { id } = req.params;
 
@@ -181,14 +175,5 @@ router.get('/:id/slike', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju slik' });
     }
 });
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
