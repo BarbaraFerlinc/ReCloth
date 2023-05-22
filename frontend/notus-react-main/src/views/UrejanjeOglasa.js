@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
-
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { HighlightSpanKind } from "typescript";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const initialState = {
     naslov: "",
@@ -17,10 +18,35 @@ const initialState = {
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
-
 }
 
-export default function ObjavaOglasa({ dodaj }) {
+
+export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
+
+    const { id } = useParams();
+    let parsan_id;
+    if (id !== undefined) {
+        parsan_id = parseInt(id, 10);
+    } else {
+        parsan_id = undefined;
+    }
+
+    let izbira = seznamOglasov.find((i) => i.id === parsan_id);
+    console.log(izbira?.slike);
+
+    initialState.naslov = izbira?.naslov;
+    initialState.velikost = izbira?.velikost;
+    initialState.opis = izbira?.opis;
+    initialState.cena = izbira?.cena;
+    initialState.lokacija = izbira?.lokacija;
+    initialState.za_zamenjavo = izbira?.za_zamenjavo;
+    initialState.slika = izbira?.slike;
+    initialState.fk_uporabnik_id = izbira?.fk_uporabnik_id;
+    initialState.fk_kategorija_id = izbira?.fk_kategorija_id;
+
+
+
+
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
@@ -59,6 +85,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
         fetchKategorije();
     }, []);
+
 
     const velikosti = [
         { naziv: 'XS' },
@@ -146,7 +173,7 @@ export default function ObjavaOglasa({ dodaj }) {
                     }
                 }
 
-                const response = await api.post("/artikel/dodaj", formData, {
+                const response = await api.put(`/artikel/${id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -155,23 +182,20 @@ export default function ObjavaOglasa({ dodaj }) {
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
                     navigate('/');
+                } else {
+                    alert("Napaka pri objavi oglasa!");
                 }
+
+                onEdit(oglas);
                 setOglas(initialState);
                 setErrors({})
 
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
-                let errorMessages = {};
-                if (error.response && error.response.data && error.response.data.error) {
-                    errorMessages["slika"] = error.response.data.error;
-                } else {
-                    errorMessages["slika"] = "Napaka pri objavi oglasa!";
-                }
-                setErrors(errorMessages);
-
             }
-            dodaj(oglas);
-        };
+
+            setOglas(initialState);
+        }
     };
 
     const handleChange = (e) => {
@@ -234,14 +258,14 @@ export default function ObjavaOglasa({ dodaj }) {
                             <div className="rounded-t mb-0 px-6 py-6">
                                 <div className="text-center mb-3">
                                     <h1 className="text-blueGray-500 font-bold">
-                                        Objava oglasa
+                                        Urejanje oglasa
                                     </h1>
                                 </div>
                                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                             </div>
                             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                                 <div className="text-blueGray-400 text-center mb-3 font-bold">
-                                    <small>Vnesite podatke o oglasu</small>
+                                    <small>Vnesite nove podatke o oglasu</small>
                                 </div>
 
                                 <form onSubmit={handleSubmit}>
@@ -393,3 +417,10 @@ export default function ObjavaOglasa({ dodaj }) {
     )
 
 }
+
+
+
+
+
+
+

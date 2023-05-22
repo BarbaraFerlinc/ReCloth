@@ -74,6 +74,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { ime, priimek, email, geslo, telefon, naslov, posta, drzava } = req.body;
@@ -134,5 +135,33 @@ router.post('/prijavljen-uporabnik', async (req, res) => {
         return res.status(500).send({ error: 'Something went wrong' });
     }
 });
+
+
+
+router.post('/prijavljen-profil', async (req, res) => {
+    const email = req.body.email;
+    console.log(email)
+    if (!email) {
+        return res.status(400).send({ error: 'Email is required' });
+    }
+
+    try {
+        const user = await knex('uporabnik')
+            .where('email', email)
+            .first();
+        if (!user) {
+            return res.status(404).send({ error: 'Ni uporabnika s tem emailom' });
+        }
+        return res.status(200).send({ user });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: 'Something went wrong' });
+    }
+});
+
+
+
+
+
 module.exports = router;
 

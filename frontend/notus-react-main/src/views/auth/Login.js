@@ -1,36 +1,60 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserAuth } from "context/AuthContext";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const { signIn } = UserAuth();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('')
-    if (password.length > 5) {
-      try {
-        await signIn(email, password);
-        history.push("/profile");
-      } catch (er) {
-        setError(er.message);
+    setEmailError('');
+    setPasswordError('');
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+    if (email === '') {
+      setEmailError('Email is required.');
+    } else if (!emailRegex.test(email)) {
+      setEmailError('Please provide a valid email address.');
+    }
+
+    if (password === '') {
+      setPasswordError('Password is required.');
+    }
+
+    if (emailError || passwordError) {
+      return;
+    }
+
+    try {
+      await signIn(email, password);
+      navigate("/profile")
+    } catch (er) {
+      if (er.message === "Firebase: Error (auth/user-not-found).") {
+        setPasswordError("User with this email does not exist.");
+      } else if (er.message === "Firebase: Error (auth/wrong-password).") {
+        console.log("wrong password")
+        setPasswordError("Email or password is incorrect.");
+      } else if (er.message === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).") {
+        setPasswordError("Too many failed login attempts. Please try again later.");
         console.log(er.message);
       }
-    } else {
-      window.alert("Geslo mora biti dolgo vsaj 6 znakov");
-    }
-  };
+
+    };
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -102,6 +126,7 @@ export default function Login() {
                       placeholder="Email"
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                    {emailError && <p className="text-red-500">{emailError}</p>}
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -125,20 +150,10 @@ export default function Login() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
-                  </div>
 
-                  <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        id="customCheckLogin"
-                        type="checkbox"
-                        className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      />
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        Remember me
-                      </span>
-                    </label>
                   </div>
+                  {passwordError && <p className="text-red-500">{passwordError}</p>}
+
 
                   <div className="text-center mt-6">
                     <button

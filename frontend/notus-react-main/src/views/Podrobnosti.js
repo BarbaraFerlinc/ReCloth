@@ -6,8 +6,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik slik
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { Route } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
+
 
 
 export default function Podrobnosti({ seznamOglasov }) {
@@ -30,8 +30,6 @@ export default function Podrobnosti({ seznamOglasov }) {
         slidesToScroll: 1
     };
 
-    console.log(izbira);
-    //console.log(izbira?.slike)
 
     return (
         <>
@@ -58,18 +56,19 @@ export default function Podrobnosti({ seznamOglasov }) {
                                 </div>
                                 <div className="mb-2 text-blueGray-600 mt-4">
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
-                                    Opis: {izbira?.opis}
+                                    Opis: <br></br>{izbira?.opis}
                                 </div>
                                 <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
-                                    <div className="mb-2 text-blueGray-600 mt-4">
-                                        <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>
-                                        {izbira?.ime} {izbira?.priimek}
+                                    <div className="mb-2 text-blueGray-900 mt-4">
+                                        <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
+                                        Prodajalec: {izbira?.ime} {izbira?.priimek}
                                     </div>
                                 </Link>
+                                <br></br>
                                 <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
                                     <div className="px-6">
                                         <section className="relative block" style={{ height: "70vh" }}>
-                          <br></br>
+                                            <br></br>
                                             <Slider {...settings}>
                                                 {izbira?.slike.map((slika, index) => {
                                                     const slikaPath = slika.split("\\uploads\\")[1];
@@ -82,7 +81,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                                                 style={{
                                                                     objectFit: "cover",
                                                                     height: "60vh",
-                                                                    width: "40%",
+                                                                    width: "60%",
                                                                     margin: "auto",
                                                                 }}
                                                             />

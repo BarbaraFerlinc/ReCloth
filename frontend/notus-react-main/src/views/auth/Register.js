@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "components/Footers/Footer";
 
 const initialState = {
@@ -30,7 +30,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const {createUser} = UserAuth();
 
@@ -138,7 +138,7 @@ export default function Register() {
           
           await createUser(email, password);
 
-          history.push("/profile");
+          navigate("/profile")
         } catch (er) {
           setError(er.message);
           console.log(er.message);
@@ -175,7 +175,7 @@ export default function Register() {
           </button>
         </Link>
       </div>
-      <br></br><br></br>
+      <br></br><br></br><br></br><br></br><br></br><br></br>
       <div className="container mx-auto px-4 pt-20">
         <div className="flex content-center items-center justify-center h-screen">
           <div className="w-full lg:w-6/12 px-4">
@@ -332,8 +332,9 @@ export default function Register() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
-                    <small className="text-red-500">{errors.geslo}</small>
+                    
                   </div>
+                  <small className="text-red-500">{errors.geslo}</small>
 
                   <div className="text-center mt-6">
                     <button
@@ -356,7 +357,7 @@ export default function Register() {
           </div>
         </div>
       </div>
-      <br></br><br></br><br></br><br></br>
+      <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
       <Footer />
     </>
   );

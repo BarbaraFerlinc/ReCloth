@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { UserAuth } from "context/AuthContext";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 
 // components
 
@@ -13,13 +13,13 @@ export default function Navbar(props) {
 
   const {user, logout} = UserAuth();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await logout();
       console.log("use: " + user);
-      history.push("/login");
+      navigate("/login");
     } catch (e) {
       console.log(e.message);
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes, Redirect } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import Index from "views/Index.js";
@@ -14,61 +14,12 @@ import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
 import Zamenjava from "views/Zamenjava";
 import Nakup from "views/Nakup";
+import { UserAuth } from "context/AuthContext";
+import PrivateRouting from "./PrivateRouting";
+import UrejanjeOglasa from "views/UrejanjeOglasa";
+
 
 const Routing = () => {
-
-    const poljeOglasov = [
-        {
-            id: 1001,
-            naslov: "Majica 1",
-            opis: "Udobna majica z dolgimi rokavi",
-            cena: "25,99",
-            zamenjava: false,
-            slika: require("assets/img/team-2-800x800.jpg").default,
-        },
-        {
-            id: 1002,
-            naslov: "Majica 2",
-            opis: "Modna majica z kratkimi rokavi",
-            cena: "19,99",
-            zamenjava: false,
-            slika: require("assets/img/team-3-800x800.jpg").default,
-        },
-        {
-            id: 1003,
-            naslov: "Hlače 1",
-            opis: "Kavbojke slim fit",
-            cena: "45,99",
-            zamenjava: false,
-            slika: require("assets/img/team-4-470x470.png").default,
-        },
-        {
-            id: 1004,
-            naslov: "Hlače 2",
-            opis: "Eleganten videz s klasičnimi hlačami",
-            cena: "39,99",
-            zamenjava: true,
-            slika: require("assets/img/team-1-800x800.jpg").default,
-        },
-        {
-            id: 1005,
-            naslov: "Obleka 1",
-            opis: "Čudovita večerna obleka",
-            cena: "89,99",
-            zamenjava: false,
-            slika: require("assets/img/team-2-800x800.jpg").default,
-        },
-        {
-            id: 1006,
-            naslov: "Obleka 2",
-            opis: "Elegantna poslovna obleka",
-            cena: "79,99",
-            zamenjava: true,
-            slika: require("assets/img/team-3-800x800.jpg").default,
-        },
-    ];
-
-    const [seznamOglasov, setSeznamOglasov] = useState(poljeOglasov);
     const [seznam, setSeznam] = useState([]);
     const [error, setError] = useState(null);
 
@@ -84,103 +35,44 @@ const Routing = () => {
         fetchArtikle();
     }, []);
 
-    const handleAdd = (oglas) => {
-        console.log(oglas);
-        let posodobljeniOglasi = Array.from(seznam);
-        posodobljeniOglasi.push(oglas);
-        setSeznam(posodobljeniOglasi);
+    const fetchArtikle = async () => {
+        try {
+            const response = await api.get('/artikel/vsi');
+            console.log(response.data)
+            setSeznam(response.data);
+        } catch (error) {
+            console.error("Napaka pri pridobivanju oglasov", error);
+        }
+    };
 
-        const fetchArtikle = async () => {
-            try {
-                const response = await api.get('/artikel/vsi');
-                console.log(response.data)
-                setSeznam(response.data);
-            } catch (error) {
-                console.error("Napaka pri pridobivanju oglasov", error);
-            }
-        };
+    const handleAdd = () => {
         fetchArtikle();
     }
 
+    const handleEdit = () => {
+        fetchArtikle();
+    }
+
+    const izbris = (id) => {
+        setSeznam(seznam.filter((oglas) => oglas.id !== id));
+    };
+
     return (<>
         <AuthContextProvider>
-            <Switch>
-                <Route
-                    path="/"
-                    exact
-                    render={(props) => <Index {...props} seznamOglasov={seznam} />}
-                />
-                <Route
-                    path="/oglas/:id"
-                    exact
-                    render={(props) => <Podrobnosti {...props} seznamOglasov={seznam} />}
-                />
-                <Route
-                    path="/prodajalec/:id"
-                    exact
-                    render={() => <ProdajalecProfil />}
-                />
-
-                <Route
-                    path="/objavaOglasa"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <ObjavaOglasa {...props} dodaj={handleAdd} />
-                        </div>
-                    )}
-                />
-                <Route
-                    path="/login"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <Login {...props} />
-                        </div>
-                    )}
-                />
-                <Route
-                    path="/register"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <Register {...props} />
-                        </div>
-                    )
-                    }
-                />
-                <Route
-                    path="/profile"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <Profile {...props} />
-                        </div>
-                    )
-                    }
-                />
-                <Route
-                    path="/zamenjava/:id"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <Zamenjava {...props} />
-                        </div>
-                    )
-                    }
-                />
-                <Route
-                    path="/nakup/:id"
-                    exact
-                    render={(props) => (
-                        <div className="bg-blueGray-200 min-h-screen">
-                            <Nakup {...props} />
-                        </div>
-                    )
-                    }
-                />
-                < Redirect from="*" to="/" />
-            </Switch >
+            <Routes>
+                <Route path="/" element={<Index seznamOglasov={seznam} />} />
+                <Route path="/oglas/:id" element={<Podrobnosti seznamOglasov={seznam} />} />
+                <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
+                <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
+                <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />
+                <Route path="" element={<PrivateRouting />}>
+                    <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
+                    <Route path="/profile" element={<Profile izbris={izbris} />} />
+                    <Route path="/urejanje-oglasa/:id" element={<UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} />} />
+                    <Route path="/zamenjava/:id" element={<Zamenjava />} />
+                    <Route path="/nakup/:id" element={<Nakup />} />
+                </Route>
+            </Routes>
         </AuthContextProvider>
     </>
     );
