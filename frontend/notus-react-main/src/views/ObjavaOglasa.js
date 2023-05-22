@@ -4,7 +4,7 @@ import api from "services/api";
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 import { HighlightSpanKind } from "typescript";
 
 const initialState = {
@@ -29,7 +29,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
     const { user } = UserAuth();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const uporabnikovEmail = user.email;
@@ -155,6 +155,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
+                    navigate('/');
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
@@ -162,7 +163,6 @@ export default function ObjavaOglasa({ dodaj }) {
                 setOglas(initialState);
                 setErrors({})
 
-                history.push("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
@@ -172,6 +172,9 @@ export default function ObjavaOglasa({ dodaj }) {
     };
 
     const handleChange = (e) => {
+        if (e.target.id === 'za_zamenjavo') {
+            setZamenjava(!zamenjava);
+        }
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
 

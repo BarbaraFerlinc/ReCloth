@@ -6,7 +6,7 @@ import Navbar from "components/Navbars/AuthNavbar.js";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import api from "services/api";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom"
 
 export default function Profile() {
 
@@ -15,13 +15,13 @@ export default function Profile() {
 
   const {user, logout} = UserAuth();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await logout();
       console.log("use: " + user);
-      history.push("/login");
+      navigate("/login");
     } catch (e) {
       console.log(e.message);
     }

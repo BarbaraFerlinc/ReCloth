@@ -17,14 +17,8 @@ export default function Index({ seznamOglasov }) {
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
 
-  console.log(seznamOglasov);
 
-  const filteredOglasi = seznamOglasov.filter(oglas =>
-    (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
-    (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
-    (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
-    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
-  );
+
 
   const handleRefresh = () => {
     window.location.reload();
@@ -42,6 +36,13 @@ export default function Index({ seznamOglasov }) {
 
     fetchKategorije();
   }, []);
+  
+  const filteredOglasi = seznamOglasov.filter(oglas =>
+    (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
+    (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
+    (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
+    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
+  );
 
   return (
     <>
@@ -144,7 +145,7 @@ export default function Index({ seznamOglasov }) {
                           alt="..."
                           className="w-full align-middle rounded-lg"
                           src={`http://localhost:9000/uploads/${slikaPath}`}
-                          style={{ objectFit: "cover", objectPosition: "center", height: "400px", width: "100%"}}
+                          style={{ objectFit: "cover", objectPosition: "center", height: "400px", width: "100%" }}
                         />
                       </Link>
                       <div className="mt-4">

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "components/Footers/Footer";
 
 const initialState = {
@@ -30,7 +30,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const {createUser} = UserAuth();
 
@@ -138,7 +138,7 @@ export default function Register() {
           
           await createUser(email, password);
 
-          history.push("/profile");
+          navigate("/profile")
         } catch (er) {
           setError(er.message);
           console.log(er.message);

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserAuth } from "context/AuthContext";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -14,7 +14,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const { signIn } = UserAuth();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ export default function Login() {
     if (password.length > 5) {
       try {
         await signIn(email, password);
-        history.push("/profile");
+        navigate("/profile")
       } catch (er) {
         setError(er.message);
         console.log(er.message);
