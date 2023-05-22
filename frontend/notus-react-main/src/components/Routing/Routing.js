@@ -46,6 +46,10 @@ const Routing = () => {
         fetchArtikle();
     }
 
+    const izbris = (id) => {
+        setSeznam(seznam.filter((oglas) => oglas.id !== id));
+    };
+
     return (<>
         <AuthContextProvider>
             <Routes>
@@ -57,7 +61,7 @@ const Routing = () => {
 
                 <Route path="" element={<PrivateRouting />}>
                     <Route path="objavaOglasa" element={<ObjavaOglasa dodaj={handleAdd} />} />
-                    <Route path="profile" element={<Profile />} />
+                    <Route path="/profile" element={<Profile izbris={izbris} />} />
                 </Route>
             </Routes>
         </AuthContextProvider>
