@@ -139,13 +139,23 @@ export default function Profile() {
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                     <div className="relative">
-                      <img
-                        alt="..."
-                        src={require("assets/img/team-2-800x800.jpg").default}
-                        className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                      />
+                      {profil ?
+                        <div
+                          className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px text-5xl font-bold text-blueGray-700 flex items-center justify-center"
+                          style={{ height: '150px', width: '150px', backgroundColor: "#d8b4fe" }}
+                        >
+                          {profil.ime[0]}{profil.priimek[0]}
+                        </div>
+                        :
+                        <img
+                          alt="..."
+                          src={require("assets/img/team-2-800x800.jpg").default}
+                          className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
+                        />
+                      }
                     </div>
                   </div>
+
                   <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                     <div className="py-6 px-3 mt-32 sm:mt-0">
                       <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

@@ -54,10 +54,9 @@ const Routing = () => {
                 <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />
-
                 <Route path="" element={<PrivateRouting />}>
-                    <Route path="objavaOglasa" element={<ObjavaOglasa dodaj={handleAdd} />} />
-                    <Route path="profile" element={<Profile />} />
+                    <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
+                    <Route path="/profile" element={<Profile />} />
                 </Route>
             </Routes>
         </AuthContextProvider>

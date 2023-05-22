@@ -175,7 +175,7 @@ export default function Register() {
           </button>
         </Link>
       </div>
-      <br></br><br></br>
+      <br></br><br></br><br></br><br></br><br></br><br></br>
       <div className="container mx-auto px-4 pt-20">
         <div className="flex content-center items-center justify-center h-screen">
           <div className="w-full lg:w-6/12 px-4">
@@ -332,8 +332,9 @@ export default function Register() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
-                    <small className="text-red-500">{errors.geslo}</small>
+                    
                   </div>
+                  <small className="text-red-500">{errors.geslo}</small>
 
                   <div className="text-center mt-6">
                     <button
@@ -356,7 +357,7 @@ export default function Register() {
           </div>
         </div>
       </div>
-      <br></br><br></br><br></br><br></br>
+      <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
       <Footer />
     </>
   );
