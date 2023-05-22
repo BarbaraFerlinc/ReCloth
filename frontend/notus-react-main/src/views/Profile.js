@@ -8,7 +8,7 @@ import Footer from "components/Footers/Footer.js";
 import api from "services/api";
 import { useNavigate } from "react-router-dom"
 
-export default function Profile() {
+export default function Profile({ izbris }) {
 
   const [uporabnik, setUporabnik] = useState({});
   const [uporabnikovId, setUporabnikovId] = useState(0);
@@ -50,7 +50,6 @@ export default function Profile() {
           console.error(err);
         });
 
-
       api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
         .then(res => {
           const uporabnik_profil = res.data.user;
@@ -86,7 +85,7 @@ export default function Profile() {
     }
   };
 
-  console.log(oglasi);
+
 
   useEffect(() => {
     fetchUser(uporabnikovId);
@@ -94,6 +93,22 @@ export default function Profile() {
     steviloKomentarjev();
     izracunajOceno();
   }, [uporabnikovId]);
+
+  console.log(oglasi);
+
+
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/artikel/${id}`);
+      fetchOglasi(uporabnikovId);
+      izbris(id);
+    } catch (error) {
+      console.error("Error deleting advertisement", error);
+    }
+  };
+
+
 
   return (
     <>
@@ -233,7 +248,11 @@ export default function Profile() {
                                       <td className="py-4 px-4">{oglas?.naslov}</td>
                                       <td className="py-4 px-4">{oglas?.cena} €</td>
                                       <td className="py-4 px-4">
-                                        <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                        <button
+                                          className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                          type="button"
+                                          onClick={() => handleDelete(oglas.id)}
+                                        >
                                           Izbriši
                                         </button>
                                       </td>
