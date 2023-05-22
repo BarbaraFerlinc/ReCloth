@@ -57,12 +57,12 @@ export default function Podrobnosti({ seznamOglasov }) {
                                 </div>
                                 <div className="mb-2 text-blueGray-600 mt-4">
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
-                                    Opis: {izbira?.opis}
+                                    Opis: <br></br>{izbira?.opis}
                                 </div>
                                 <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
                                     <div className="mb-2 text-blueGray-900 mt-4">
                                         <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
-                                        {izbira?.ime} {izbira?.priimek}
+                                        Prodajalec: {izbira?.ime} {izbira?.priimek}
                                     </div>
                                 </Link>
                                 <br></br>

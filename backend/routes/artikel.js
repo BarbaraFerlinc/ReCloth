@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../knexConfig');
 var path = require('path');
+const maxSize = 30 * 1024 * 1024; // 1 MB
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -13,13 +15,30 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({ storage: storage });
+var upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: maxSize // omejitev velikosti datoteke na 2MB
+    }
+});
 
 router.post('/dodaj', upload.array('slika'), async (req, res) => {
     const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, fk_uporabnik_id, fk_kategorija_id } = req.body;
 
     if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
+    }
+
+    if (req.files.length > 5) {
+        return res.status(400).json({ error: 'Lahko naložite največ 5 slik.' });
+    }
+
+    if (req.files) {
+        for (let i = 0; i < req.files.length; i++) {
+            if (req.files[i].size > maxSize) {
+                return res.status(400).json({ error: 'Vsaka slika mora biti manjša od 1MB' });
+            }
+        }
     }
 
     try {
@@ -33,7 +52,6 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
             fk_uporabnik_id: fk_uporabnik_id,
             fk_kategorija_id: fk_kategorija_id
         });
-        console.log(novOglas)
 
         if (req.files) {
             console.log(req.files)

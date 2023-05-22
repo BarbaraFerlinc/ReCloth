@@ -156,19 +156,23 @@ export default function ObjavaOglasa({ dodaj }) {
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
                     navigate('/');
-                } else {
-                    alert("Napaka pri objavi oglasa!");
                 }
-
                 setOglas(initialState);
                 setErrors({})
 
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
+                let errorMessages = {};
+                if (error.response && error.response.data && error.response.data.error) {
+                    errorMessages["slika"] = error.response.data.error;
+                } else {
+                    errorMessages["slika"] = "Napaka pri objavi oglasa!";
+                }
+                setErrors(errorMessages);
+
             }
             dodaj(oglas);
-            setOglas(initialState);
-        }
+        };
     };
 
     const handleChange = (e) => {
