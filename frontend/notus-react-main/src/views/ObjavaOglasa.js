@@ -4,6 +4,8 @@ import api from "services/api";
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { HighlightSpanKind } from "typescript";
 
 const initialState = {
     naslov: "",
@@ -26,6 +28,8 @@ export default function ObjavaOglasa({ dodaj }) {
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
     const { user } = UserAuth();
+
+    const history = useHistory();
 
     useEffect(() => {
         const uporabnikovEmail = user.email;
@@ -157,6 +161,8 @@ export default function ObjavaOglasa({ dodaj }) {
 
                 setOglas(initialState);
                 setErrors({})
+
+                history.push("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }

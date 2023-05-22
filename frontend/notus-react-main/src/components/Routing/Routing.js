@@ -15,8 +15,6 @@ import ProdajalecProfil from "views/ProdajalecProfil";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 
-
-
 const Routing = () => {
 
     const poljeOglasov = [

@@ -138,7 +138,7 @@ export default function Register() {
           
           await createUser(email, password);
 
-          history.push("/");
+          history.push("/profile");
         } catch (er) {
           setError(er.message);
           console.log(er.message);
