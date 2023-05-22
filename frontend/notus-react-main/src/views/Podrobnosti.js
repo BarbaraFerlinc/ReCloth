@@ -30,8 +30,6 @@ export default function Podrobnosti({ seznamOglasov }) {
         slidesToScroll: 1
     };
 
-    console.log(izbira);
-    //console.log(izbira?.slike)
 
 
     return (
@@ -83,7 +81,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                                                 style={{
                                                                     objectFit: "cover",
                                                                     height: "60vh",
-                                                                    width: "40%",
+                                                                    width: "60%",
                                                                     margin: "auto",
                                                                 }}
                                                             />

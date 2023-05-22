@@ -12,6 +12,8 @@ import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
+import { UserAuth } from "context/AuthContext";
+import PrivateRouting from "./PrivateRouting";
 
 
 
@@ -122,8 +124,7 @@ const Routing = () => {
                     exact
                     render={() => <ProdajalecProfil />}
                 />
-
-                <Route
+                <PrivateRouting
                     path="/objavaOglasa"
                     exact
                     render={(props) => (
@@ -151,7 +152,7 @@ const Routing = () => {
                     )
                     }
                 />
-                <Route
+                <PrivateRouting
                     path="/profile"
                     exact
                     render={(props) => (
