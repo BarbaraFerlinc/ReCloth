@@ -183,9 +183,18 @@ router.get('/:id/slike', async (req, res) => {
 });
 
 
+router.get('/profil/:id', async (req, res) => {
+    const prodajalec_id = req.params.id;
 
-
-
+    try {
+        const oglas = await knex('oglas')
+            .select('*')
+            .where('fk_uporabnik_id', prodajalec_id);
+        res.status(200).json(oglas);
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju oglasov' });
+    }
+});
 
 
 
