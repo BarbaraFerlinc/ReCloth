@@ -41,9 +41,11 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     initialState.cena = izbira?.cena;
     initialState.lokacija = izbira?.lokacija;
     initialState.za_zamenjavo = izbira?.za_zamenjavo;
-    initialState.slika = izbira?.slike;
+
     initialState.fk_uporabnik_id = izbira?.fk_uporabnik_id;
     initialState.fk_kategorija_id = izbira?.fk_kategorija_id;
+
+    //console.log("initial state: " + initialState.slika);
 
 
 
@@ -141,10 +143,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             formErrors["lokacija"] = "Prosimo, vnesite lokacijo.";
         }
 
-        if (!oglas.slika || oglas.slika.length === 0) {
-            formIsValid = false;
-            formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
-        }
         setErrors(formErrors);
         return formIsValid;
     }
@@ -164,7 +162,14 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
 
-                if (oglas.slika) {
+                // Append existing files from the `izbira` object
+                if (izbira && izbira.slike) {
+                    for (let file of izbira.slike) {
+                        console.log("to je ta slika" + file)
+                        formData.append("slika", file);
+                    }
+                } else if (oglas.slika) {
+                    // If no new files are uploaded, use the existing `oglas.slika` property
                     if (Array.isArray(oglas.slika)) {
                         oglas.slika.forEach((slika) => {
                             formData.append("slika", slika);
@@ -173,7 +178,9 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                         formData.append("slika", oglas.slika);
                     }
                 }
-
+                for (const entry of formData.entries()) {
+                    console.log("to je entry" + entry);
+                }
                 const response = await api.put(`/artikel/${id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -182,20 +189,22 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
-                    navigate(`/profile`);
+                    // navigate(`/profile`);
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
 
                 setOglas(initialState);
-                setErrors({})
-
+                setErrors({});
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            onEdit(oglas);
+            //onEdit(oglas);
         }
     };
+
+
+
 
     const handleChange = (e) => {
         const { value, name, type, checked } = e.target;
