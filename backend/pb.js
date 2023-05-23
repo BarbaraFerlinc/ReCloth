@@ -1,10 +1,11 @@
 var knex = require('./knexConfig');
 
 async function baza() {
-
+    await knex.schema.dropTableIfExists('slika_zamenjanih').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('slika').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('ocena').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('obvestilo').catch((err) => { console.log(err); throw err });
+    await knex.schema.dropTableIfExists('zamenjani').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('nakup').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('nacin_placila').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('oglas').catch((err) => { console.log(err); throw err });
@@ -50,6 +51,23 @@ async function baza() {
     }).then(() => console.log('Tabela slika ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
 
+    await knex.schema.createTable('zamenjani', (table) => {
+        table.increments('id');
+        table.string('naslov').notNullable();
+        table.string('velikost').notNullable();
+        table.text('opis', 'longtext').notNullable();
+        table.integer('fk_oglas_id').references('id').inTable('oglas').unsigned().onDelete('CASCADE');
+        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
+        table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');
+    }).then(() => console.log('Tabela zamenjani ustvarjena.'))
+        .catch((err) => { console.log(err); throw err });
+
+    await knex.schema.createTable('slika_zamenjanih', (table) => {
+        table.increments('id');
+        table.string('pot').notNullable();
+        table.integer('fk_zamenjani_id').references('id').inTable('zamenjani').unsigned().onDelete('CASCADE');
+    }).then(() => console.log('Tabela slika ustvarjena.'))
+        .catch((err) => { console.log(err); throw err });
 
     await knex.schema.createTable('nacin_placila', (table) => {
         table.increments('id');
