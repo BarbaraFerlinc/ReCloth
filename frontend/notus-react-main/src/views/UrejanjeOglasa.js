@@ -32,7 +32,8 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     }
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
-    console.log(izbira?.slike);
+    console.log(izbira);
+    //console.log(izbira?.slike);
 
     initialState.naslov = izbira?.naslov;
     initialState.velikost = izbira?.velikost;
@@ -181,20 +182,18 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
-                    navigate('/');
+                    navigate(`/profile`);
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
 
-                onEdit(oglas);
                 setOglas(initialState);
                 setErrors({})
 
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-
-            setOglas(initialState);
+            onEdit(oglas);
         }
     };
 
@@ -244,6 +243,11 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             });
             setErrors(prevState => ({ ...prevState, slika: [] }));
         }
+    }
+
+
+    if (uporabnikovId !== oglas.fk_uporabnik_id) {
+        navigate('/');
     }
 
     return (

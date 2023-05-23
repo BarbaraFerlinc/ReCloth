@@ -58,7 +58,7 @@ export default function Navbar(props) {
                 className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
               >
                 <i className="fas fa-user-circle text-lg leading-lg mr-2"></i>
-                <span className="lg:hidden inline-block ml-2">My Profile</span>
+                <span className="lg:hidden inline-block ml-2">Moj profil</span>
               </Link>
             </li>
           </ul>

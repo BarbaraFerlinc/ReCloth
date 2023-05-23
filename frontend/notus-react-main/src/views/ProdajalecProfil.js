@@ -77,23 +77,6 @@ export default function ProdajalecProfil() {
                                             <i className="fas fa-flag mr-2 text-lg text-blueGray-400"></i>
                                             {prodajalec.drzava}
                                         </div>
-                                        <h6 className="text-xl font-semibold leading-normal text-blueGray-700 mb-4 mt-20">Ostali oglasi prodajalca</h6>
-                                        <div className="flex justify-center">
-                                            <table className="min-w-full divide-y divide-blueGray-400">
-                                                <thead className="bg-blueGray-400">
-                                                </thead>
-                                                <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
-                                                    {oglasiProdajalca?.map((oglas, index) => (
-                                                        <tr key={oglas.id} className="bg-blueGray-200">
-                                                            <td className="py-4 px-4">{oglas?.naslov}</td>
-                                                            <td className="py-4 px-4">{oglas?.cena} €</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-
-
-                                        </div>
                                         <br></br><br></br>
                                     </>
                                 )}

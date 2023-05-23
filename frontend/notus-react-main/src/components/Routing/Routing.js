@@ -66,7 +66,7 @@ const Routing = () => {
                 <Route path="" element={<PrivateRouting />}>
                     <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
-                    <Route path="/urejanje-oglasa/:id" element={<UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} />} />
+                    <Route path="/urejanje-oglasa/:id" element={<div className="bg-blueGray-200 min-h-screen"><UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} /></div>} />
                 </Route>
             </Routes>
         </AuthContextProvider>
