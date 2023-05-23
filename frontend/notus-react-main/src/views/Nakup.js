@@ -4,8 +4,8 @@ import api from "services/api";
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const initialState = {
     za_dostavo: false,
@@ -37,7 +37,7 @@ export default function Nakup() {
 
     const { user } = UserAuth();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const uporabnikovEmail = user.email;
@@ -94,7 +94,7 @@ export default function Nakup() {
 
                 // more se poslat predlog prodajalcu
 
-                history.push("/profile");
+                navigate("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
