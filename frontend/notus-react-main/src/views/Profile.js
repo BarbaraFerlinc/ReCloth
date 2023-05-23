@@ -89,14 +89,12 @@ export default function Profile({ izbris }) {
 
   const fetchZamenjani = async (id) => {
     try {
-      const response = await api.get(`/zamenjava/zamenjani/${id}`);
+      const response = await api.get(`/zamenjava/zamenjanii/${id}`);
       setZamenjaniOglasi(response.data);
     } catch (error) {
       console.error("Napaka pri pridobivanju zamenjanih uporabnika", error);
     }
   };
-
-
 
 
   useEffect(() => {
@@ -108,7 +106,7 @@ export default function Profile({ izbris }) {
   }, [uporabnikovId]);
 
   console.log(oglasi);
-
+  console.log(zamenjaniOglasi)
 
 
 

@@ -65,12 +65,13 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
     }
 });
 
-router.get('/zamenjani/:uporabnikId', async (req, res) => {
-    const { uporabnikId } = req.params;
+
+router.get('/zamenjani/:fk_oglas_id', async (req, res) => {
+    const { fk_oglas_id } = req.params;
     try {
         const zamenjaniData = await knex('zamenjani')
             .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
-            .where('zamenjani.fk_uporabnik_id', uporabnikId)
+            .where('zamenjani.fk_oglas_id', fk_oglas_id)
             .select('zamenjani.*');
         res.json(zamenjaniData);
     } catch (error) {
@@ -78,6 +79,51 @@ router.get('/zamenjani/:uporabnikId', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
+    const fk_uporabnik_id = req.params.fk_uporabnik_id;
+
+    try {
+        const results = await knex('zamenjani')
+            .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
+            .where('oglas.fk_uporabnik_id', fk_uporabnik_id)
+            .select('zamenjani.*');
+
+        res.json(results);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred' });
+    }
+});
+
+
+router.get('/vsi', async (req, res) => {
+    try {
+        const zamenjani = await knex('zamenjani').select('*');
+
+        // Loop through each ad to get the images
+        for (let i = 0; i < zamenjani.length; i++) {
+            const slike = await knex('slika_zamenjanih')
+                .select('pot')
+                .where('fk_zamenjani_id', '=', zamenjani[i].id);
+
+            // Add the images to the ad object
+            zamenjani[i].slike = slike.map(slika => slika.pot);
+        }
+        res.status(200).json(zamenjani);
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju oglasov iz baze', details: error.message });
+    }
+});
+
+
+
+
+
+
+
+
 
 
 router.get('/:id', async (req, res) => {

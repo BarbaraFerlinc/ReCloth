@@ -21,6 +21,7 @@ import UrejanjeOglasa from "views/UrejanjeOglasa";
 
 const Routing = () => {
     const [seznam, setSeznam] = useState([]);
+    const [seznamZamenjanih, setSeznamZamenjanih] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -32,7 +33,17 @@ const Routing = () => {
                 console.error("Napaka pri pridobivanju oglasov", error);
             }
         };
+        const fetchZamenjani = async () => {
+            try {
+                const response = await api.get('/zamenjava/vsi');
+                console.log(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju oglasov", error);
+            }
+        };
+
         fetchArtikle();
+        fetchZamenjani();
     }, []);
 
     const fetchArtikle = async () => {
@@ -44,6 +55,7 @@ const Routing = () => {
             console.error("Napaka pri pridobivanju oglasov", error);
         }
     };
+
 
     const handleAdd = () => {
         fetchArtikle();
