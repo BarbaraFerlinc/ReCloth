@@ -246,8 +246,9 @@ export default function Profile({ izbris }) {
                                 <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
                                   {oglasi.map((oglas, index) => (
                                     <tr key={oglas.id} className="bg-blueGray-200">
-                                      <td className="py-4 px-4">{oglas?.naslov}</td>
-                                      <td className="py-4 px-4">{oglas?.cena} €</td>
+                                      <Link to={`/oglas/${oglas.id}`}>
+                                        <td style={{ textDecoration: 'underline' }} className="py-4 px-4 ">{oglas?.naslov}</td>
+                                      </Link >
                                       <td className="py-4 px-4">
                                         <button
                                           className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

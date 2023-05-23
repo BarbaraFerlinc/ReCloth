@@ -36,7 +36,7 @@ export default function Index({ seznamOglasov }) {
 
     fetchKategorije();
   }, []);
-  
+
   const filteredOglasi = seznamOglasov.filter(oglas =>
     (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
     (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
@@ -125,7 +125,7 @@ export default function Index({ seznamOglasov }) {
 
       <section className="pt-10 pb-15 px-4 md:px-0">
         <br></br>
-        {seznamOglasov.length === 0 ? (
+        {seznamOglasov.length === 0 || filteredOglasi.length === 0 ? (
           <div className="text-center my-8">
             <h2 className="text-2xl font-bold text-gray-800">Ni oglasov za prikaz!</h2>
           </div>

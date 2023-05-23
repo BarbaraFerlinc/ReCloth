@@ -33,7 +33,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
     console.log(izbira);
-    //console.log(izbira?.slike);
+
 
     initialState.naslov = izbira?.naslov;
     initialState.velikost = izbira?.velikost;
@@ -51,7 +51,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
-    const [zamenjava, setZamenjava] = useState(false);
+    const [zamenjava, setZamenjava] = useState(initialState.za_zamenjavo);
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
     const { user } = UserAuth();
@@ -198,14 +198,13 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     };
 
     const handleChange = (e) => {
-        if (e.target.id === 'za_zamenjavo') {
-            setZamenjava(!zamenjava);
-        }
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
 
         if (type === "checkbox" && name === "za_zamenjavo") {
             valueToUse = checked ? 1 : 0;
+            console.log(valueToUse)
+            setZamenjava(valueToUse);
         } else if (name === "fk_kategorija_id") {
             const selectedKategorija = kategorija.find((k) => k.id === value);
             if (selectedKategorija) {
@@ -275,7 +274,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} checked={oglas.za_zamenjavo === 1} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
                                     </div>
 
