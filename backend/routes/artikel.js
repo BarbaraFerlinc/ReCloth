@@ -95,7 +95,6 @@ router.get('/vsi', async (req, res) => {
     }
 });
 
-
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -178,8 +177,6 @@ router.get('/kategorija/:id', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasa iz baze', details: error.message });
     }
 });
-
-
 
 router.get('/:id/slike', async (req, res) => {
     const { id } = req.params;

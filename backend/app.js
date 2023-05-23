@@ -11,6 +11,7 @@ var nakupRouter = require('./routes/nakup');
 var pogovorRouter = require('./routes/pogovor');
 var profilRouter = require('./routes/profil');
 var uporabnikRouter = require('./routes/uporabnik');
+var zamenjavaRouter = require('./routes/zamenjava');
 
 const app = express();
 
@@ -36,10 +37,10 @@ app.use('/nakup/', nakupRouter);
 app.use('/pogovor/', pogovorRouter);
 app.use('/profil/', profilRouter);
 app.use('/uporabnik/', uporabnikRouter);
+app.use('/zamenjava', zamenjavaRouter);
 
 // Dodajanje statične poti za dostop do slik
 app.use('/uploads', express.static('uploads'));
-
 
 app.listen(9000);
 module.exports = app;

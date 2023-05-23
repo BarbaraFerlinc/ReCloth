@@ -165,7 +165,6 @@ export default function Index({ seznamOglasov }) {
                           Več
                         </button>
                       </Link>
-
                     </div>
                   </div>
                 </div>
@@ -174,7 +173,6 @@ export default function Index({ seznamOglasov }) {
           </div>
         )}
       </section>
-
       <br></br>
       <Footer />
     </>

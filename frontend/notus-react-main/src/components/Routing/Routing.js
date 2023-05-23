@@ -12,6 +12,8 @@ import api from "services/api";
 import Podrobnosti from "views/Podrobnosti";
 import { AuthContextProvider } from "context/AuthContext";
 import ProdajalecProfil from "views/ProdajalecProfil";
+import Zamenjava from "views/Zamenjava";
+import Nakup from "views/Nakup";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 import UrejanjeOglasa from "views/UrejanjeOglasa";
@@ -67,6 +69,8 @@ const Routing = () => {
                     <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
                     <Route path="/urejanje-oglasa/:id" element={<div className="bg-blueGray-200 min-h-screen"><UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} /></div>} />
+                    <Route path="/zamenjava/:id" element={<Zamenjava />} />
+                    <Route path="/nakup/:id" element={<Nakup />} />
                 </Route>
             </Routes>
         </AuthContextProvider>
