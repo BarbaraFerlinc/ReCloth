@@ -40,6 +40,7 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
             }
         }
     }
+    console.log(req.body)
 
     try {
         const novOglas = await knex('oglas').insert({
@@ -128,6 +129,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', upload.array('slika'), async (req, res) => {
     const { naslov, velikost, opis, cena, lokacija, za_zamenjavo, fk_uporabnik_id, fk_kategorija_id } = req.body;
+    console.log(req.body)
 
     if (!naslov || !velikost || !opis || !cena || !lokacija || !za_zamenjavo) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });

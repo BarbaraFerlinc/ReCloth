@@ -70,10 +70,6 @@ export default function ProdajalecProfil() {
                                             {prodajalec.telefon}
                                         </div>
                                         <div className="mb-2 text-blueGray-600 mt-4">
-                                            <i className="fas fa-map-marker mr-2 text-lg text-blueGray-400"></i>
-                                            {prodajalec.naslov}, {prodajalec.posta}
-                                        </div>
-                                        <div className="mb-2 text-blueGray-600 mt-4">
                                             <i className="fas fa-flag mr-2 text-lg text-blueGray-400"></i>
                                             {prodajalec.drzava}
                                         </div>

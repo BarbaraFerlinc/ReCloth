@@ -33,7 +33,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
     console.log(izbira);
-    //console.log(izbira?.slike);
+
 
     initialState.naslov = izbira?.naslov;
     initialState.velikost = izbira?.velikost;
@@ -41,9 +41,11 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     initialState.cena = izbira?.cena;
     initialState.lokacija = izbira?.lokacija;
     initialState.za_zamenjavo = izbira?.za_zamenjavo;
-    initialState.slika = izbira?.slike;
+
     initialState.fk_uporabnik_id = izbira?.fk_uporabnik_id;
     initialState.fk_kategorija_id = izbira?.fk_kategorija_id;
+
+    //console.log("initial state: " + initialState.slika);
 
 
 
@@ -51,7 +53,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
-    const [zamenjava, setZamenjava] = useState(false);
+    const [zamenjava, setZamenjava] = useState(initialState.za_zamenjavo);
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
     const { user } = UserAuth();
@@ -141,10 +143,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             formErrors["lokacija"] = "Prosimo, vnesite lokacijo.";
         }
 
-        if (!oglas.slika || oglas.slika.length === 0) {
-            formIsValid = false;
-            formErrors["slika"] = "Prosimo, dodajte vsaj eno sliko.";
-        }
         setErrors(formErrors);
         return formIsValid;
     }
@@ -164,7 +162,14 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
 
-                if (oglas.slika) {
+                // Append existing files from the `izbira` object
+                if (izbira && izbira.slike) {
+                    for (let file of izbira.slike) {
+                        console.log("to je ta slika" + file)
+                        formData.append("slika", file);
+                    }
+                } else if (oglas.slika) {
+                    // If no new files are uploaded, use the existing `oglas.slika` property
                     if (Array.isArray(oglas.slika)) {
                         oglas.slika.forEach((slika) => {
                             formData.append("slika", slika);
@@ -173,7 +178,9 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                         formData.append("slika", oglas.slika);
                     }
                 }
-
+                for (const entry of formData.entries()) {
+                    console.log("to je entry" + entry);
+                }
                 const response = await api.put(`/artikel/${id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -182,30 +189,31 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
                 if (response.status === 200) {
                     alert("Oglas uspešno objavljen!");
-                    navigate(`/profile`);
+                    // navigate(`/profile`);
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
 
                 setOglas(initialState);
-                setErrors({})
-
+                setErrors({});
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            onEdit(oglas);
+            //onEdit(oglas);
         }
     };
 
+
+
+
     const handleChange = (e) => {
-        if (e.target.id === 'za_zamenjavo') {
-            setZamenjava(!zamenjava);
-        }
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
 
         if (type === "checkbox" && name === "za_zamenjavo") {
             valueToUse = checked ? 1 : 0;
+            console.log(valueToUse)
+            setZamenjava(valueToUse);
         } else if (name === "fk_kategorija_id") {
             const selectedKategorija = kategorija.find((k) => k.id === value);
             if (selectedKategorija) {
@@ -275,7 +283,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} checked={oglas.za_zamenjavo === 1} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
                                     </div>
 
