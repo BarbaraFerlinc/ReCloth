@@ -51,4 +51,18 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
     }
 });
 
+router.get('/zamenjani/:uporabnikId', async (req, res) => {
+    const {uporabnikId } = req.params;
+    try {
+        const zamenjaniData = await knex('zamenjani')
+            .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
+            .where('zamenjani.fk_uporabnik_id', uporabnikId)
+            .select('zamenjani.*');
+        res.json(zamenjaniData);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;
