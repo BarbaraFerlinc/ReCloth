@@ -40,7 +40,6 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
             }
         }
     }
-    console.log(req.body)
 
     try {
         const novOglas = await knex('oglas').insert({
@@ -135,6 +134,18 @@ router.put('/:id', upload.array('slika'), async (req, res) => {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
+    if (req.files.length > 5) {
+        return res.status(400).json({ error: 'Lahko naložite največ 5 slik.' });
+    }
+
+    if (req.files) {
+        for (let i = 0; i < req.files.length; i++) {
+            if (req.files[i].size > maxSize) {
+                return res.status(400).json({ error: 'Vsaka slika mora biti manjša od 1MB' });
+            }
+        }
+    }
+
     try {
         const posodobiOglas = await knex('oglas').where({ id: req.params.id }).update({
             naslov: naslov,
@@ -146,8 +157,11 @@ router.put('/:id', upload.array('slika'), async (req, res) => {
             fk_uporabnik_id: fk_uporabnik_id,
             fk_kategorija_id: fk_kategorija_id
         });
-
-        if (req.files) {
+        if (req.body.slikeNespremenjene === 'true') {
+            console.log("slike nespremenjene")
+            return res.status(200).json({ message: 'ok', oglas: posodobiOglas });
+        }
+        else {
 
             await knex('slika').where({ fk_oglas_id: req.params.id }).del();
 

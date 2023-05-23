@@ -32,7 +32,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     }
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
-    console.log(izbira);
 
 
     initialState.naslov = izbira?.naslov;
@@ -41,11 +40,8 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     initialState.cena = izbira?.cena;
     initialState.lokacija = izbira?.lokacija;
     initialState.za_zamenjavo = izbira?.za_zamenjavo;
-
     initialState.fk_uporabnik_id = izbira?.fk_uporabnik_id;
     initialState.fk_kategorija_id = izbira?.fk_kategorija_id;
-
-    //console.log("initial state: " + initialState.slika);
 
 
 
@@ -162,14 +158,10 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
 
-                // Append existing files from the `izbira` object
-                if (izbira && izbira.slike) {
-                    for (let file of izbira.slike) {
-                        console.log("to je ta slika" + file)
-                        formData.append("slika", file);
-                    }
-                } else if (oglas.slika) {
-                    // If no new files are uploaded, use the existing `oglas.slika` property
+                if (izbira.slike.length > 0 && oglas.slika.length === 0) {
+                    formData.append("slikeNespremenjene", 'true');
+                    console.log("slike nespremenjene")
+                } else {
                     if (Array.isArray(oglas.slika)) {
                         oglas.slika.forEach((slika) => {
                             formData.append("slika", slika);
@@ -188,8 +180,8 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 });
 
                 if (response.status === 200) {
-                    alert("Oglas uspešno objavljen!");
-                    // navigate(`/profile`);
+                    alert("Oglas uspešno posodobljen!");
+                    navigate(`/`);
                 } else {
                     alert("Napaka pri objavi oglasa!");
                 }
@@ -198,8 +190,16 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 setErrors({});
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
+                let errorMessages = {};
+                if (error.response && error.response.data && error.response.data.error) {
+                    errorMessages["slika"] = error.response.data.error;
+                } else {
+                    errorMessages["slika"] = "Napaka pri objavi oglasa!";
+                }
+                setErrors(errorMessages);
+
             }
-            //onEdit(oglas);
+            onEdit(oglas);
         }
     };
 
@@ -409,6 +409,13 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                         </small>
 
                                     </div>
+                                    <small>
+                                        <b>Vaše trenutne slike so: </b>{oglas?.slika.length > 0 ? oglas?.slika?.map((slika, index) => (
+                                            <p> Slika {index + 1}: {slika.name} </p>
+                                        )) : izbira?.slike?.map((slika, index) => (
+                                            <p> Slika {index + 1}: {slika.split("\\uploads\\")[1]}</p>
+                                        ))}
+                                    </small>
                                     <div className="text-center mt-6">
                                         <button
                                             className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
