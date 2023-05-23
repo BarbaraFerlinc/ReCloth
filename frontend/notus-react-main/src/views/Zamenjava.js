@@ -127,7 +127,7 @@ export default function Zamenjava() {
                 formData.append("opis", oglas.opis);
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
-                formData.append("fk_oglas_id", parsan_id);
+                formData.append("fk_oglas_id", oglas.fk_oglas_id);
 
                 if (oglas.slika) {
                     if (Array.isArray(oglas.slika)) {
@@ -154,8 +154,6 @@ export default function Zamenjava() {
                 setOglas(initialState);
                 setErrors({})
 
-                // more se poslat predlog prodajalcu
-
                 navigate("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
@@ -180,6 +178,7 @@ export default function Zamenjava() {
             const nextState = {
                 ...prevState,
                 [name]: valueToUse,
+                fk_oglas_id: parsan_id,
                 fk_uporabnik_id: uporabnikovId,
             };
             return nextState;
