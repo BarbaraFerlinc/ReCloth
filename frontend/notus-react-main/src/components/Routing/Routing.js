@@ -17,6 +17,7 @@ import Nakup from "views/Nakup";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 import UrejanjeOglasa from "views/UrejanjeOglasa";
+import { Navigate } from "react-router-dom";
 
 
 const Routing = () => {
@@ -72,6 +73,7 @@ const Routing = () => {
                     <Route path="/zamenjava/:id" element={<Zamenjava />} />
                     <Route path="/nakup/:id" element={<Nakup />} />
                 </Route>
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </AuthContextProvider>
     </>

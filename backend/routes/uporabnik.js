@@ -159,6 +159,56 @@ router.post('/prijavljen-profil', async (req, res) => {
     }
 });
 
+router.post('/get-email-from-id', async (req, res) => {
+    const id = req.body.id;
+    console.log(id)
+    if (!id) {
+        return res.status(400).send({ error: 'ID is required' });
+    }
+
+    try {
+        const user = await knex('uporabnik')
+            .where('id', id)
+            .first();
+
+        if (!user) {
+            return res.status(404).send({ error: 'No user found with this id' });
+        }
+        console.log(user.email)
+        return res.status(200).send({ userEmail: user.email });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: 'Something went wrong' });
+    }
+});
+
+router.post('/get-email-from-oglas-id', async (req, res) => {
+    const id = req.body.id;
+    console.log(id)
+    if (!id) {
+        return res.status(400).send({ error: 'ID is required' });
+    }
+
+    try {
+        const user = await knex('uporabnik')
+            .join('oglas', 'uporabnik.id', '=', 'oglas.fk_uporabnik_id')
+            .where('oglas.id', id)
+            .first();
+        
+        if (!user) {
+            return res.status(404).send({ error: 'No user found with this id' });
+        }
+        console.log(user.email)
+        return res.status(200).send({ userEmail: user.email });
+    
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: 'Something went wrong' });
+    }
+});
+
+
 
 
 
