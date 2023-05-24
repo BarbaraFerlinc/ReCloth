@@ -57,7 +57,7 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
                                     </div>
                                 </Link>
                                 <br></br>
-                                <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
+                                <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-20 shadow-xl rounded-lg">
                                     <div className="px-6">
                                         <section className="relative block" style={{ height: "70vh" }}>
                                             <br></br>
@@ -83,6 +83,14 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
                                             </Slider>
                                         </section>
                                     </div>
+                                </div>
+                                <div className="flex justify-center mt-10 mb-8">
+                                    <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                        Sprejmi
+                                    </button>
+                                    <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                        Zavrni
+                                    </button>
                                 </div>
                             </div>
                         </div>

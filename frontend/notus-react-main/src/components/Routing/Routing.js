@@ -84,8 +84,8 @@ const Routing = () => {
                     <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
                     <Route path="/urejanje-oglasa/:id" element={<div className="bg-blueGray-200 min-h-screen"><UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} /></div>} />
-                    <Route path="/zamenjava/:id" element={<Zamenjava />} />
-                    <Route path="/nakup/:id" element={<Nakup />} />
+                    <Route path="/zamenjava/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Zamenjava /> </div>} />
+                    <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup /> </div>} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

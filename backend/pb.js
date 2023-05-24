@@ -83,10 +83,11 @@ async function baza() {
     }).then(() => console.log('Tabela nakup ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
 
-    await knex.schema.createTable('obvestilo', (table) => {
+    await knex.schema.createTable('obvestilo_zamenjava', (table) => {
         table.increments('id');
         table.integer('fk_oglas_id').references('id').inTable('oglas').notNullable().unsigned().onDelete('CASCADE');
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('jeSprejeto').notNullable();
     }).then(() => console.log('Tabela obvestilo ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
 
