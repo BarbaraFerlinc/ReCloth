@@ -6,6 +6,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const initialState = {
     za_dostavo: false,
@@ -34,6 +35,8 @@ export default function Nakup() {
     const [nakup, setNakup] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [uporabnikovId, setUporabnikovId] = useState(0)
+    const [uporabnikovEmailizOglasa, setUporabnikovEmailizOglasa] = useState("")
+    const [errorIzBaze, setErrorIzBaze] = useState(null);
 
     const { user } = UserAuth();
 
@@ -51,6 +54,35 @@ export default function Nakup() {
             })
             .catch(err => {
                 console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    console.log("error message:", err.response.data.error);
+                    setErrorIzBaze(err.response.data.error);
+                } else {
+                    console.log("error message: Napaka pri pridobivanju podatkov");
+                    setErrorIzBaze("Napaka pri pridobivanju podatkov");
+                }
+            });
+    }, [user]);
+
+    useEffect(() => {
+        const oglasId = parsan_id;
+        console.log("Oglas Id je: ", oglasId)
+
+        api.post('uporabnik/get-email-from-oglas-id', { id: oglasId })
+            .then(res => {
+                const uporabnikovEmailizOglasa = res.data.userEmail;
+                setUporabnikovEmailizOglasa(uporabnikovEmailizOglasa);
+                console.log("Uporabnikov email iz oglasa je: ", uporabnikovEmailizOglasa);
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    console.log("error message:", err.response.data.error);
+                    setErrorIzBaze(err.response.data.error);
+                } else {
+                    console.log("error message: Napaka pri pridobivanju podatkov");
+                    setErrorIzBaze("Napaka pri pridobivanju podatkov");
+                }
             });
     }, [user]);
 
@@ -117,50 +149,70 @@ export default function Nakup() {
         });
     };
 
+    if (user.email == uporabnikovEmailizOglasa) {
+        navigate("/");
+    }
+
     return (
         <>
-            <IndexNavbar />
-            <br></br>
-            <div className="container mx-auto px-4 pt-20">
-                <div className="flex content-center items-center justify-center h-screen">
-                    <div className="w-full lg:w-6/12 px-4">
-                        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
-                            <div className="rounded-t mb-0 px-6 py-6">
-                                <div className="text-center mb-3">
-                                    <h1 className="text-blueGray-500 font-bold">
-                                        Nakup
-                                    </h1>
+            {errorIzBaze ? (
+                <div className="text-center mt-12">
+                    <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                        Ta zamenjava ne obstaja!
+                    </h3>
+                    <Link to="/">
+                        <button className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                            Pojdi nazaj
+                        </button>
+                    </Link>
+                </div>
+
+            ) : (
+                <div>
+                    <IndexNavbar />
+                    <br></br>
+                    <div className="container mx-auto px-4 pt-20">
+                        <div className="flex content-center items-center justify-center h-screen">
+                            <div className="w-full lg:w-6/12 px-4">
+                                <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
+                                    <div className="rounded-t mb-0 px-6 py-6">
+                                        <div className="text-center mb-3">
+                                            <h1 className="text-blueGray-500 font-bold">
+                                                Nakup
+                                            </h1>
+                                        </div>
+                                        <hr className="mt-6 border-b-1 border-blueGray-300" />
+                                    </div>
+                                    <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="relative w-full mb-3">
+                                                <div class="w-full"><label class="inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" name="za_dostavo" id="za_dostavo" value={nakup.za_dostavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                                    <span class="ml-2 text-sm font-semibold text-blueGray-500">Dostava na dom</span></label></div>
+                                            </div>
+                                            <hr className="mt-6 border-b-1 border-blueGray-300" />
+                                            <div className="text-blueGray-400 text-center mb-3 font-bold">
+                                                <small>Vnesite podatke o placilu</small>
+                                            </div>
+                                            <br></br>
+                                            <div className="text-center mt-6">
+                                                <button
+                                                    className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                                    type="submit"
+                                                >
+                                                    Poslji
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <hr className="mt-6 border-b-1 border-blueGray-300" />
-                            </div>
-                            <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="relative w-full mb-3">
-                                        <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_dostavo" id="za_dostavo" value={nakup.za_dostavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
-                                            <span class="ml-2 text-sm font-semibold text-blueGray-500">Dostava na dom</span></label></div>
-                                    </div>
-                                    <hr className="mt-6 border-b-1 border-blueGray-300" />
-                                    <div className="text-blueGray-400 text-center mb-3 font-bold">
-                                        <small>Vnesite podatke o placilu</small>
-                                    </div>
-                                    <br></br>
-                                    <div className="text-center mt-6">
-                                        <button
-                                            className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                                            type="submit"
-                                        >
-                                            Poslji
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
+                    <br></br>
+                    <Footer />
                 </div>
-            </div>
-            <br></br>
-            <Footer />
+            )}
         </>
     )
 }
