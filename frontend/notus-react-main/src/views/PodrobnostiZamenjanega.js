@@ -7,11 +7,19 @@ import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import api from "services/api";
+import { useEffect, useState } from "react";
+import { UserAuth } from "context/AuthContext";
 
 
 
 export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
+    const [izbira, setIzbira] = useState("");
+    const [error, setError] = useState(null);
+    const [clicked, setClicked] = useState(null);
 
+
+    const { user } = UserAuth();
     const { id } = useParams();
     let parsan_id;
     if (id !== undefined) {
@@ -20,7 +28,7 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
         parsan_id = undefined;
     }
 
-    let izbira = seznamZamenjanih.find((i) => i.id === parsan_id);
+    //let izbira = seznamZamenjanih.find((i) => i.id === parsan_id);
 
     const settings = {
         dots: true,
@@ -30,6 +38,42 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
         slidesToScroll: 1
     };
 
+    useEffect(() => {
+        api.get(`/zamenjava/${parsan_id}`)
+            .then(res => {
+                setIzbira(res.data);
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    setError(err.response.data.error);
+                } else {
+                    setError("Napaka pri pridobivanju podatkov");
+                }
+            });
+    }, [parsan_id]);
+
+
+    useEffect(() => {
+        if (clicked !== null) {
+            // Perform the desired logic when a button is clicked
+            console.log(clicked === 'sprejmi' ? 'Sprejmi clicked!' : 'Zavrni clicked!');
+
+            // Define the value of jeSprejeto based on the clicked button
+            const jeSprejeto = clicked === 'sprejmi' ? 2 : 1;
+            api.post('obvestilo/dodaj', { fk_oglas_id: izbira?.fk_oglas_id, fk_uporabnik_id: izbira?.fk_uporabnik_id, jeSprejeto: jeSprejeto })
+                .then(res => {
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+    }, [clicked]);
+
+    const handleClick = (buttonType) => {
+        setClicked(buttonType);
+    };
 
     return (
         <>
@@ -50,19 +94,17 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
                                     Opis: <br></br>{izbira?.opis}
                                 </div>
-                                <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
-                                    <div className="mb-2 text-blueGray-900 mt-4">
-                                        <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
-                                        Zamenjal bi rad: {izbira?.ime} {izbira?.priimek}
-                                    </div>
-                                </Link>
+                                <div className="mb-2 text-blueGray-900 mt-4">
+                                    <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
+                                    Rad bi zamenjal: {izbira?.uporabnik?.ime} {izbira?.uporabnik?.priimek}
+                                </div>
                                 <br></br>
                                 <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-20 shadow-xl rounded-lg">
                                     <div className="px-6">
                                         <section className="relative block" style={{ height: "70vh" }}>
                                             <br></br>
-                                            <Slider {...settings}>
-                                                {izbira?.slike.map((slika, index) => {
+                                            {<Slider {...settings}>
+                                                {izbira?.slike?.map((slika, index) => {
                                                     const slikaPath = slika.split("\\uploads\\")[1];
                                                     return (
                                                         <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -80,15 +122,23 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
                                                         </div>
                                                     );
                                                 })}
-                                            </Slider>
+                                            </Slider>}
                                         </section>
                                     </div>
                                 </div>
                                 <div className="flex justify-center mt-10 mb-8">
-                                    <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                    <button
+                                        className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        type="button"
+                                        onClick={() => handleClick('sprejmi')}
+                                    >
                                         Sprejmi
                                     </button>
-                                    <button className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                    <button
+                                        className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        type="button"
+                                        onClick={() => handleClick('zavrni')}
+                                    >
                                         Zavrni
                                     </button>
                                 </div>
