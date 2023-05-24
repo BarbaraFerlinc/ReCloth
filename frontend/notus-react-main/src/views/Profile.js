@@ -70,7 +70,7 @@ export default function Profile({ izbris }) {
   const fetchUser = async (id) => {
     try {
       const response = await api.get(`/uporabnik/${id}`);
-      console.log(response.data[0]);
+      //console.log(response.data[0]);
       setUporabnik(response.data[0]);
     } catch (error) {
       console.error("Napaka pri pridobivanju uporabika", error);
@@ -105,7 +105,7 @@ export default function Profile({ izbris }) {
     izracunajOceno();
   }, [uporabnikovId]);
 
-  console.log(oglasi);
+  //console.log(oglasi);
   console.log(zamenjaniOglasi)
 
 
@@ -259,18 +259,18 @@ export default function Profile({ izbris }) {
                                     {oglasi.map((oglas, index) => (
                                       <tr key={oglas.id} className="bg-blueGray-200">
                                         <Link to={`/oglas/${oglas.id}`}>
-                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
+                                          <td className="py-3 px-3 ">{oglas?.naslov}</td>
                                         </Link >
-                                        <td className="py-4 px-4">
+                                        <td className="py-3 px-3">
                                           <button
-                                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                             type="button"
                                             onClick={() => handleDelete(oglas.id)}
                                           >
                                             Izbriši
                                           </button>
                                         </td>
-                                        <td className="py-4 px-4">
+                                        <td className="py-3 px-3">
                                           <Link to={`/urejanje-oglasa/${oglas.id}`}>
                                             <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
                                               Uredi
@@ -292,9 +292,11 @@ export default function Profile({ izbris }) {
                                     {zamenjaniOglasi?.map((oglas, index) => (
                                       <tr key={oglas.id} className="bg-blueGray-200">
                                         <Link to={`/oglas-zamenjan/${oglas.id}`}>
-                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
+                                          <td className="py-3 px-3 ">📝</td>
+                                          <td className="py-3 px-3 ">Naziv: {oglas?.naslov}</td>
                                         </Link>
-                                        <td className="py-4 px-4">{oglas?.ime} {oglas?.priimek}</td>
+                                        <td className="py-3 px-3">Ponudnik: {oglas?.ime} {oglas?.priimek}</td>
+                                        <td className="py-3 px-3">Za oglas: {oglas?.naslov_oglasa}</td>
                                       </tr>
                                     ))}
                                   </tbody>

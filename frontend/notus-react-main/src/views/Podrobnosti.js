@@ -154,7 +154,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                             </div>
                                         </div>
                                         <div className="flex justify-center mt-10 mb-8">
-                                            {user.email !== uporabnikovEmail && (
+                                            {!user || user.email !== uporabnikovEmail && (
                                                 <>
                                                     <Link to={`/nakup/${izbira?.id}`}>
                                                         <button

@@ -158,7 +158,7 @@ export default function Nakup() {
             {errorIzBaze ? (
                 <div className="text-center mt-12">
                     <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                        Ta zamenjava ne obstaja!
+                        Ta nakup ne obstaja!
                     </h3>
                     <Link to="/">
                         <button className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">

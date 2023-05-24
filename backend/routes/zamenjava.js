@@ -98,9 +98,11 @@ router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
             .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
             .join('uporabnik', 'zamenjani.fk_uporabnik_id', '=', 'uporabnik.id')
             .where('oglas.fk_uporabnik_id', fk_uporabnik_id)
-            .select('zamenjani.*', 'uporabnik.ime', 'uporabnik.priimek');
+            .select('zamenjani.*', 'uporabnik.ime', 'uporabnik.priimek', 'oglas.naslov as naslov_oglasa');
 
+            console.log(results)
         res.json(results);
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'An error occurred' });
