@@ -67,6 +67,10 @@ const Routing = () => {
         fetchArtikle();
     }
 
+    const handleDelete = () => {
+        fetchArtikle();
+    }
+
     const izbris = (id) => {
         setSeznam(seznam.filter((oglas) => oglas.id !== id));
     };
@@ -75,9 +79,8 @@ const Routing = () => {
         <AuthContextProvider>
             <Routes>
                 <Route path="/" element={<Index seznamOglasov={seznam} />} />
-                <Route path="/oglas/:id" element={<Podrobnosti seznamOglasov={seznam} />} />
-                <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega seznamZamenjanih={seznamZamenjanih} />} />
-                <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
+
+
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />
                 <Route path="" element={<PrivateRouting />}>
@@ -86,6 +89,9 @@ const Routing = () => {
                     <Route path="/urejanje-oglasa/:id" element={<div className="bg-blueGray-200 min-h-screen"><UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} /></div>} />
                     <Route path="/zamenjava/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Zamenjava /> </div>} />
                     <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup /> </div>} />
+                    <Route path="/oglas/:id" element={<Podrobnosti />} />
+                    <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega izbris={handleDelete} />} />
+                    <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

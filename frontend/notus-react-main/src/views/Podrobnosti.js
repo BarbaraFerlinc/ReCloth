@@ -13,7 +13,7 @@ import api from "services/api";
 
 
 
-export default function Podrobnosti({ seznamOglasov }) {
+export default function Podrobnosti({ }) {
     const [uporabnikovEmail, setUporabnikovEmail] = useState("");
     const [izbira, setIzbira] = useState();
     const [error, setError] = useState(null);
@@ -26,6 +26,8 @@ export default function Podrobnosti({ seznamOglasov }) {
         parsan_id = undefined;
     }
 
+
+    
     useEffect(() => {
         api.get(`/artikel/${parsan_id}`)
             .then(res => {

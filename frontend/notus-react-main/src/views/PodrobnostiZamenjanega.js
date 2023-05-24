@@ -10,13 +10,16 @@ import { Link } from "react-router-dom";
 import api from "services/api";
 import { useEffect, useState } from "react";
 import { UserAuth } from "context/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 
 
-export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
+export default function PodrobnostiZamenjanega({ izbris }) {
     const [izbira, setIzbira] = useState("");
     const [error, setError] = useState(null);
-    const [clicked, setClicked] = useState(null);
+
+
+    const navigate = useNavigate();
 
 
     const { user } = UserAuth();
@@ -27,8 +30,6 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
     } else {
         parsan_id = undefined;
     }
-
-    //let izbira = seznamZamenjanih.find((i) => i.id === parsan_id);
 
     const settings = {
         dots: true,
@@ -54,26 +55,44 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
     }, [parsan_id]);
 
 
-    useEffect(() => {
-        if (clicked !== null) {
-            // Perform the desired logic when a button is clicked
-            console.log(clicked === 'sprejmi' ? 'Sprejmi clicked!' : 'Zavrni clicked!');
-
-            // Define the value of jeSprejeto based on the clicked button
-            const jeSprejeto = clicked === 'sprejmi' ? 2 : 1;
-            api.post('obvestilo/dodaj', { fk_oglas_id: izbira?.fk_oglas_id, fk_uporabnik_id: izbira?.fk_uporabnik_id, jeSprejeto: jeSprejeto })
-                .then(res => {
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        }
-
-    }, [clicked]);
-
-    const handleClick = (buttonType) => {
-        setClicked(buttonType);
+    const handleSprejmiClick = () => {
+        api.post('obvestilo/dodaj', {
+            fk_oglas_id: izbira?.fk_oglas_id,
+            fk_uporabnik_id: izbira?.fk_uporabnik_id,
+            jeSprejeto: 2
+        })
+            .then(response => {
+                if(response.status === 200) {
+                    izbris();
+                    navigate('/');      
+                }
+            })
+            .catch(error => {
+                // Handle the error
+                console.error(error);  // You can customize this part based on your needs
+            });
     };
+
+    const handleZavrniClick = () => {
+        api.post('obvestilo/dodaj2', {
+            fk_oglas_id: izbira?.fk_oglas_id,
+            fk_uporabnik_id: izbira?.fk_uporabnik_id,
+            jeSprejeto: 2
+        })
+            .then(response => {
+                if(response.status === 200) {
+                    izbris();
+                    navigate('/');      
+                }
+            })
+            .catch(error => {
+                // Handle the error
+                console.error(error);  // You can customize this part based on your needs
+            });
+    };
+
+
+
 
     return (
         <>
@@ -130,14 +149,16 @@ export default function PodrobnostiZamenjanega({ seznamZamenjanih }) {
                                     <button
                                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={() => handleClick('sprejmi')}
+                                        onClick={handleSprejmiClick}
+
                                     >
                                         Sprejmi
                                     </button>
                                     <button
                                         className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={() => handleClick('zavrni')}
+                                        onClick={handleZavrniClick}
+
                                     >
                                         Zavrni
                                     </button>
