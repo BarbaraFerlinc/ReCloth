@@ -7,10 +7,16 @@ import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import { UserAuth } from "context/AuthContext";
+import { useEffect, useState } from "react";
+import api from "services/api";
 
 
 
 export default function Podrobnosti({ seznamOglasov }) {
+    const [uporabnikovEmail, setUporabnikovEmail] = useState("");
+    const [izbira, setIzbira] = useState();
+    const [error, setError] = useState(null);
 
     const { id } = useParams();
     let parsan_id;
@@ -20,7 +26,25 @@ export default function Podrobnosti({ seznamOglasov }) {
         parsan_id = undefined;
     }
 
-    let izbira = seznamOglasov.find((i) => i.id === parsan_id);
+    useEffect(() => {
+        api.get(`/artikel/${parsan_id}`)
+            .then(res => {
+                console.log("Izbira je: ", res.data)
+                setIzbira(res.data);
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    setError(err.response.data.error);
+                } else {
+                    setError("Napaka pri pridobivanju podatkov");
+                }
+            });
+    }, [parsan_id]);
+
+
+
+    const { user } = UserAuth();
 
     const settings = {
         dots: true,
@@ -30,10 +54,33 @@ export default function Podrobnosti({ seznamOglasov }) {
         slidesToScroll: 1
     };
 
+    useEffect(() => {
+        const uporabnikovId = izbira?.uporabnik.id;
+
+        api.post('uporabnik/get-email-from-id', { id: uporabnikovId })
+            .then(res => {
+                const uporabnikovEmail = res.data.userEmail;
+                setUporabnikovEmail(uporabnikovEmail);
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    setError(err.response.data.error);
+                } else {
+                    setError("Napaka pri pridobivanju uporabnikovega e-poštnega naslova");
+                }
+            });
+    }, [user]);
 
     return (
         <>
             <IndexNavbar fixed={true} />
+            {
+                error &&
+                <div className="error-message">
+                    {error}
+                </div>
+            }
             <section className="relative py-16 bg-blueGray-200">
                 <div className="container mx-auto px-4">
                     <div className="relative flex flex-col min-w-0 break-words bg-white w-full md:w-3/4 mx-auto mt-24 mb-4 shadow-xl rounded-lg">
@@ -58,10 +105,10 @@ export default function Podrobnosti({ seznamOglasov }) {
                                     <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
                                     Opis: <br></br>{izbira?.opis}
                                 </div>
-                                <Link to={`/prodajalec/${izbira?.prodajalecID}`}>
+                                <Link to={`/prodajalec/${izbira?.uporabnik.id}`}>
                                     <div className="mb-2 text-blueGray-900 mt-4">
                                         <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
-                                        Prodajalec: {izbira?.ime} {izbira?.priimek}
+                                        Prodajalec: {izbira?.uporabnik.ime} {izbira?.uporabnik.priimek}
                                     </div>
                                 </Link>
                                 <br></br>
@@ -70,7 +117,7 @@ export default function Podrobnosti({ seznamOglasov }) {
                                         <section className="relative block" style={{ height: "70vh" }}>
                                             <br></br>
                                             <Slider {...settings}>
-                                                {izbira?.slike.map((slika, index) => {
+                                                {izbira?.slike?.map((slika, index) => {
                                                     const slikaPath = slika.split("\\uploads\\")[1];
                                                     return (
                                                         <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -93,26 +140,32 @@ export default function Podrobnosti({ seznamOglasov }) {
                                     </div>
                                 </div>
                                 <div className="flex justify-center mt-10 mb-8">
-                                    <Link to={`/nakup/${izbira?.id}`}>
-                                        <button
-                                            className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                            type="button"
-                                        >
-                                            Kupi
-                                        </button>
-                                    </Link>
-                                    {izbira?.za_zamenjavo === 1 && (<div>
-                                        <Link to={`/zamenjava/${izbira?.id}`}>
-                                            <button
-                                                className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                type="button"
-                                            >
-                                                Zamenjaj
-                                            </button>
-                                        </Link>
-                                        </div>
+                                    {user.email !== uporabnikovEmail && (
+                                        <>
+                                            <Link to={`/nakup/${izbira?.id}`}>
+                                                <button
+                                                    className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                    type="button"
+                                                >
+                                                    Kupi
+                                                </button>
+                                            </Link>
+                                            {izbira?.za_zamenjavo === 1 && (
+                                                <div>
+                                                    <Link to={`/zamenjava/${izbira?.id}`}>
+                                                        <button
+                                                            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                            type="button"
+                                                        >
+                                                            Zamenjaj
+                                                        </button>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                 </div>
+
                             </div>
                         </div>
                     </div>

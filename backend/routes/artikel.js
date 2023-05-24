@@ -98,16 +98,35 @@ router.get('/vsi', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const oglas = await knex('oglas').select('*').where('id', id);
-        if (oglas.length === 0) {
+        const oglas = await knex('oglas').select('*').where('id', id).first();
+
+        if (!oglas) {
             return res.status(404).json({ error: 'Oglas ne obstaja' });
         }
+        const slike = await knex('slika')
+            .select('pot')
+            .where('fk_oglas_id', '=', id);
+
+        // Add the images to the ad object
+        oglas.slike = slike.map(slika => slika.pot);
+        const uporabnik = await knex('uporabnik')
+            .select('*')
+            .where('id', '=', oglas.fk_uporabnik_id)
+            .first();
+
+        if (!uporabnik) {
+            return res.status(404).json({ error: 'Uporabnik ne obstaja' });
+        }
+
+        // Add the user to the ad object
+        oglas.uporabnik = uporabnik;
         res.status(200).json(oglas);
     }
     catch (error) {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasa iz baze', details: error.message });
     }
 });
+
 
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;

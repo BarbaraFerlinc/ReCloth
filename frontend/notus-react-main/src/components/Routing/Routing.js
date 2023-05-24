@@ -17,6 +17,7 @@ import Nakup from "views/Nakup";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 import UrejanjeOglasa from "views/UrejanjeOglasa";
+import { Navigate } from "react-router-dom";
 import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 
 
@@ -86,6 +87,7 @@ const Routing = () => {
                     <Route path="/zamenjava/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Zamenjava /> </div>} />
                     <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup /> </div>} />
                 </Route>
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </AuthContextProvider>
     </>

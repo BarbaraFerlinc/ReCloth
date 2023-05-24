@@ -6,6 +6,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Redirect } from "react-router";
 
 const initialState = {
     naslov: "",
@@ -30,6 +31,7 @@ export default function Zamenjava() {
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
     const [uporabnikovId, setUporabnikovId] = useState(0)
+    const [uporabnikovEmail, setUporabnikovEmail] = useState("");
 
     const { user } = UserAuth();
 
@@ -64,6 +66,26 @@ export default function Zamenjava() {
         fetchKategorije();
     }, []);
 
+    useEffect(() => {
+        const oglasId = parsan_id;
+        console.log("Oglas Id je: ", oglasId)
+
+        api.post('uporabnik/get-email-from-oglas-id', { id: oglasId })
+            .then(res => {
+                const uporabnikovEmailizOglasa = res.data.userEmail;
+                setUporabnikovEmail(uporabnikovEmailizOglasa);
+                console.log("Uporabnikov email iz oglasa je: ", uporabnikovEmailizOglasa);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, [user]);
+
+
+
+    if (user.email == uporabnikovEmail) {
+        navigate("/");
+    }
 
     const velikosti = [
         { naziv: 'XS' },
