@@ -17,6 +17,7 @@ import Nakup from "views/Nakup";
 import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 import UrejanjeOglasa from "views/UrejanjeOglasa";
+import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 
 
 const Routing = () => {
@@ -36,7 +37,7 @@ const Routing = () => {
         const fetchZamenjani = async () => {
             try {
                 const response = await api.get('/zamenjava/vsi');
-                console.log(response.data);
+                setSeznamZamenjanih(response.data);
             } catch (error) {
                 console.error("Napaka pri pridobivanju oglasov", error);
             }
@@ -74,6 +75,7 @@ const Routing = () => {
             <Routes>
                 <Route path="/" element={<Index seznamOglasov={seznam} />} />
                 <Route path="/oglas/:id" element={<Podrobnosti seznamOglasov={seznam} />} />
+                <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega seznamZamenjanih={seznamZamenjanih} />} />
                 <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />

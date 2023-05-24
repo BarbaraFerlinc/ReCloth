@@ -259,7 +259,7 @@ export default function Profile({ izbris }) {
                                     {oglasi.map((oglas, index) => (
                                       <tr key={oglas.id} className="bg-blueGray-200">
                                         <Link to={`/oglas/${oglas.id}`}>
-                                          <td style={{ textDecoration: 'underline' }} className="py-4 px-4 ">{oglas?.naslov}</td>
+                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
                                         </Link >
                                         <td className="py-4 px-4">
                                           <button
@@ -291,16 +291,16 @@ export default function Profile({ izbris }) {
                                   <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
                                     {zamenjaniOglasi?.map((oglas, index) => (
                                       <tr key={oglas.id} className="bg-blueGray-200">
-                                        <Link to={`/oglas/${oglas.id}`}>
-                                          <td style={{ textDecoration: 'underline' }} className="py-4 px-4 ">{oglas?.naslov}</td>
-                                        </Link >
+                                        <Link to={`/oglas-zamenjan/${oglas.id}`}>
+                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
+                                        </Link>
+                                        <td className="py-4 px-4">{oglas?.ime} {oglas?.priimek}</td>
                                       </tr>
                                     ))}
                                   </tbody>
                                 </table>
                               </div>
                             </div>
-
                           ) : (
                             <p className="text-xl text-blueGray-500">Nimate objavljenih oglasov!</p>
                           )}
@@ -314,7 +314,7 @@ export default function Profile({ izbris }) {
             </div>
           </div>
         </section>
-      </main>
+      </main >
       <Footer />
     </>
   );

@@ -87,8 +87,9 @@ router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
     try {
         const results = await knex('zamenjani')
             .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
+            .join('uporabnik', 'zamenjani.fk_uporabnik_id', '=', 'uporabnik.id')
             .where('oglas.fk_uporabnik_id', fk_uporabnik_id)
-            .select('zamenjani.*');
+            .select('zamenjani.*', 'uporabnik.ime', 'uporabnik.priimek');
 
         res.json(results);
     } catch (error) {
@@ -100,7 +101,9 @@ router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
 
 router.get('/vsi', async (req, res) => {
     try {
-        const zamenjani = await knex('zamenjani').select('*');
+        const zamenjani = await knex('zamenjani')
+            .select('zamenjani.*', 'uporabnik.id as prodajalecID', 'uporabnik.ime', 'uporabnik.priimek')
+            .join('uporabnik', 'zamenjani.fk_uporabnik_id', 'uporabnik.id');
 
         // Loop through each ad to get the images
         for (let i = 0; i < zamenjani.length; i++) {
@@ -116,14 +119,6 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasov iz baze', details: error.message });
     }
 });
-
-
-
-
-
-
-
-
 
 
 router.get('/:id', async (req, res) => {
