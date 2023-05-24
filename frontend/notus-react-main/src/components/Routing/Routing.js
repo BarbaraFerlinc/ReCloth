@@ -18,10 +18,12 @@ import { UserAuth } from "context/AuthContext";
 import PrivateRouting from "./PrivateRouting";
 import UrejanjeOglasa from "views/UrejanjeOglasa";
 import { Navigate } from "react-router-dom";
+import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 
 
 const Routing = () => {
     const [seznam, setSeznam] = useState([]);
+    const [seznamZamenjanih, setSeznamZamenjanih] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -33,7 +35,17 @@ const Routing = () => {
                 console.error("Napaka pri pridobivanju oglasov", error);
             }
         };
+        const fetchZamenjani = async () => {
+            try {
+                const response = await api.get('/zamenjava/vsi');
+                setSeznamZamenjanih(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju oglasov", error);
+            }
+        };
+
         fetchArtikle();
+        fetchZamenjani();
     }, []);
 
     const fetchArtikle = async () => {
@@ -45,6 +57,7 @@ const Routing = () => {
             console.error("Napaka pri pridobivanju oglasov", error);
         }
     };
+
 
     const handleAdd = () => {
         fetchArtikle();
@@ -63,6 +76,7 @@ const Routing = () => {
             <Routes>
                 <Route path="/" element={<Index seznamOglasov={seznam} />} />
                 <Route path="/oglas/:id" element={<Podrobnosti seznamOglasov={seznam} />} />
+                <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega seznamZamenjanih={seznamZamenjanih} />} />
                 <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />

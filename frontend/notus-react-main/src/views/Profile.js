@@ -15,6 +15,7 @@ export default function Profile({ izbris }) {
   const [uporabnikovId, setUporabnikovId] = useState(0);
   const [oglasi, setOglasi] = useState([]);
   const [profil, setProfil] = useState(null);
+  const [zamenjaniOglasi, setZamenjaniOglasi] = useState([]);
 
 
 
@@ -86,16 +87,26 @@ export default function Profile({ izbris }) {
     }
   };
 
+  const fetchZamenjani = async (id) => {
+    try {
+      const response = await api.get(`/zamenjava/zamenjanii/${id}`);
+      setZamenjaniOglasi(response.data);
+    } catch (error) {
+      console.error("Napaka pri pridobivanju zamenjanih uporabnika", error);
+    }
+  };
 
 
   useEffect(() => {
     fetchUser(uporabnikovId);
     fetchOglasi(uporabnikovId);
+    fetchZamenjani(uporabnikovId);
     steviloKomentarjev();
     izracunajOceno();
   }, [uporabnikovId]);
 
   console.log(oglasi);
+  console.log(zamenjaniOglasi)
 
 
 
@@ -239,36 +250,56 @@ export default function Profile({ izbris }) {
                         <div className="w-full lg:w-9/12 px-4">
                           <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Moji oglasi</h6>
                           {oglasi && oglasi.length > 0 ? (
-                            <div className="flex justify-center">
-                              <table className="min-w-full divide-y divide-blueGray-400">
-                                <thead className="bg-blueGray-400">
-                                </thead>
-                                <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
-                                  {oglasi.map((oglas, index) => (
-                                    <tr key={oglas.id} className="bg-blueGray-200">
-                                      <Link to={`/oglas/${oglas.id}`}>
-                                        <td style={{ textDecoration: 'underline' }} className="py-4 px-4 ">{oglas?.naslov}</td>
-                                      </Link >
-                                      <td className="py-4 px-4">
-                                        <button
-                                          className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                          type="button"
-                                          onClick={() => handleDelete(oglas.id)}
-                                        >
-                                          Izbriši
-                                        </button>
-                                      </td>
-                                      <td className="py-4 px-4">
-                                        <Link to={`/urejanje-oglasa/${oglas.id}`}>
-                                          <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                                            Uredi
+                            <div>
+                              <div className="flex justify-center">
+                                <table className="min-w-full divide-y divide-blueGray-400">
+                                  <thead className="bg-blueGray-400">
+                                  </thead>
+                                  <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
+                                    {oglasi.map((oglas, index) => (
+                                      <tr key={oglas.id} className="bg-blueGray-200">
+                                        <Link to={`/oglas/${oglas.id}`}>
+                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
+                                        </Link >
+                                        <td className="py-4 px-4">
+                                          <button
+                                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            type="button"
+                                            onClick={() => handleDelete(oglas.id)}
+                                          >
+                                            Izbriši
                                           </button>
+                                        </td>
+                                        <td className="py-4 px-4">
+                                          <Link to={`/urejanje-oglasa/${oglas.id}`}>
+                                            <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                                              Uredi
+                                            </button>
+                                          </Link>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <br></br><br></br>
+                              <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Ponudbe za zamenjavo</h6>
+                              <div className="flex justify-center">
+                                <table className="min-w-full divide-y divide-blueGray-400">
+                                  <thead className="bg-blueGray-400">
+                                  </thead>
+                                  <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
+                                    {zamenjaniOglasi?.map((oglas, index) => (
+                                      <tr key={oglas.id} className="bg-blueGray-200">
+                                        <Link to={`/oglas-zamenjan/${oglas.id}`}>
+                                          <td className="py-4 px-4 ">{oglas?.naslov}</td>
                                         </Link>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                                        <td className="py-4 px-4">{oglas?.ime} {oglas?.priimek}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           ) : (
                             <p className="text-xl text-blueGray-500">Nimate objavljenih oglasov!</p>
@@ -283,7 +314,7 @@ export default function Profile({ izbris }) {
             </div>
           </div>
         </section>
-      </main>
+      </main >
       <Footer />
     </>
   );
