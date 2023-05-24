@@ -32,11 +32,14 @@ export default function Podrobnosti({ seznamOglasov }) {
                 console.log("Izbira je: ", res.data)
                 setIzbira(res.data);
             })
+
             .catch(err => {
                 console.error(err);
                 if (err.response && err.response.data && err.response.data.error) {
+                    console.log("error message:", err.response.data.error);
                     setError(err.response.data.error);
                 } else {
+                    console.log("error message: Napaka pri pridobivanju podatkov");
                     setError("Napaka pri pridobivanju podatkov");
                 }
             });
@@ -55,7 +58,8 @@ export default function Podrobnosti({ seznamOglasov }) {
     };
 
     useEffect(() => {
-        const uporabnikovId = izbira?.uporabnik.id;
+        const uporabnikovId = izbira && izbira.uporabnik.id;
+
 
         api.post('uporabnik/get-email-from-id', { id: uporabnikovId })
             .then(res => {
@@ -65,113 +69,125 @@ export default function Podrobnosti({ seznamOglasov }) {
             .catch(err => {
                 console.error(err);
                 if (err.response && err.response.data && err.response.data.error) {
-                    setError(err.response.data.error);
+                    console.log("error message:", err.response.data.error);
                 } else {
-                    setError("Napaka pri pridobivanju uporabnikovega e-poštnega naslova");
+                    console.log("error message: Napaka pri pridobivanju podatkov");
                 }
             });
-    }, [user]);
+
+    }, [izbira]);
+
 
     return (
         <>
-            <IndexNavbar fixed={true} />
-            {
-                error &&
-                <div className="error-message">
-                    {error}
+            {error ? (
+                <div className="text-center mt-12">
+                    <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                        {error}
+                    </h3>
+                    <Link to="/">
+                        <button className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                            Pojdi nazaj
+                        </button>
+                    </Link>
                 </div>
-            }
-            <section className="relative py-16 bg-blueGray-200">
-                <div className="container mx-auto px-4">
-                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full md:w-3/4 mx-auto mt-24 mb-4 shadow-xl rounded-lg">
-                        <div className="px-6">
-                            <div className="text-center mt-12">
-                                <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                                    {izbira?.naslov}
-                                </h3>
-                                <div className="mb-2 text-blueGray-600 mt-4">
-                                    <i className="fas fa-map-marker mr-2 text-lg text-blueGray-400"></i>
-                                    {izbira?.lokacija}
-                                </div>
-                                <div className="mb-2 text-blueGray-600 mt-4">
-                                    <i className="fas fa-ruler-combined mr-2 text-lg text-blueGray-400"></i>
-                                    Velikost: {izbira?.velikost}
-                                </div>
-                                <div className="mb-2 text-blueGray-600 mt-4">
-                                    <i className="fas fa-euro-sign mr-2 text-lg text-blueGray-400"></i>
-                                    {izbira?.cena}
-                                </div>
-                                <div className="mb-2 text-blueGray-600 mt-4">
-                                    <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
-                                    Opis: <br></br>{izbira?.opis}
-                                </div>
-                                <Link to={`/prodajalec/${izbira?.uporabnik.id}`}>
-                                    <div className="mb-2 text-blueGray-900 mt-4">
-                                        <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
-                                        Prodajalec: {izbira?.uporabnik.ime} {izbira?.uporabnik.priimek}
-                                    </div>
-                                </Link>
-                                <br></br>
-                                <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
-                                    <div className="px-6">
-                                        <section className="relative block" style={{ height: "70vh" }}>
-                                            <br></br>
-                                            <Slider {...settings}>
-                                                {izbira?.slike?.map((slika, index) => {
-                                                    const slikaPath = slika.split("\\uploads\\")[1];
-                                                    return (
-                                                        <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                            <img
-                                                                alt={`slika-${index}`}
-                                                                className="w-full align-middle rounded-lg"
-                                                                src={`http://localhost:9000/uploads/${slikaPath}`}
-                                                                style={{
-                                                                    objectFit: "cover",
-                                                                    height: "60vh",
-                                                                    width: "60%",
-                                                                    margin: "auto",
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    );
-                                                })}
-                                            </Slider>
-                                        </section>
-                                    </div>
-                                </div>
-                                <div className="flex justify-center mt-10 mb-8">
-                                    {user.email !== uporabnikovEmail && (
-                                        <>
-                                            <Link to={`/nakup/${izbira?.id}`}>
-                                                <button
-                                                    className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                                    type="button"
-                                                >
-                                                    Kupi
-                                                </button>
-                                            </Link>
-                                            {izbira?.za_zamenjavo === 1 && (
-                                                <div>
-                                                    <Link to={`/zamenjava/${izbira?.id}`}>
+
+            ) : (
+                <div>
+                    <IndexNavbar fixed={true} />
+                    <section className="relative py-16 bg-blueGray-200">
+                        <div className="container mx-auto px-4">
+                            <div className="relative flex flex-col min-w-0 break-words bg-white w-full md:w-3/4 mx-auto mt-24 mb-4 shadow-xl rounded-lg">
+                                <div className="px-6">
+                                    <div className="text-center mt-12">
+                                        <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                                            {izbira?.naslov}
+                                        </h3>
+                                        <div className="mb-2 text-blueGray-600 mt-4">
+                                            <i className="fas fa-map-marker mr-2 text-lg text-blueGray-400"></i>
+                                            {izbira?.lokacija}
+                                        </div>
+                                        <div className="mb-2 text-blueGray-600 mt-4">
+                                            <i className="fas fa-ruler-combined mr-2 text-lg text-blueGray-400"></i>
+                                            Velikost: {izbira?.velikost}
+                                        </div>
+                                        <div className="mb-2 text-blueGray-600 mt-4">
+                                            <i className="fas fa-euro-sign mr-2 text-lg text-blueGray-400"></i>
+                                            {izbira?.cena}
+                                        </div>
+                                        <div className="mb-2 text-blueGray-600 mt-4">
+                                            <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
+                                            Opis: <br></br>{izbira?.opis}
+                                        </div>
+                                        <Link to={`/prodajalec/${izbira?.uporabnik.id}`}>
+                                            <div className="mb-2 text-blueGray-900 mt-4">
+                                                <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
+                                                Prodajalec: {izbira?.uporabnik.ime} {izbira?.uporabnik.priimek}
+                                            </div>
+                                        </Link>
+                                        <br></br>
+                                        <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-24 shadow-xl rounded-lg">
+                                            <div className="px-6">
+                                                <section className="relative block" style={{ height: "70vh" }}>
+                                                    <br></br>
+                                                    <Slider {...settings}>
+                                                        {izbira?.slike?.map((slika, index) => {
+                                                            const slikaPath = slika.split("\\uploads\\")[1];
+                                                            return (
+                                                                <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                                    <img
+                                                                        alt={`slika-${index}`}
+                                                                        className="w-full align-middle rounded-lg"
+                                                                        src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                        style={{
+                                                                            objectFit: "cover",
+                                                                            height: "60vh",
+                                                                            width: "60%",
+                                                                            margin: "auto",
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </Slider>
+                                                </section>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-center mt-10 mb-8">
+                                            {user.email !== uporabnikovEmail && (
+                                                <>
+                                                    <Link to={`/nakup/${izbira?.id}`}>
                                                         <button
-                                                            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                            className="bg-teal-500 text-white active:bg-teal-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                                             type="button"
                                                         >
-                                                            Zamenjaj
+                                                            Kupi
                                                         </button>
                                                     </Link>
-                                                </div>
+                                                    {izbira?.za_zamenjavo === 1 && (
+                                                        <div>
+                                                            <Link to={`/zamenjava/${izbira?.id}`}>
+                                                                <button
+                                                                    className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                                    type="button"
+                                                                >
+                                                                    Zamenjaj
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                    )}
+                                                </>
                                             )}
-                                        </>
-                                    )}
-                                </div>
+                                        </div>
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </section >
+                    <Footer />
                 </div>
-            </section >
-            <Footer />
+            )}
 
         </>
     );

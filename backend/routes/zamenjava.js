@@ -68,12 +68,21 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
 
 router.get('/zamenjani/:fk_oglas_id', async (req, res) => {
     const { fk_oglas_id } = req.params;
+    //dodaj še validacijo če ta id od oglasa ne obstaja
+    if (!fk_oglas_id) {
+        return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
+    }
     try {
         const zamenjaniData = await knex('zamenjani')
             .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
             .where('zamenjani.fk_oglas_id', fk_oglas_id)
             .select('zamenjani.*');
+
+        if (zamenjaniData === undefined || zamenjaniData.length == 0) {
+            return res.status(404).json({ error: 'Oglas ne obstaja' });
+        }
         res.json(zamenjaniData);
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal server error' });
