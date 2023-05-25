@@ -40,6 +40,7 @@ async function baza() {
         table.string('lokacija').notNullable();
         table.boolean('osebni_prevzem').notNullable();
         table.boolean('za_zamenjavo').notNullable();
+        table.boolean('jeZamenjan').notNullable();
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
         table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela oglas ustvarjena.'))

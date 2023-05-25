@@ -15,6 +15,7 @@ const initialState = {
     lokacija: "",
     za_zamenjavo: 0,
     osebni_prevzem: 0,
+    jeZamenjan: 1,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
@@ -134,9 +135,12 @@ export default function ObjavaOglasa({ dodaj }) {
                 formData.append("cena", Number(oglas.cena));
                 formData.append("lokacija", oglas.lokacija);
                 formData.append("za_zamenjavo", oglas.za_zamenjavo);
+                formData.append("jeZamenjan", oglas.jeZamenjan);
                 formData.append("osebni_prevzem", oglas.osebni_prevzem);
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
+
+
 
                 if (oglas.slika) {
                     if (Array.isArray(oglas.slika)) {
@@ -158,7 +162,7 @@ export default function ObjavaOglasa({ dodaj }) {
                     alert("Oglas uspešno objavljen!");
                     navigate('/');
                 }
-                setOglas(initialState);
+                
                 setErrors({})
 
             } catch (error) {
@@ -201,6 +205,7 @@ export default function ObjavaOglasa({ dodaj }) {
                 ...prevState,
                 [name]: valueToUse,
                 fk_uporabnik_id: uporabnikovId,
+                jeZamenjan: 1
             };
             return nextState;
         });

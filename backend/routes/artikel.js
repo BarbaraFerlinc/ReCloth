@@ -23,8 +23,8 @@ var upload = multer({
 });
 
 router.post('/dodaj', upload.array('slika'), async (req, res) => {
-    const { naslov, velikost, opis, cena, lokacija, osebni_prevzem, za_zamenjavo, fk_uporabnik_id, fk_kategorija_id } = req.body;
-
+    const { naslov, velikost, opis, cena, lokacija, osebni_prevzem, za_zamenjavo, jeZamenjan, fk_uporabnik_id, fk_kategorija_id } = req.body;
+    
     if (!naslov || !velikost || !opis || !cena || !lokacija || !osebni_prevzem || !za_zamenjavo) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
@@ -50,6 +50,7 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
             lokacija: lokacija,
             osebni_prevzem: osebni_prevzem,
             za_zamenjavo: za_zamenjavo,
+            jeZamenjan: jeZamenjan,
             fk_uporabnik_id: fk_uporabnik_id,
             fk_kategorija_id: fk_kategorija_id
         });

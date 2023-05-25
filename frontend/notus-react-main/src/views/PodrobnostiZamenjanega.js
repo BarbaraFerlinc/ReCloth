@@ -124,10 +124,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
 
 
 
-
-
-
-
     return (
         <>
             {errorIzBaze ? (
