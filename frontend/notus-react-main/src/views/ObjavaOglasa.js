@@ -14,16 +14,17 @@ const initialState = {
     cena: 0,
     lokacija: "",
     za_zamenjavo: 0,
+    osebni_prevzem: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
-
 }
 
 export default function ObjavaOglasa({ dodaj }) {
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
     const [kategorija, setKategorija] = useState([]);
+    const [prevzem, setPrevzem] = useState(false);
     const [zamenjava, setZamenjava] = useState(false);
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
@@ -133,6 +134,7 @@ export default function ObjavaOglasa({ dodaj }) {
                 formData.append("cena", Number(oglas.cena));
                 formData.append("lokacija", oglas.lokacija);
                 formData.append("za_zamenjavo", oglas.za_zamenjavo);
+                formData.append("osebni_prevzem", oglas.osebni_prevzem);
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
 
@@ -177,11 +179,15 @@ export default function ObjavaOglasa({ dodaj }) {
     const handleChange = (e) => {
         if (e.target.id === 'za_zamenjavo') {
             setZamenjava(!zamenjava);
+        } else if (e.target.id === 'osebni_prevzem') {
+            setPrevzem(!prevzem);
         }
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
 
         if (type === "checkbox" && name === "za_zamenjavo") {
+            valueToUse = checked ? 1 : 0;
+        } else if (type === "checkbox" && name === "osebni_prevzem") {
             valueToUse = checked ? 1 : 0;
         } else if (name === "fk_kategorija_id") {
             const selectedKategorija = kategorija.find((k) => k.id === value);
@@ -249,6 +255,11 @@ export default function ObjavaOglasa({ dodaj }) {
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
                                             <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
+                                    </div>
+                                    <div className="relative w-full mb-3">
+                                        <div class="w-full"><label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="osebni_prevzem" id="osebni_prevzem" value={oglas.osebni_prevzem} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <span class="ml-2 text-sm font-semibold text-blueGray-500">Omogocen osebni prevzem</span></label></div>
                                     </div>
 
                                     <div className="relative w-full mb-3">
@@ -341,12 +352,12 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                                     htmlFor="grid-password"
                                                 >
-                                                    Lokacija
+                                                    {prevzem ? 'Prevzemno mesto' : 'Lokacija'}
                                                 </label>
                                                 <input
                                                     type="text"
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                                                    placeholder="Lokacija"
+                                                    placeholder={prevzem ? 'Prevzemno mesto' : 'Lokacija'}
                                                     name="lokacija" id="lokacija" value={oglas.lokacija} onChange={handleChange}
                                                 />
                                                 <small className="text-red-500">{errors.lokacija}</small>

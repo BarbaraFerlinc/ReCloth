@@ -154,7 +154,6 @@ export default function Register() {
             ...prevState,
             [name]: value,
         };
-        console.log(nextState)
         return nextState;
     });
   };

@@ -196,7 +196,6 @@ export default function Zamenjava() {
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            //dodaj(oglas);
             setOglas(initialState);
         }
     };
