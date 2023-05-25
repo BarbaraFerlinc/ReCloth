@@ -9,6 +9,7 @@ import Footer from "components/Footers/Footer.js";
 import api from "services/api";
 import { useNavigate } from "react-router-dom"
 
+
 export default function Profile({ izbris }) {
 
   const [uporabnik, setUporabnik] = useState({});
@@ -252,29 +253,21 @@ export default function Profile({ izbris }) {
                           {oglasi && oglasi.length > 0 ? (
                             <div>
                               <div className="flex justify-center">
-                                <table className="min-w-full divide-y divide-blueGray-400">
-                                  <thead className="bg-blueGray-400">
+                                <table className="min-w-full border divide-y divide-blueGray-400">
+                                  <thead className="bg-blueGray-500">
                                   </thead>
                                   <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
                                     {oglasi.map((oglas, index) => (
-                                      <tr key={oglas.id} className="bg-blueGray-200">
+                                      <tr key={oglas.id} className="bg-blueGray-100">
                                         <Link to={`/oglas/${oglas.id}`}>
-                                          <td className="py-3 px-3 ">{oglas?.naslov}</td>
+                                          <td className="py-2 px-4 text-left">{oglas?.naslov}</td>
                                         </Link >
-                                        <td className="py-3 px-3">
-                                          <button
-                                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                            type="button"
-                                            onClick={() => handleDelete(oglas.id)}
-                                          >
-                                            Izbriši
-                                          </button>
+                                        <td className="py-2 px-4">
+                                          <i className="fas fa-trash-alt hover:text-red-500 transition-colors" style={{ color: '#ff0000', fontSize: '20px', cursor: 'pointer' }} onClick={() => handleDelete(oglas.id)}></i>
                                         </td>
-                                        <td className="py-3 px-3">
+                                        <td className="py-2 px-4">
                                           <Link to={`/urejanje-oglasa/${oglas.id}`}>
-                                            <button className="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                                              Uredi
-                                            </button>
+                                            <i className="fas fa-edit hover:text-blue-500 transition-colors" style={{ color: '#0000ff', fontSize: '20px' }}></i>
                                           </Link>
                                         </td>
                                       </tr>
@@ -285,22 +278,33 @@ export default function Profile({ izbris }) {
                               <br></br><br></br>
                               <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Ponudbe za zamenjavo</h6>
                               <div className="flex justify-center">
-                                <table className="min-w-full divide-y divide-blueGray-400">
-                                  <thead className="bg-blueGray-400">
+                                <table className="min-w-full border divide-y divide-blueGray-400">
+                                  <thead className="bg-blueGray-500">
+                                    <tr>
+                                      <th className="py-3 px-3 text-left"></th>
+                                      <th className="py-3 px-3 text-left">Naziv</th>
+                                      <th className="py-3 px-3 text-left">Ponudnik</th>
+                                      <th className="py-3 px-3 text-left">Za oglas</th>
+                                    </tr>
                                   </thead>
-                                  <tbody className="bg-blueGray-100 divide-y divide-blueGray-300">
+                                  <tbody className="bg-blueGray-100">
                                     {zamenjaniOglasi?.map((oglas, index) => (
                                       <tr key={oglas.id} className="bg-blueGray-200">
                                         <Link to={`/oglas-zamenjan/${oglas.id}`}>
-                                          <td className="py-3 px-3 ">📝</td>
-                                          <td className="py-3 px-3 ">Naziv: {oglas?.naslov}</td>
+                                          <td className="py-3 px-3">📝</td>
                                         </Link>
-                                        <td className="py-3 px-3">Ponudnik: {oglas?.ime} {oglas?.priimek}</td>
-                                        <td className="py-3 px-3">Za oglas: {oglas?.naslov_oglasa}</td>
+                                        <td className="py-3 px-3">
+                                          <Link to={`/oglas-zamenjan/${oglas.id}`}>
+                                            {oglas?.naslov}
+                                          </Link>
+                                        </td>
+                                        <td className="py-3 px-3">{oglas?.ime} {oglas?.priimek}</td>
+                                        <td className="py-3 px-3">{oglas?.naslov_oglasa}</td>
                                       </tr>
                                     ))}
                                   </tbody>
                                 </table>
+
                               </div>
                             </div>
                           ) : (

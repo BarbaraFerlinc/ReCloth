@@ -95,39 +95,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     };
 
-    // useEffect(() => {
-    //     const oglasId = parsan_id;
-    //     console.log("Oglas Id je: ", oglasId)
-
-    //     api.post('uporabnik/get-email-from-oglas-id', { id: oglasId })
-    //         .then(res => {
-    //             const uporabnikovEmailizOglasa = res.data.userEmail;
-    //             console.log("Uporabnikov email iz oglasa je: ", uporabnikovEmailizOglasa);
-    //             if (user.email !== uporabnikovEmailizOglasa) {
-    //                 navigate("/");
-    //             } else {
-    //                 // Your handling code here if both emails are the same
-    //                 console.log("User email and Uporabnikov email are the same");
-    //             }
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             if (err.response && err.response.data && err.response.data.error) {
-    //                 console.log("error message:", err.response.data.error);
-    //                 setErrorIzBaze(err.response.data.error);
-    //             } else {
-    //                 console.log("error message: Napaka pri pridobivanju podatkov");
-    //                 setErrorIzBaze("Napaka pri pridobivanju podatkov");
-    //             }
-    //         });
-    // }, [user]);
-
-
-
-
-
-
-
     return (
         <>
             {errorIzBaze ? (
@@ -195,22 +162,22 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                         </div>
                                         <div className="flex justify-center mt-10 mb-8">
                                             <button
-                                                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                className="bg-emerald-500 hover:bg-emerald-600 text-white active:bg-emerald-700 font-bold uppercase text-sm px-6 py-3 rounded-full shadow focus:outline-none transition-colors duration-300"
                                                 type="button"
                                                 onClick={handleSprejmiClick}
-
                                             >
                                                 Sprejmi
                                             </button>
+                                            &nbsp;
                                             <button
-                                                className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                className="bg-red-500 hover:bg-red-600 text-white active:bg-red-700 font-bold uppercase text-sm px-6 py-3 rounded-full shadow focus:outline-none transition-colors duration-300"
                                                 type="button"
                                                 onClick={handleZavrniClick}
-
                                             >
                                                 Zavrni
                                             </button>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
