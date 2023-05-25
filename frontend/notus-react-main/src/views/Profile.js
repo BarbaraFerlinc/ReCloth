@@ -20,6 +20,9 @@ export default function Profile({ izbris }) {
 
 
 
+
+
+
   const { user, logout } = UserAuth();
 
   const navigate = useNavigate();
@@ -81,8 +84,8 @@ export default function Profile({ izbris }) {
   const fetchOglasi = async (id) => {
     try {
       const response = await api.get(`/artikel/profil/${id}`);
-      //console.log(response.data);
-      setOglasi(response.data);
+      const filteredOglasi = response.data.filter(filteredOglas => filteredOglas.jeZamenjan === 1);
+      setOglasi(filteredOglasi);
     } catch (error) {
       console.error("Napaka pri pridobivanju oglasov uporabnika", error);
     }
@@ -106,8 +109,8 @@ export default function Profile({ izbris }) {
     izracunajOceno();
   }, [uporabnikovId]);
 
-  //console.log(oglasi);
-  console.log(zamenjaniOglasi)
+  console.log(oglasi);
+  //console.log(zamenjaniOglasi);
 
 
 
@@ -122,6 +125,11 @@ export default function Profile({ izbris }) {
   };
 
 
+
+
+
+
+  console.log(oglasi)
 
   return (
     <>
@@ -250,7 +258,7 @@ export default function Profile({ izbris }) {
                       <div className="flex flex-wrap justify-center">
                         <div className="w-full lg:w-9/12 px-4">
                           <h6 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-4">Moji oglasi</h6>
-                          {oglasi && oglasi.length > 0 ? (
+                          {oglasi && oglasi?.length > 0 ? (
                             <div>
                               <div className="flex justify-center">
                                 <table className="min-w-full border divide-y divide-blueGray-400">
