@@ -40,26 +40,28 @@ export default function Zamenjava() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-                if (err.response && err.response.data && err.response.data.error) {
-                    console.log("error message:", err.response.data.error);
-                    setErrorIzBaze(err.response.data.error);
-                } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
-                    setErrorIzBaze("Napaka pri pridobivanju podatkov");
-                }
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                    if (err.response && err.response.data && err.response.data.error) {
+                        console.log("error message:", err.response.data.error);
+                        setErrorIzBaze(err.response.data.error);
+                    } else {
+                        console.log("error message: Napaka pri pridobivanju podatkov");
+                        setErrorIzBaze("Napaka pri pridobivanju podatkov");
+                    }
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
         const fetchKategorije = async () => {
