@@ -16,15 +16,14 @@ router.post('/dodaj', async (req, res) => {
 
     try {
         const obvestilo = await knex.transaction(async (trx) => {
-            // Insert the new record into the 'obvestilo_zamenjava' table
             const insertedObvestilo = await trx('obvestilo_zamenjava').insert({
                 fk_oglas_id: fk_oglas_id,
                 fk_uporabnik_id: fk_uporabnik_id,
                 jeSprejeto: jeSprejeto
             });
 
-            // Delete the corresponding 'oglas' record
-            await trx('oglas').where('id', fk_oglas_id).del();
+            await trx('oglas').where('id', fk_oglas_id).update('jeZamenjan', 0);
+            await trx('zamenjani').del();
             return insertedObvestilo;
         });
 

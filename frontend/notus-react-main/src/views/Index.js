@@ -120,6 +120,11 @@ export default function Index({ seznamOglasov }) {
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
 
+
+  console.log(seznamOglasov);
+  let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 1)
+  console.log(nov)
+
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -137,11 +142,11 @@ export default function Index({ seznamOglasov }) {
     fetchKategorije();
   }, []);
 
-  const filteredOglasi = seznamOglasov.filter(oglas =>
+  const filteredOglasi = nov.filter(oglas =>
     (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
     (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
     (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
-    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
+    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase()) 
   );
 
   return (
