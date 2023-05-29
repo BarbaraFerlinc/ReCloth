@@ -1,5 +1,5 @@
 node_modules/
 uploads/
-./knexConfig.js
-./secret.js
+knexConfig.js
+secret.js
 

@@ -46,7 +46,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     useEffect(() => {
         api.get(`/zamenjava/${parsan_id}`)
             .then(res => {
-                setIzbira(res.data);
+                setIzbira(res.data)
             })
             .catch(err => {
                 console.error(err);
@@ -86,8 +86,18 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [izbira.fk_uporabnik_id]);
 
+    
+    const dobiKupca = async () => {
+        try {
+            const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
+            setKupec(response.data[0])
+        } catch (error) {
+            console.error("Napaka pri pridobivanju kupca", error);
+        }
+    };
+
     useEffect(() => {
-        api.get(`/artikel/${izbira.fk_oglas_id}`)
+        api.get(`/artikel/${izbira?.fk_oglas_id}`)
             .then(res => {
                 console.log("Oglas je: ", res.data)
                 setOglas(res.data);
@@ -101,7 +111,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                     console.log("error message: Napaka pri pridobivanju podatkov");
                 }
             });
-    }, [izbira.fk_oglas_id]);
+        dobiKupca();
+    }, [izbira]);
 
     const posljiPotrdilo = async (e) => {
         let kupecIme = kupec.ime + " " + kupec.priimek;
@@ -137,7 +148,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     const posljiZavrnitev = async () => {
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
-        let stevilkaRacuna = 'oglas_' + oglas.id;
 
         //console.log(kupec)
         //console.log(prodajalec)
@@ -165,7 +175,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }
 
     const handleSprejmiClick = () => {
-        posljiPotrdilo();
         api.post('obvestilo/dodaj', {
             fk_oglas_id: izbira?.fk_oglas_id,
             fk_uporabnik_id: izbira?.fk_uporabnik_id,
@@ -181,10 +190,10 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
+        posljiPotrdilo();
     };
 
     const handleZavrniClick = () => {
-        posljiZavrnitev();
         api.post('obvestilo/dodaj2', {
             fk_oglas_id: izbira?.fk_oglas_id,
             fk_uporabnik_id: izbira?.fk_uporabnik_id,
@@ -199,6 +208,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
+        posljiZavrnitev();
     };
 
     // useEffect(() => {
