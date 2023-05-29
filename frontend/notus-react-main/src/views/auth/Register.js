@@ -8,6 +8,8 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Footer from "components/Footers/Footer";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialState = {
   ime: "",
@@ -32,7 +34,7 @@ export default function Register() {
 
   const navigate = useNavigate();
 
-  const {createUser} = UserAuth();
+  const { createUser } = UserAuth();
 
   const [uporabniki, setUporabniki] = useState([]);
 
@@ -55,33 +57,33 @@ export default function Register() {
     console.log(user)
 
     if (!user.ime) {
-        formIsValid = false;
-        formErrors["ime"] = "Prosimo, vnesite ime.";
+      formIsValid = false;
+      formErrors["ime"] = "Prosimo, vnesite ime.";
     }
 
     if (!user.priimek) {
-        formIsValid = false;
-        formErrors["priimek"] = "Prosimo, vnesite priimek.";
+      formIsValid = false;
+      formErrors["priimek"] = "Prosimo, vnesite priimek.";
     }
 
     if (!user.telefon) {
-        formIsValid = false;
-        formErrors["telefon"] = "Prosimo, vnesite telefonsko stevilko.";
+      formIsValid = false;
+      formErrors["telefon"] = "Prosimo, vnesite telefonsko stevilko.";
     }
 
     if (!user.naslov) {
-        formIsValid = false;
-        formErrors["naslov"] = "Prosimo, vnesite naslov.";
+      formIsValid = false;
+      formErrors["naslov"] = "Prosimo, vnesite naslov.";
     }
 
     if (!user.posta) {
-        formIsValid = false;
-        formErrors["posta"] = "Prosimo, vnesite postno stevilko.";
+      formIsValid = false;
+      formErrors["posta"] = "Prosimo, vnesite postno stevilko.";
     }
 
     if (!user.drzava) {
-        formIsValid = false;
-        formErrors["drzava"] = "Prosimo, vnesite drzavo.";
+      formIsValid = false;
+      formErrors["drzava"] = "Prosimo, vnesite drzavo.";
     }
 
     if (!email) {
@@ -97,52 +99,61 @@ export default function Register() {
     }
 
     if (!password) {
-        formIsValid = false;
-        formErrors["geslo"] = "Prosimo, vnesite geslo.";
+      formIsValid = false;
+      formErrors["geslo"] = "Prosimo, vnesite geslo.";
     }
 
     if (password && password.length < 6) {
       formIsValid = false;
       formErrors["geslo"] = "Prosimo, vnesite geslo z vsaj 6 znaki.";
-  }
+    }
     setErrors(formErrors);
     return formIsValid;
-}
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (validateForm()) {
 
-        try {
-          user.email = email;
+      try {
+        user.email = email;
 
-          console.log(user);
+        console.log(user);
 
-          const response = await api.post("/uporabnik/dodaj", user, {
-              headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-              },
+        const response = await api.post("/uporabnik/dodaj", user, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          toast.info(' Uspešno ste se registrirali!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
           });
-
-          if (response.status === 200) {
-              alert("Uporabnik uspešno registriran!");
-          } else {
-              alert("Napaka pri registraciji!");
-          }
-
-          setUser(initialState);
-          setErrors({});
-          
-          await createUser(email, password);
-
-          navigate("/profile")
-        } catch (er) {
-          setError(er.message);
-          console.log(er.message);
         }
+
+        setUser(initialState);
+        setErrors({});
+
+        await createUser(email, password);
+
+        setTimeout(() => {
+          navigate('/profile');
+        }, 3000);
+      } catch (er) {
+        setError(er.message);
+        console.log(er.message);
+      }
     }
   }
 
@@ -150,11 +161,11 @@ export default function Register() {
     const { value, name } = e.target;
 
     setUser((prevState) => {
-        const nextState = {
-            ...prevState,
-            [name]: value,
-        };
-        return nextState;
+      const nextState = {
+        ...prevState,
+        [name]: value,
+      };
+      return nextState;
     });
   };
 
@@ -331,7 +342,7 @@ export default function Register() {
                     >
                       <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                     </button>
-                    
+
                   </div>
                   <small className="text-red-500">{errors.geslo}</small>
 
@@ -358,6 +369,7 @@ export default function Register() {
       </div>
       <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
       <Footer />
+      <ToastContainer></ToastContainer>
     </>
   );
 }
