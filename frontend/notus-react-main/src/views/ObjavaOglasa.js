@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
-
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { HighlightSpanKind } from "typescript";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const initialState = {
     naslov: "",
@@ -15,7 +18,7 @@ const initialState = {
     lokacija: "",
     za_zamenjavo: 0,
     osebni_prevzem: 0,
-    jeZamenjan: 1,
+    jeZamenjan: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
@@ -30,6 +33,7 @@ export default function ObjavaOglasa({ dodaj }) {
     const [uporabnikovId, setUporabnikovId] = useState(0)
 
     const { user } = UserAuth();
+
 
     const navigate = useNavigate();
 
@@ -159,10 +163,21 @@ export default function ObjavaOglasa({ dodaj }) {
                 });
 
                 if (response.status === 200) {
-                    alert("Oglas uspešno objavljen!");
-                    navigate('/');
+                    toast.success(' Uspešno ste objavili oglas!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    setTimeout(() => {
+                        navigate('/');
+                      }, 3000);
                 }
-                
+
                 setErrors({})
 
             } catch (error) {
@@ -205,7 +220,7 @@ export default function ObjavaOglasa({ dodaj }) {
                 ...prevState,
                 [name]: valueToUse,
                 fk_uporabnik_id: uporabnikovId,
-                jeZamenjan: 1
+                jeZamenjan: 0
             };
             return nextState;
         });
@@ -405,6 +420,7 @@ export default function ObjavaOglasa({ dodaj }) {
             </div>
             <br></br>
             <Footer />
+            <ToastContainer />
         </>
     )
 

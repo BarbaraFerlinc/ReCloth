@@ -7,7 +7,6 @@ async function baza() {
     await knex.schema.dropTableIfExists('obvestilo_zamenjava').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('zamenjani').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('nakup').catch((err) => { console.log(err); throw err });
-    //await knex.schema.dropTableIfExists('nacin_placila').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('oglas').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('kategorija').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('uporabnik').catch((err) => { console.log(err); throw err });
@@ -58,6 +57,7 @@ async function baza() {
         table.string('naslov').notNullable();
         table.string('velikost').notNullable();
         table.text('opis', 'longtext').notNullable();
+        table.boolean('jePotrjen').notNullable();
         table.integer('fk_oglas_id').references('id').inTable('oglas').unsigned().onDelete('CASCADE');
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
         table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');
@@ -71,19 +71,10 @@ async function baza() {
     }).then(() => console.log('Tabela slika ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
 
-    /*await knex.schema.createTable('nacin_placila', (table) => {
-        table.increments('id');
-        table.string('naziv').notNullable();
-    }).then(() => console.log('Tabela nacin_placila ustvarjena.'))
-        .catch((err) => { console.log(err); throw err });*/
-
-    // tabela kupljeni ??
-
     await knex.schema.createTable('nakup', (table) => {
         table.increments('id');
-        table.boolean('za_dostavo').notNullable();
+        table.boolean('osebni_prevzem').notNullable();
         table.string('nacin_placila').notNullable();
-        table.integer('fk_prodajalec_id').references('id').inTable('nacin_placila').notNullable().unsigned().onDelete('CASCADE');
         table.integer('fk_oglas_id').references('id').inTable('oglas').notNullable().unsigned().onDelete('CASCADE');
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
     }).then(() => console.log('Tabela nakup ustvarjena.'))

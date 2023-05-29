@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "services/api";
+import { UserAuth } from "context/AuthContext";
+
 import { useParams } from "react-router-dom";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer";
@@ -7,17 +10,16 @@ import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-import api from "services/api";
-import { useEffect, useState } from "react";
-import { UserAuth } from "context/AuthContext";
 import { useNavigate } from "react-router-dom"
-
-
+import { generatePdf } from "./Index";
 
 export default function PodrobnostiZamenjanega({ izbris }) {
     const [izbira, setIzbira] = useState("");
+    const [oglas, setOglas] = useState();
     const [error, setError] = useState(null);
 
+    const [prodajalec, setProdajalec] = useState({});
+    const [kupec, setKupec] = useState({});
 
     const navigate = useNavigate();
     const [clicked, setClicked] = useState(null);
@@ -44,7 +46,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     useEffect(() => {
         api.get(`/zamenjava/${parsan_id}`)
             .then(res => {
-                setIzbira(res.data);
+                setIzbira(res.data)
             })
             .catch(err => {
                 console.error(err);
@@ -58,7 +60,119 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [parsan_id]);
 
+    console.log(izbira)
+    useEffect(() => {
+        const uporabnikovEmail = user.email;
+        console.log("Uporabnikov email je: ", uporabnikovEmail)
 
+        api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
+            .then(res => {
+                const uporabnik_profil = res.data.user;
+                setProdajalec(uporabnik_profil);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, [user]);
+
+    useEffect(() => {
+        api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
+            .then(res => {
+                const uporabnik_profil = res.data.user;
+                setKupec(uporabnik_profil);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, [izbira.fk_uporabnik_id]);
+
+    
+    const dobiKupca = async () => {
+        try {
+            const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
+            setKupec(response.data[0])
+        } catch (error) {
+            console.error("Napaka pri pridobivanju kupca", error);
+        }
+    };
+
+    useEffect(() => {
+        api.get(`/artikel/${izbira?.fk_oglas_id}`)
+            .then(res => {
+                console.log("Oglas je: ", res.data)
+                setOglas(res.data);
+            })
+
+            .catch(err => {
+                console.error(err);
+                if (err.response && err.response.data && err.response.data.error) {
+                    console.log("error message:", err.response.data.error);
+                } else {
+                    console.log("error message: Napaka pri pridobivanju podatkov");
+                }
+            });
+        dobiKupca();
+    }, [izbira]);
+
+    const posljiPotrdilo = async (e) => {
+        let kupecIme = kupec.ime + " " + kupec.priimek;
+        let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
+        let stevilkaRacuna = 'oglas_' + oglas.id;
+
+        console.log(kupec)
+        console.log(prodajalec)
+
+        const podatki = {
+            subject: 'Potrdilo zamenjave',
+            body: `Potrdilo zamenjave.\n\nKupec: ${kupecIme} (${kupec.email})\nProdajalec: ${prodajalecIme} (${prodajalec.email})\nŠtevilka nakupa: oglas_${oglas.id}\nNačin plačila: Zamenjava\nNacin prevzema: Po dogovoru`,
+            to: [kupec.email, prodajalec.email],
+        }
+
+        const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov);
+        podatki.pdfDataUri = pdfDataUri;
+
+        const res = await api.post("/mail/poslji", podatki, {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        });
+
+        if (res.status === 200) {
+            console.log(200);
+        } else {
+            console.log(res.status);
+        }
+    }
+
+    const posljiZavrnitev = async () => {
+        let kupecIme = kupec.ime + " " + kupec.priimek;
+        let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
+
+        //console.log(kupec)
+        //console.log(prodajalec)
+
+
+
+        const podatki = {
+            subject: 'Zavrnitev zamenjave',
+            body: `Zamenjava je bila zavrnjena.\n\nKupec: ${kupecIme} (${kupec.email})\nProdajalec: ${prodajalecIme} (${prodajalec.email})\nŠtevilka oglasa: oglas_${oglas.id}`,
+            to: [kupec.email, prodajalec.email],
+        }
+
+        const res = await api.post("/mail/poslji", podatki, {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        });
+
+        if (res.status === 200) {
+            console.log(200);
+        } else {
+            console.log(res.status);
+        }
+    }
 
     const handleSprejmiClick = () => {
         api.post('obvestilo/dodaj', {
@@ -76,6 +190,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
+        posljiPotrdilo();
     };
 
     const handleZavrniClick = () => {
@@ -93,6 +208,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
+        posljiZavrnitev();
     };
 
     return (

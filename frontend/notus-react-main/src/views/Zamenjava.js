@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
 const initialState = {
@@ -186,15 +186,36 @@ export default function Zamenjava() {
                 });
 
                 if (response.status === 200) {
-                    alert("Oglas uspešno poslan!");
+                    toast.success(' Uspešno ste objavili oglas za zamenjavo!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 } else {
-                    alert("Napaka pri posiljanju oglasa!");
+                    toast.error(' Napaka pri objavi oglasa za zamenjavo!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 }
 
+                
                 setOglas(initialState);
                 setErrors({})
 
-                navigate("/profile");
+                setTimeout(() => {
+                        navigate('/');
+                      }, 3000);
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
@@ -387,6 +408,8 @@ export default function Zamenjava() {
                     <Footer />
                 </div>
             )}
+            <ToastContainer />
+
         </>
     )
 }
