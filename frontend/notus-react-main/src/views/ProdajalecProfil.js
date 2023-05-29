@@ -17,13 +17,11 @@ export default function ProdajalecProfil() {
         parsan_id = undefined;
     }
 
-    //console.log(id);
 
     useEffect(() => {
         const fetchProdajalec = async () => {
             try {
                 const response = await api.get(`/uporabnik/${parsan_id}`);
-                //console.log(response.data[0]);
                 setProdajalec(response.data[0])
             } catch (error) {
                 console.error("Napaka pri pridobivanju prodajalca", error);
@@ -42,10 +40,6 @@ export default function ProdajalecProfil() {
         };
         fetchOglasiProdajalca();
     }, []);
-
-    //console.log(prodajalec);
-    //console.log(oglasiProdajalca);
-
 
 
     return (

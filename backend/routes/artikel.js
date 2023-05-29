@@ -119,6 +119,10 @@ router.get('/:id', async (req, res) => {
         if (!uporabnik) {
             return res.status(404).json({ error: 'Uporabnik ne obstaja' });
         }
+        if(oglas.jeZamenjan === 1){
+            return res.status(404).json({ error: 'Oglas je že zamenjan' });
+        }
+        
 
         // Add the user to the ad object
         oglas.uporabnik = uporabnik;

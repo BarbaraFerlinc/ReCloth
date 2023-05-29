@@ -20,6 +20,7 @@ import UrejanjeOglasa from "views/UrejanjeOglasa";
 import { Navigate } from "react-router-dom";
 import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 import Obvestilo from "views/Obvestila";
+import PodrobnostiObvestila from "views/PodrobnostiObvestila";
 
 
 const Routing = () => {
@@ -27,7 +28,7 @@ const Routing = () => {
     const [seznamZamenjanih, setSeznamZamenjanih] = useState([]);
     const [error, setError] = useState(null);
 
-    
+
 
     useEffect(() => {
         const fetchArtikle = async () => {
@@ -94,6 +95,7 @@ const Routing = () => {
                     <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega izbris={handleDelete} />} />
                     <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                     <Route path="/obvestila" element={<Obvestilo></Obvestilo>}></Route>
+                    <Route path="/obvestilo/:id" element={<PodrobnostiObvestila />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

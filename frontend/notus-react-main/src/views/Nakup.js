@@ -51,26 +51,28 @@ export default function Nakup() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-                if (err.response && err.response.data && err.response.data.error) {
-                    console.log("error message:", err.response.data.error);
-                    setErrorIzBaze(err.response.data.error);
-                } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
-                    setErrorIzBaze("Napaka pri pridobivanju podatkov");
-                }
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                    if (err.response && err.response.data && err.response.data.error) {
+                        console.log("error message:", err.response.data.error);
+                        setErrorIzBaze(err.response.data.error);
+                    } else {
+                        console.log("error message: Napaka pri pridobivanju podatkov");
+                        setErrorIzBaze("Napaka pri pridobivanju podatkov");
+                    }
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
         const oglasId = parsan_id;
@@ -258,12 +260,12 @@ export default function Nakup() {
                                     </div>
                                     <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                                         <form onSubmit={handleSubmit}>
-                                            {oglas ? oglas.osebni_prevzem ? 
+                                            {oglas ? oglas.osebni_prevzem ?
                                                 <div className="relative w-full mb-3">
                                                     <div class="w-full"><label class="inline-flex items-center cursor-pointer">
                                                         <input type="checkbox" name="za_dostavo" id="za_dostavo" value={nakup.za_dostavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                                         <span class="ml-2 text-sm font-semibold text-blueGray-500">Dostava na dom</span></label></div>
-                                                </div>: <></> : "Ni oglasa."
+                                                </div> : <></> : "Ni oglasa."
                                             }
                                             <div className="w-1/2 px-2">
                                                 <div className="relative w-full mb-3">
@@ -285,8 +287,8 @@ export default function Nakup() {
                                                 </div>
                                             </div>
                                             <hr className="mt-6 border-b-1 border-blueGray-300" />
-                                            
-                                            {nacinPlacila=="Kreditna kartica" ?
+
+                                            {nacinPlacila == "Kreditna kartica" ?
                                                 <>
                                                     <div className="text-blueGray-400 text-center mb-3 font-bold">
                                                         <small>Vnesite podatke o kartici</small>
@@ -342,13 +344,13 @@ export default function Nakup() {
                                                 </> : <></>
                                             }
 
-                                            {nacinPlacila=="PayPal" ?
+                                            {nacinPlacila == "PayPal" ?
                                                 "S klikom na KUPI boste preusmerjeni na PayPal za varno dokončanje vašega nakupa" : <></>
                                             }
 
-                                            {nacinPlacila=="Po povzetju" ?
+                                            {nacinPlacila == "Po povzetju" ?
                                                 "Plačilo po povzetju" : <></>
-                                            }                                            
+                                            }
 
                                             <br></br>
                                             <div className="text-center mt-6">
