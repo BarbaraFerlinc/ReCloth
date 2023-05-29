@@ -6,7 +6,6 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
 const initialState = {

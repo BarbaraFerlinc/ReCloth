@@ -17,6 +17,9 @@
     "firebase": "^9.22.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.29",
+    "nodemailer": "6.9.2",
     "postcss": "^8.4.23",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -24,6 +27,7 @@
     "react-router-dom": "^6.11.2",
     "react-scripts": "4.0.3",
     "react-slick": "^0.29.0",
+    "save": "^2.9.0",
     "slick-carousel": "^1.8.1",
     "tailwindcss": "2.0.4"
   },

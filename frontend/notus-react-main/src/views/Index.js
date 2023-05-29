@@ -7,6 +7,109 @@ import api from "services/api";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import "../components/Dropdown.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
+  var doc = new jsPDF('portrait', 'px', 'a4', 'false');
+  
+  doc.setFont('Arial', 'bold');
+  doc.setFontSize(36);
+  doc.setTextColor('#333');
+  
+  doc.text('Racun', 30, 60);
+  
+  doc.setFont('Arial', 'normal');
+  doc.setFontSize(16);
+  doc.setTextColor('#555');
+  
+  doc.text('Kupec:', 30, 100);
+  doc.text(imeKupca, 150, 100);
+  
+  doc.text('Prodajalec:', 30, 120);
+  doc.text(imeProdajalca, 150, 120);
+  
+  doc.text('Stevilka racuna:', 30, 140);
+  doc.text(stevilkaRacuna, 150, 140);
+
+  if (!nacinPlacila) {
+    doc.text('Nacin placila:', 30, 160);
+    doc.text("Zamenjava", 150, 160);
+
+    doc.text('Nacin prevzema:', 30, 180);
+    doc.text("Po dogovoru", 150, 180);
+  } else {
+    doc.text('Nacin placila:', 30, 160);
+    doc.text(nacinPlacila, 150, 160);
+
+    if (osebniPrevzem) {
+      doc.text('Nacin prevzema:', 30, 180);
+      doc.text("Osebni prevzem (" + lokacijaPrevzema + ")", 150, 180);
+    } else {
+      doc.text('Nacin prevzema:', 30, 180);
+      doc.text("Dostava na dom", 150, 180);
+    }
+  }
+  
+  const currentDate = new Date().toLocaleDateString('sl-SI');
+  doc.setTextColor('#777');
+  doc.setFontSize(12);
+  doc.text(currentDate, doc.internal.pageSize.getWidth() - 30, 40, { align: 'right' });
+  
+  const items = [
+    { name: imeArtikla, price: cena },
+  ];
+  
+  if (nacinPlacila) {
+    doc.autoTable({
+      startY: 200,
+      margin: { top: 180 },
+      head: [['Artikel', 'Cena']],
+      body: items.map(item => [item.name, item.price + ' €']),
+      theme: 'grid',
+      columnStyles: {
+        0: { cellWidth: 120 },
+        1: { cellWidth: 80, halign: 'right' },
+      },
+    });
+  } else {
+    doc.autoTable({
+      startY: 200,
+      margin: { top: 180 },
+      head: [['Artikel', 'Okvirna cena']],
+      body: items.map(item => [item.name, item.price + ' €']),
+      theme: 'grid',
+      columnStyles: {
+        0: { cellWidth: 120 },
+        1: { cellWidth: 80, halign: 'right' },
+      },
+    });
+  }
+  
+  doc.setTextColor('#555');
+  doc.setFontSize(16);
+
+  if (nacinPlacila) {
+    doc.text('Koncna cena:', 30, doc.autoTable.previous.finalY + 20);
+    doc.text(cena + ' €', 150, doc.autoTable.previous.finalY + 20);
+  }
+  
+  doc.setDrawColor('#ccc');
+  doc.setLineWidth(1);
+  doc.rect(20, 80, doc.internal.pageSize.getWidth() - 40, doc.autoTable.previous.finalY - 80 + 40);
+  
+  doc.setFont('Arial', 'bold');
+  doc.setFontSize(24);
+  doc.setTextColor('#333');
+
+  const reclothX = doc.internal.pageSize.getWidth() / 2;
+  const reclothY = doc.autoTable.previous.finalY + 80;
+
+  doc.text('ReCloth', reclothX, reclothY, { align: 'center' });
+
+  return doc.output('datauristring');
+  //doc.save('racun.pdf');
+}
 
 export default function Index({ seznamOglasov }) {
   const [imageSrcs, setImageSrcs] = useState({});
@@ -16,9 +119,6 @@ export default function Index({ seznamOglasov }) {
   const [selectedZamenjava, setSelectedZamenjava] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
-
-
-
 
   const handleRefresh = () => {
     window.location.reload();

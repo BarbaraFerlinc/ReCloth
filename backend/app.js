@@ -3,10 +3,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const pdf = require('html-pdf');
 
 // routerji
 var artikelRouter = require('./routes/artikel');
+var pdfRouter = require('./routes/createPdf');
 var kategorijaRouter = require('./routes/kategorija');
+var mailRouter = require('./routes/mailSender');
 var nakupRouter = require('./routes/nakup');
 var pogovorRouter = require('./routes/pogovor');
 var profilRouter = require('./routes/profil');
@@ -21,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -33,7 +39,9 @@ app.use((req, res, next) => {
 
 // uporaba routerjev
 app.use('/artikel/', artikelRouter);
+app.use('/pdf/', pdfRouter);
 app.use('/kategorija/', kategorijaRouter);
+app.use('/mail/', mailRouter);
 app.use('/nakup/', nakupRouter);
 app.use('/pogovor/', pogovorRouter);
 app.use('/profil/', profilRouter);

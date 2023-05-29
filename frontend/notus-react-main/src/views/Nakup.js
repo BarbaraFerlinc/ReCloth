@@ -7,17 +7,14 @@ import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { generatePdf } from "./Index";
 
 const initialState = {
-    za_dostavo: 0,
+    osebni_prevzem: 0,
     nacin_placila: "",
     fk_uporabnik_id: 0,
-    fk_prodajalec_id: 0,
     fk_oglas_id: 0,
 }
-
-// fk_prodajalec_id mogoce ni potreben - se dobi iz oglasa
-// namesto fk_oglas_id mogoce fk_kupljeni_id -> nova tabela v bazi (iz tabele oglas se zbrise in shrani v tabelo kupljeni)
 
 const podatki_kartice = {
     stevilka: "",
@@ -35,6 +32,8 @@ export default function Nakup() {
         parsan_id = undefined;
     }
 
+    const [prodajalec, setProdajalec] = useState({});
+    const [kupec,  setKupec] = useState({});
     const [nakup, setNakup] = useState(initialState);
     const [kartica, setKartica] = useState(podatki_kartice);
     const [errors, setErrors] = useState({ slika: [] });
@@ -43,8 +42,7 @@ export default function Nakup() {
     const [errorIzBaze, setErrorIzBaze] = useState(null);
     const [oglas, setOglas] = useState();
     const [nacinPlacila, setNacinPlacila] = useState("");
-
-    const [dostava, setDostava] = useState(false);
+    const [prevzem, setPrevzem] = useState(false);
 
     const { user } = UserAuth();
 
@@ -70,7 +68,26 @@ export default function Nakup() {
                     setErrorIzBaze("Napaka pri pridobivanju podatkov");
                 }
             });
+        api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
+            .then(res => {
+              const uporabnik_profil = res.data.user;
+              setKupec(uporabnik_profil);
+            })
+            .catch(err => {
+              console.error(err);
+            });
     }, [user]);
+
+    useEffect(() => {
+        api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmailizOglasa })
+            .then(res => {
+              const uporabnik_profil = res.data.user;
+              setProdajalec(uporabnik_profil);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+    }, [uporabnikovEmailizOglasa]);
 
     useEffect(() => {
         const oglasId = parsan_id;
@@ -122,29 +139,42 @@ export default function Nakup() {
         let formErrors = {};
         let formIsValid = true;
 
+        const regex = /^[0-9]{3}$/;
+        const regex1 = /^(0[1-9]|1[0-2])\/\d{2}$/;
+
         if (!nakup.nacin_placila) {
             formIsValid = false;
             formErrors["nacin_placila"] = "Prosimo, izberite nacin placila.";
         }
 
-        if (!kartica.stevilka) {
+        if (nakup.nacin_placila === "Kreditna kartica" && !kartica.stevilka) {
             formIsValid = false;
             formErrors["stevilka"] = "Prosimo, vnesite stevilko kartice.";
         }
 
-        if (!kartica.ime) {
+        if (nakup.nacin_placila === "Kreditna kartica" && !kartica.ime) {
             formIsValid = false;
             formErrors["ime"] = "Prosimo, vnesite ime na kartici.";
         }
 
-        if (!kartica.datum_poteka) {
+        if (nakup.nacin_placila === "Kreditna kartica" && !kartica.datum_poteka) {
             formIsValid = false;
             formErrors["datum_poteka"] = "Prosimo, vnesite datum poteka kartice.";
         }
 
-        if (!kartica.varnostna_koda) {
+        if (nakup.nacin_placila === "Kreditna kartica" && !kartica.varnostna_koda) {
             formIsValid = false;
             formErrors["varnostna_koda"] = "Prosimo, vnesite varnostno kodo kartice.";
+        }
+
+        if (nakup.nacin_placila === "Kreditna kartica" && (!regex.test(kartica.varnostna_koda) || kartica.varnostna_koda.length != 3)) {
+            formIsValid = false;
+            formErrors["varnostna_koda"] = "Varnostna koda mora vsebovati natanko tri številke.";
+        }
+
+        if (nakup.nacin_placila === "Kreditna kartica" && !regex1.test(kartica.datum_poteka)) {
+            formIsValid = false;
+            formErrors["datum_poteka"] = "Datum poteka mora biti v obliki MM/LL.";
         }
 
         setErrors(formErrors);
@@ -154,9 +184,15 @@ export default function Nakup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log(validateForm());
+
         if (validateForm()) {
             try {
                 console.log(nakup);
+                let prevzem1 = "Dostava na dom";
+                if (nakup.osebni_prevzem) {
+                    prevzem1 = "Osebni prevzem (" + oglas.lokacija + ")";
+                }
 
                 const response = await api.post("/nakup/dodaj", nakup, {
                     headers: {
@@ -166,6 +202,35 @@ export default function Nakup() {
                 });
 
                 if (response.status === 200) {
+                    let kupecIme = kupec.ime + " " + kupec.priimek;
+                    let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
+                    let stevilkaRacuna = 'oglas_' + oglas.id;
+
+                    console.log(kupec)
+                    console.log(prodajalec)
+
+                    const podatki = {
+                        subject: 'Potrdilo nakupa',
+                        body: `Potrdilo nakupa.\n\nKupec: ${kupecIme} (${kupec.email})\nProdajalec: ${prodajalecIme} (${prodajalec.email})\nŠtevilka nakupa: oglas_${oglas.id}\nNačin plačila: ${nakup.nacin_placila}\nNacin prevzema: ${prevzem1}`,
+                        to: [kupec.email, prodajalec.email],
+                    }
+
+                    const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov, nakup.nacin_placila, prevzem, oglas.lokacija);
+                    podatki.pdfDataUri = pdfDataUri;
+                    
+                    const res = await api.post("/mail/poslji", podatki, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                    });
+
+                    if (res.status === 200) {
+                        console.log(200);
+                    } else {
+                        console.log(res.status);
+                    }
+
                     alert("Nakup uspešno shranjen!");
                 } else {
                     alert("Napaka pri shranjevanju nakupa!");
@@ -183,14 +248,14 @@ export default function Nakup() {
     };
 
     const handleChange = (e) => {
-        if (e.target.id === 'za_dostavo') {
-            setDostava(!dostava);
+        if (e.target.id === 'osebni_prevzem') {
+            setPrevzem(!prevzem);
         }
 
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
 
-        if (type === "checkbox" && name === "za_dostavo") {
+        if (type === "checkbox" && name === "osebni_prevzem") {
             valueToUse = checked ? 1 : 0;
         }
 
@@ -261,8 +326,8 @@ export default function Nakup() {
                                             {oglas ? oglas.osebni_prevzem ? 
                                                 <div className="relative w-full mb-3">
                                                     <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                                        <input type="checkbox" name="za_dostavo" id="za_dostavo" value={nakup.za_dostavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
-                                                        <span class="ml-2 text-sm font-semibold text-blueGray-500">Dostava na dom</span></label></div>
+                                                        <input type="checkbox" name="osebni_prevzem" id="osebni_prevzem" value={nakup.osebni_prevzem} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                                        <span class="ml-2 text-sm font-semibold text-blueGray-500">Osebni prevzem</span></label></div>
                                                 </div>: <></> : "Ni oglasa."
                                             }
                                             <div className="w-1/2 px-2">
