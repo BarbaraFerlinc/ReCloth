@@ -22,7 +22,7 @@ router.post('/dodaj', async (req, res) => {
                 jeSprejeto: jeSprejeto
             });
 
-            await trx('oglas').where('id', fk_oglas_id).update('jeZamenjan', 0);
+            await trx('oglas').where('id', fk_oglas_id).update('jeZamenjan', 1);
             await trx('zamenjani').del();
             return insertedObvestilo;
         });

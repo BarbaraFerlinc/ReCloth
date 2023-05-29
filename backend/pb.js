@@ -57,6 +57,7 @@ async function baza() {
         table.string('naslov').notNullable();
         table.string('velikost').notNullable();
         table.text('opis', 'longtext').notNullable();
+        table.boolean('jePotrjen').notNullable();
         table.integer('fk_oglas_id').references('id').inTable('oglas').unsigned().onDelete('CASCADE');
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').unsigned().onDelete('CASCADE');
         table.integer('fk_kategorija_id').references('id').inTable('kategorija').unsigned().onDelete('CASCADE');

@@ -122,7 +122,7 @@ export default function Index({ seznamOglasov }) {
 
 
   console.log(seznamOglasov);
-  let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 1)
+  let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 0)
   console.log(nov)
 
   const handleRefresh = () => {

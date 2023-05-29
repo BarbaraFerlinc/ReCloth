@@ -83,7 +83,7 @@ export default function Profile({ izbris }) {
   const fetchOglasi = async (id) => {
     try {
       const response = await api.get(`/artikel/profil/${id}`);
-      const filteredOglasi = response.data.filter(filteredOglas => filteredOglas.jeZamenjan === 1);
+      const filteredOglasi = response.data.filter(filteredOglas => filteredOglas.jeZamenjan === 0);
       setOglasi(filteredOglasi);
     } catch (error) {
       console.error("Napaka pri pridobivanju oglasov uporabnika", error);

@@ -18,7 +18,7 @@ const initialState = {
     lokacija: "",
     za_zamenjavo: 0,
     osebni_prevzem: 0,
-    jeZamenjan: 1,
+    jeZamenjan: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
@@ -220,7 +220,7 @@ export default function ObjavaOglasa({ dodaj }) {
                 ...prevState,
                 [name]: valueToUse,
                 fk_uporabnik_id: uporabnikovId,
-                jeZamenjan: 1
+                jeZamenjan: 0
             };
             return nextState;
         });

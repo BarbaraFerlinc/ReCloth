@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 import api from "services/api";
 import { UserAuth } from "context/AuthContext";
 
@@ -19,7 +19,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     const [error, setError] = useState(null);
 
     const [prodajalec, setProdajalec] = useState({});
-    const [kupec,  setKupec] = useState({});
+    const [kupec, setKupec] = useState({});
 
     const navigate = useNavigate();
     const [clicked, setClicked] = useState(null);
@@ -60,28 +60,29 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [parsan_id]);
 
+    console.log(izbira)
     useEffect(() => {
         const uporabnikovEmail = user.email;
         console.log("Uporabnikov email je: ", uporabnikovEmail)
 
         api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
             .then(res => {
-              const uporabnik_profil = res.data.user;
-              setProdajalec(uporabnik_profil);
+                const uporabnik_profil = res.data.user;
+                setProdajalec(uporabnik_profil);
             })
             .catch(err => {
-              console.error(err);
+                console.error(err);
             });
     }, [user]);
 
     useEffect(() => {
         api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
             .then(res => {
-              const uporabnik_profil = res.data.user;
-              setKupec(uporabnik_profil);
+                const uporabnik_profil = res.data.user;
+                setKupec(uporabnik_profil);
             })
             .catch(err => {
-              console.error(err);
+                console.error(err);
             });
     }, [izbira.fk_uporabnik_id]);
 
@@ -118,7 +119,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
 
         const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov);
         podatki.pdfDataUri = pdfDataUri;
-        
+
         const res = await api.post("/mail/poslji", podatki, {
             headers: {
                 "Content-Type": "application/json",
@@ -138,15 +139,17 @@ export default function PodrobnostiZamenjanega({ izbris }) {
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
         let stevilkaRacuna = 'oglas_' + oglas.id;
 
-        console.log(kupec)
-        console.log(prodajalec)
+        //console.log(kupec)
+        //console.log(prodajalec)
+
+
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',
             body: `Zamenjava je bila zavrnjena.\n\nKupec: ${kupecIme} (${kupec.email})\nProdajalec: ${prodajalecIme} (${prodajalec.email})\nŠtevilka oglasa: oglas_${oglas.id}`,
             to: [kupec.email, prodajalec.email],
         }
-        
+
         const res = await api.post("/mail/poslji", podatki, {
             headers: {
                 "Content-Type": "application/json",
