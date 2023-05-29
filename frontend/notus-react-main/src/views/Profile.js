@@ -17,11 +17,6 @@ export default function Profile({ izbris }) {
   const [profil, setProfil] = useState(null);
   const [zamenjaniOglasi, setZamenjaniOglasi] = useState([]);
 
-
-
-
-
-
   const { user, logout } = UserAuth();
 
   const navigate = useNavigate();
@@ -99,7 +94,6 @@ export default function Profile({ izbris }) {
     }
   };
 
-
   useEffect(() => {
     fetchUser(uporabnikovId);
     fetchOglasi(uporabnikovId);
@@ -111,8 +105,6 @@ export default function Profile({ izbris }) {
   console.log(oglasi);
   //console.log(zamenjaniOglasi);
 
-
-
   const handleDelete = async (id) => {
     try {
       await api.delete(`/artikel/${id}`);
@@ -122,11 +114,6 @@ export default function Profile({ izbris }) {
       console.error("Error deleting advertisement", error);
     }
   };
-
-
-
-
-
 
   console.log(oglasi)
 
