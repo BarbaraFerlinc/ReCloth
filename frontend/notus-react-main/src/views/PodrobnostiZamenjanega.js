@@ -190,7 +190,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
-        posljiPotrdilo();
+        //posljiPotrdilo();
     };
 
     const handleZavrniClick = () => {
@@ -208,7 +208,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
-        posljiZavrnitev();
+        //posljiZavrnitev();
     };
 
     return (

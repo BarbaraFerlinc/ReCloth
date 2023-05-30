@@ -1,13 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { UserAuth } from "context/AuthContext";
+import { useEffect, useState } from "react";
+import api from "services/api";
+
 
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [notificationCount, setNotificationCount] = useState(0); // Dodali smo števec za obvestila
 
   const { user } = UserAuth();
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await api.get('/obvestilo/prestej-neprebrane');
+        console.log(response.data.count);
+        setNotificationCount(response.data.count);
+      } catch (error) {
+        console.error("Napaka pri pridobivanju obvestil", error);
+      }
+    };
+
+    if (user) {
+      fetchNotifications();
+    }
+  }, [user]);
   return (<>
     {user ?
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-6 py-3 navbar-expand-lg bg-white shadow">
@@ -67,7 +86,12 @@ export default function Navbar(props) {
                   className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                 >
                   <i class="fas fa-bell text-lg"></i>
+
                   <span className="lg:hidden inline-block ml-2">Obvestila</span>
+                  {notificationCount > 0 &&
+                    <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold ml-1">{notificationCount}</span>
+                  }
+
                 </Link>
               </li>
             </ul>

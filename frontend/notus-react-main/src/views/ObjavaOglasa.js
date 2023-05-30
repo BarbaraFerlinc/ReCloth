@@ -31,6 +31,7 @@ export default function ObjavaOglasa({ dodaj }) {
     const [prevzem, setPrevzem] = useState(false);
     const [zamenjava, setZamenjava] = useState(false);
     const [uporabnikovId, setUporabnikovId] = useState(0)
+    const [loading, setLoading] = useState(false);
 
     const { user } = UserAuth();
 
@@ -130,7 +131,10 @@ export default function ObjavaOglasa({ dodaj }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+
         if (validateForm()) {
+            setLoading(true);
+            
             try {
                 const formData = new FormData();
                 formData.append("naslov", oglas.naslov);
@@ -175,10 +179,11 @@ export default function ObjavaOglasa({ dodaj }) {
                     });
                     setTimeout(() => {
                         navigate('/');
-                      }, 3000);
+                    }, 3000);
                 }
 
                 setErrors({})
+
 
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
@@ -191,6 +196,7 @@ export default function ObjavaOglasa({ dodaj }) {
                 setErrors(errorMessages);
 
             }
+            setLoading(false);
             dodaj(oglas);
         };
     };
@@ -248,11 +254,17 @@ export default function ObjavaOglasa({ dodaj }) {
         }
     }
 
+    console.log("loading je " + loading)
     return (
         <>
+
             <IndexNavbar />
             <br></br>
-
+            {loading ? (
+                <div className="flex justify-center">
+                    <div className="loader"></div>
+                </div>
+            ) : null}
             <div className="container mx-auto px-4 pt-20">
                 <div className="flex content-center items-center justify-center h-screen">
                     <div className="w-full lg:w-6/12 px-4">

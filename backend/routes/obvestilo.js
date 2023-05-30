@@ -23,7 +23,7 @@ router.post('/dodaj', async (req, res) => {
             });
 
             await trx('oglas').where('id', fk_oglas_id).update('jeZamenjan', 1);
-            await trx('zamenjani').del();
+            //await trx('zamenjani').del();
             return insertedObvestilo;
         });
 
@@ -69,7 +69,7 @@ router.post('/dodaj2', async (req, res) => {
                 datum: currentDate
             });
 
-            await trx('zamenjani').del();
+            //(await trx('zamenjani').del();
             return insertedObvestilo;
         });
 
@@ -124,6 +124,37 @@ router.post('/getVsaObvestila-zaKupca', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestil' });
     }
 });
+
+router.get('/prestej-neprebrane', async (req, res) => {
+    try {
+        const count = await knex('obvestilo_zamenjava')
+            .count('id as count')
+            .where('prebrano', false)
+            .first();
+
+        if (!count) {
+            return res.status(404).json({ error: 'Obvestila ne obstajajo' });
+        }
+        res.status(200).json(count);
+    } catch (error) {
+        console.error('Napaka pri pridobivanju števila obvestil', error);
+        res.status(500).json({ error: 'Napaka pri pridobivanju števila obvestil' });
+    }
+});
+
+router.post('/preberi', async (req, res) => {
+    try {
+        await knex('obvestilo_zamenjava')
+            .where('prebrano', false)
+            .update({ prebrano: true });
+
+        res.status(200).json({ message: 'Vsa obvestila so prebrana' });
+      } catch (error) {
+        console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
+        res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
+    }
+});
+
 
 //sepravi jaz mam id od obvestila, mogu bom pogledat kdo je prijavljen in pol primerjat z fk_uporabnik_id in uporabnikom v oglasu in dobim vse o uporabniku in oglasu
 router.post('/getPodrobnostiObvestila'), async (req, res) => {

@@ -4,11 +4,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const pdf = require('html-pdf');
 
 // routerji
 var artikelRouter = require('./routes/artikel');
-var pdfRouter = require('./routes/createPdf');
 var kategorijaRouter = require('./routes/kategorija');
 var mailRouter = require('./routes/mailSender');
 var nakupRouter = require('./routes/nakup');
@@ -39,7 +37,6 @@ app.use((req, res, next) => {
 
 // uporaba routerjev
 app.use('/artikel/', artikelRouter);
-app.use('/pdf/', pdfRouter);
 app.use('/kategorija/', kategorijaRouter);
 app.use('/mail/', mailRouter);
 app.use('/nakup/', nakupRouter);

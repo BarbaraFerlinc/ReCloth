@@ -52,6 +52,21 @@ const Obvestilo = () => {
         fetchData();
     }, [uporabnikovId]);
 
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await api.post('/obvestilo/preberi');
+                console.log(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju obvestil", error);
+            }
+        };
+
+        if (user) {
+            fetchNotifications();
+        }
+    }, [user]);
+
     if (loading) {
         return <div>Nalaganje...</div>;
     }

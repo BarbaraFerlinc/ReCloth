@@ -86,6 +86,7 @@ async function baza() {
         table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
         table.integer('jeSprejeto').notNullable();
         table.datetime('datum').notNullable().defaultTo(knex.fn.now());
+        table.boolean('prebrano').notNullable().defaultTo(false);
     }).then(() => console.log('Tabela obvestilo ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
 
