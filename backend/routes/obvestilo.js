@@ -149,7 +149,7 @@ router.post('/preberi', async (req, res) => {
             .update({ prebrano: true });
 
         res.status(200).json({ message: 'Vsa obvestila so prebrana' });
-      } catch (error) {
+    } catch (error) {
         console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
         res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
     }
@@ -157,8 +157,47 @@ router.post('/preberi', async (req, res) => {
 
 
 //sepravi jaz mam id od obvestila, mogu bom pogledat kdo je prijavljen in pol primerjat z fk_uporabnik_id in uporabnikom v oglasu in dobim vse o uporabniku in oglasu
-router.post('/getPodrobnostiObvestila'), async (req, res) => {
-}
+router.post('/podrobnostiObvestila', async (req, res) => {
+    const { id } = req.body;
+    try {
+        const obvestilo1 = await knex('obvestilo_zamenjava')
+            .select('oglas.*', 'uporabnik.*', 'oglas.naslov as naslovOglasa', 'oglas.id as idOglasa')
+            .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', 'oglas.id')
+            .join('uporabnik', 'oglas.fk_uporabnik_id', 'uporabnik.id')
+            .where('obvestilo_zamenjava.id', id)
+            .first();
+        const slike = await knex('slika')
+            .select('pot')
+            .where('fk_oglas_id', '=', obvestilo1.idOglasa);
+        obvestilo1.slike = slike.map(slika => slika.pot);
+
+        if (!obvestilo1) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+        const obvestilo2 = await knex('obvestilo_zamenjava')
+            .select('uporabnik.ime', 'uporabnik.*', 'zamenjani.*', 'zamenjani.id as idZamenjanih')
+            .join('zamenjani', 'obvestilo_zamenjava.fk_oglas_id', 'zamenjani.fk_oglas_id')
+            .join('uporabnik', 'zamenjani.fk_uporabnik_id', 'uporabnik.id')
+            .where('zamenjani.potrjenaZamenjava', 1)
+            .where('obvestilo_zamenjava.id', id)
+            .first();
+
+        const slike2 = await knex('slika_zamenjanih')
+            .select('pot')
+            .where('fk_zamenjani_id', '=', obvestilo2.id);
+        obvestilo2.slike = slike2.map(slika => slika.pot);
+
+
+        if (!obvestilo2) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+
+        res.status(200).json({ obvestilo1, obvestilo2 });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju obvestila iz baze', details: error.message });
+    }
+});
 
 
 
