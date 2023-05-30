@@ -6,9 +6,9 @@ var path = require('path');
 
 
 router.post('/dodaj', async (req, res) => {
-    const { fk_oglas_id, fk_uporabnik_id, jeSprejeto } = req.body;
+    const { fk_oglas_id, fk_uporabnik_id, jeSprejeto, potrjenaZamenjava } = req.body;
 
-    if (!fk_oglas_id || !fk_uporabnik_id || !jeSprejeto) {
+    if (!fk_oglas_id || !fk_uporabnik_id || !jeSprejeto || !potrjenaZamenjava) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
@@ -23,7 +23,8 @@ router.post('/dodaj', async (req, res) => {
             });
 
             await trx('oglas').where('id', fk_oglas_id).update('jeZamenjan', 1);
-            //await trx('zamenjani').del();
+            await trx('zamenjani').where('fk_oglas_id', fk_oglas_id).update('jePotrjen', 1);
+            await trx('zamenjani').where('id', potrjenaZamenjava).update('potrjenaZamenjava', 1);
             return insertedObvestilo;
         });
 
@@ -69,7 +70,6 @@ router.post('/dodaj2', async (req, res) => {
                 datum: currentDate
             });
 
-            //(await trx('zamenjani').del();
             return insertedObvestilo;
         });
 

@@ -13,6 +13,8 @@ const initialState = {
     naslov: "",
     velikost: "XS",
     opis: "",
+    jePotrjen: 0,
+    potrjenaZamenjava: 0,
     slika: [],
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
@@ -165,6 +167,8 @@ export default function Zamenjava() {
                 formData.append("naslov", oglas.naslov);
                 formData.append("velikost", oglas.velikost);
                 formData.append("opis", oglas.opis);
+                formData.append("jePotrjen", oglas.jePotrjen);
+                formData.append("potrjenaZamenjava", oglas.potrjenaZamenjava);
                 formData.append("fk_uporabnik_id", oglas.fk_uporabnik_id);
                 formData.append("fk_kategorija_id", oglas.fk_kategorija_id);
                 formData.append("fk_oglas_id", oglas.fk_oglas_id);
@@ -209,13 +213,13 @@ export default function Zamenjava() {
                     });
                 }
 
-                
+
                 setOglas(initialState);
                 setErrors({})
 
                 setTimeout(() => {
-                        navigate('/');
-                      }, 3000);
+                    navigate('/');
+                }, 3000);
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
@@ -238,6 +242,8 @@ export default function Zamenjava() {
             const nextState = {
                 ...prevState,
                 [name]: valueToUse,
+                jePotrjen: 0,
+                potrjenaZamenjava: 0,
                 fk_oglas_id: parsan_id,
                 fk_uporabnik_id: uporabnikovId,
             };

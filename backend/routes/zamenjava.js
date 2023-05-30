@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.post('/dodaj', upload.array('slika'), async (req, res) => {
-    const { naslov, velikost, opis, fk_oglas_id, fk_uporabnik_id, fk_kategorija_id } = req.body;
+    const { naslov, velikost, opis, jePotrjen, fk_oglas_id, fk_uporabnik_id, fk_kategorija_id } = req.body;
 
     if (!naslov || !velikost || !opis) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
@@ -41,6 +41,7 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
             naslov: naslov,
             velikost: velikost,
             opis: opis,
+            jePotrjen: jePotrjen,
             fk_oglas_id: fk_oglas_id,
             fk_uporabnik_id: fk_uporabnik_id,
             fk_kategorija_id: fk_kategorija_id
