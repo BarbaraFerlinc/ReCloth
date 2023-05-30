@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { generatePdf } from "./Index";
+import "../components/Dropdown.css";
+
+
 
 const initialState = {
     osebni_prevzem: 0,
@@ -23,7 +27,7 @@ const podatki_kartice = {
     varnostna_koda: ""
 }
 
-export default function Nakup() {
+export default function Nakup({ izbris }) {
     const { id } = useParams();
     let parsan_id;
     if (id !== undefined) {
@@ -33,7 +37,7 @@ export default function Nakup() {
     }
 
     const [prodajalec, setProdajalec] = useState({});
-    const [kupec,  setKupec] = useState({});
+    const [kupec, setKupec] = useState({});
     const [nakup, setNakup] = useState(initialState);
     const [kartica, setKartica] = useState(podatki_kartice);
     const [errors, setErrors] = useState({ slika: [] });
@@ -43,6 +47,10 @@ export default function Nakup() {
     const [oglas, setOglas] = useState();
     const [nacinPlacila, setNacinPlacila] = useState("");
     const [prevzem, setPrevzem] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+
 
     const { user } = UserAuth();
 
@@ -75,11 +83,11 @@ export default function Nakup() {
     useEffect(() => {
         api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmailizOglasa })
             .then(res => {
-              const uporabnik_profil = res.data.user;
-              setProdajalec(uporabnik_profil);
+                const uporabnik_profil = res.data.user;
+                setProdajalec(uporabnik_profil);
             })
             .catch(err => {
-              console.error(err);
+                console.error(err);
             });
     }, [uporabnikovEmailizOglasa]);
 
@@ -181,6 +189,11 @@ export default function Nakup() {
         console.log(validateForm());
 
         if (validateForm()) {
+            setLoading(true);
+            setIsSubmitting(true);
+
+
+
             try {
                 console.log(nakup);
                 let prevzem1 = "Dostava na dom";
@@ -211,7 +224,7 @@ export default function Nakup() {
 
                     const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov, nakup.nacin_placila, prevzem, oglas.lokacija);
                     podatki.pdfDataUri = pdfDataUri;
-                    
+
                     const res = await api.post("/mail/poslji", podatki, {
                         headers: {
                             "Content-Type": "application/json",
@@ -221,23 +234,39 @@ export default function Nakup() {
 
                     if (res.status === 200) {
                         console.log(200);
+                        izbris();
+                        toast.success(' Uspešno ste opravili nakup!', {
+                            position: "top-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
                     } else {
-                        console.log(res.status);
+                        toast.error(' Napaka pri nakupu!', {
+                            position: "top-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
                     }
-
-                    alert("Nakup uspešno shranjen!");
-                } else {
-                    alert("Napaka pri shranjevanju nakupa!");
                 }
-
-                setNakup(initialState);
                 setErrors({});
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000);
 
-                navigate("/profile");
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            setNakup(initialState);
+            //setNakup(initialState);
         }
     };
 
@@ -322,7 +351,7 @@ export default function Nakup() {
                                                     <div class="w-full"><label class="inline-flex items-center cursor-pointer">
                                                         <input type="checkbox" name="osebni_prevzem" id="osebni_prevzem" value={nakup.osebni_prevzem} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                                         <span class="ml-2 text-sm font-semibold text-blueGray-500">Osebni prevzem</span></label></div>
-                                                </div>: <></> : "Ni oglasa."
+                                                </div> : <></> : "Ni oglasa."
                                             }
                                             <div className="w-1/2 px-2">
                                                 <div className="relative w-full mb-3">
@@ -334,6 +363,7 @@ export default function Nakup() {
                                                         id="nacin_placila"
                                                         value={nacinPlacila}
                                                         onChange={handleChange}
+                                                        disabled={isSubmitting}
                                                         className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     >
                                                         {nacini_placila.map((v, index) => (
@@ -359,6 +389,7 @@ export default function Nakup() {
                                                         </label>
                                                         <input type="text" placeholder="0000 0000 0000 0000" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                             name="stevilka" id="stevilka" value={kartica.stevilka} onChange={handleKartica}
+                                                            disabled={isSubmitting}
                                                         />
                                                         <small className="text-red-500">{errors.stevilka}</small>
                                                     </div>
@@ -371,6 +402,7 @@ export default function Nakup() {
                                                         </label>
                                                         <input type="text" placeholder="Ime na kartici" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                             name="ime" id="ime" value={kartica.ime} onChange={handleKartica}
+                                                            disabled={isSubmitting}
                                                         />
                                                         <small className="text-red-500">{errors.ime}</small>
                                                     </div>
@@ -383,6 +415,7 @@ export default function Nakup() {
                                                         </label>
                                                         <input type="text" placeholder="Datum poteka veljavnosti (MM/LL)" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                             name="datum_poteka" id="datum_poteka" value={kartica.datum_poteka} onChange={handleKartica}
+                                                            disabled={isSubmitting}
                                                         />
                                                         <small className="text-red-500">{errors.datum_poteka}</small>
                                                     </div>
@@ -395,6 +428,7 @@ export default function Nakup() {
                                                         </label>
                                                         <input type="text" placeholder="Varnostna koda (CVC)" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                             name="varnostna_koda" id="varnostna_koda" value={kartica.varnostna_koda} onChange={handleKartica}
+                                                            disabled={isSubmitting}
                                                         />
                                                         <small className="text-red-500">{errors.varnostna_koda}</small>
                                                     </div>
@@ -419,15 +453,25 @@ export default function Nakup() {
                                                 </button>
                                             </div>
                                         </form>
+                                        {loading && isSubmitting && (
+                                            <div className="flex justify-center">
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <p style={{ textAlign: "center", marginRight: "10px" }}>Nalaganje...</p>
+                                                    <div className="loader"></div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <br></br>
                     <Footer />
                 </div>
             )}
+            <ToastContainer />
         </>
     )
 }

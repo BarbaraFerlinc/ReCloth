@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "context/AuthContext";
 import api from "services/api";
-
+import "../../components/Dropdown.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -31,6 +31,9 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -116,6 +119,8 @@ export default function Register() {
     setError('');
 
     if (validateForm()) {
+      setLoading(true);
+      setIsSubmitting(true);
 
       try {
         user.email = email;
@@ -214,6 +219,7 @@ export default function Register() {
                       name="ime"
                       id="ime"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.ime}</small>
                   </div>
@@ -232,6 +238,7 @@ export default function Register() {
                       name="priimek"
                       id="priimek"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.priimek}</small>
                   </div>
@@ -249,6 +256,7 @@ export default function Register() {
                       name="telefon"
                       id="telefon"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.telefon}</small>
                   </div>
@@ -266,6 +274,7 @@ export default function Register() {
                       name="naslov"
                       id="naslov"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.naslov}</small>
                   </div>
@@ -283,6 +292,7 @@ export default function Register() {
                       name="posta"
                       id="posta"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.posta}</small>
                   </div>
@@ -301,6 +311,7 @@ export default function Register() {
                       name="drzava"
                       id="drzava"
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.drzava}</small>
                   </div>
@@ -316,6 +327,7 @@ export default function Register() {
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                       onChange={(e) => setEmail(e.target.value)}
+                      disabled={isSubmitting}
                     />
                     <small className="text-red-500">{errors.email}</small>
                   </div>
@@ -333,6 +345,7 @@ export default function Register() {
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                       onChange={(e) => setPassword(e.target.value)}
+                      disabled={isSubmitting}
                     />
                     <button
                       onClick={togglePasswordVisibility}
@@ -367,7 +380,16 @@ export default function Register() {
           </div>
         </div>
       </div>
+
       <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+      {loading && isSubmitting && (
+        <div className="flex justify-center">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <p style={{ textAlign: "center", marginRight: "10px" }}>Nalaganje...</p>
+            {/* <div className="loader"></div> */}
+          </div>
+        </div>
+      )}
       <Footer />
       <ToastContainer></ToastContainer>
     </>

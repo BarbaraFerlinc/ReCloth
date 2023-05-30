@@ -18,6 +18,8 @@ router.post('/dodaj', async (req, res) => {
             fk_uporabnik_id: fk_uporabnik_id,
             fk_oglas_id: fk_oglas_id,
         });
+
+        await knex('oglas').where('id', fk_oglas_id).update('jeZamenjan', 1);
         console.log(novNakup)
 
         res.status(200).json({ message: 'ok', nakup: novNakup });

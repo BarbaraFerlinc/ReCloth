@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { HighlightSpanKind } from "typescript";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "../components/Dropdown.css";
 
 
 
@@ -32,6 +33,7 @@ export default function ObjavaOglasa({ dodaj }) {
     const [zamenjava, setZamenjava] = useState(false);
     const [uporabnikovId, setUporabnikovId] = useState(0)
     const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { user } = UserAuth();
 
@@ -134,7 +136,10 @@ export default function ObjavaOglasa({ dodaj }) {
 
         if (validateForm()) {
             setLoading(true);
-            
+            setIsSubmitting(true);
+
+            //setTimeout(async () => {
+
             try {
                 const formData = new FormData();
                 formData.append("naslov", oglas.naslov);
@@ -184,7 +189,7 @@ export default function ObjavaOglasa({ dodaj }) {
 
                 setErrors({})
 
-
+                //setIsSubmitting(false);
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
                 let errorMessages = {};
@@ -194,10 +199,11 @@ export default function ObjavaOglasa({ dodaj }) {
                     errorMessages["slika"] = "Napaka pri objavi oglasa!";
                 }
                 setErrors(errorMessages);
-
+                //setIsSubmitting(false);
             }
-            setLoading(false);
+            //setLoading(false);
             dodaj(oglas);
+            //}, 5000); 
         };
     };
 
@@ -255,16 +261,12 @@ export default function ObjavaOglasa({ dodaj }) {
     }
 
     console.log("loading je " + loading)
+    console.log("isSumbiting je " + isSubmitting)
     return (
         <>
 
             <IndexNavbar />
             <br></br>
-            {loading ? (
-                <div className="flex justify-center">
-                    <div className="loader"></div>
-                </div>
-            ) : null}
             <div className="container mx-auto px-4 pt-20">
                 <div className="flex content-center items-center justify-center h-screen">
                     <div className="w-full lg:w-6/12 px-4">
@@ -285,12 +287,12 @@ export default function ObjavaOglasa({ dodaj }) {
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} onChange={handleChange} disabled={isSubmitting} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
                                     </div>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="osebni_prevzem" id="osebni_prevzem" value={oglas.osebni_prevzem} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="osebni_prevzem" id="osebni_prevzem" value={oglas.osebni_prevzem} onChange={handleChange} disabled={isSubmitting} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Omogocen osebni prevzem</span></label></div>
                                     </div>
 
@@ -306,6 +308,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                             className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                             placeholder="Naslov"
                                             name="naslov" id="naslov" value={oglas.naslov} onChange={handleChange}
+                                            disabled={isSubmitting}
                                         />
                                         <small className="text-red-500">{errors.naslov}</small>
                                     </div>
@@ -318,6 +321,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                         </label>
                                         <input type="text" placeholder="Opis" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                             name="opis" id="opis" value={oglas.opis} onChange={handleChange}
+                                            disabled={isSubmitting}
                                         />
                                         <small className="text-red-500">{errors.opis}</small>
                                     </div>
@@ -333,6 +337,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     id="velikost"
                                                     value={oglas.velikost}
                                                     onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
                                                     {velikosti.map((v, index) => (
@@ -352,6 +357,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     id="fk_kategorija_id"
                                                     value={oglas.fk_kategorija_id}
                                                     onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
                                                     {kategorija.map((k, index) => (
@@ -374,6 +380,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder={zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
                                                     name="cena" id="cena" value={oglas.cena} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.cena}</small>
                                             </div>
@@ -391,6 +398,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder={prevzem ? 'Prevzemno mesto' : 'Lokacija'}
                                                     name="lokacija" id="lokacija" value={oglas.lokacija} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.lokacija}</small>
                                             </div>
@@ -409,6 +417,7 @@ export default function ObjavaOglasa({ dodaj }) {
                                             id="slika"
                                             name="slika"
                                             onChange={handleFileChange}
+                                            disabled={isSubmitting}
                                             className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                         />
                                         <small className="text-red-500">
@@ -425,11 +434,20 @@ export default function ObjavaOglasa({ dodaj }) {
                                         </button>
                                     </div>
                                 </form>
+                                {loading && isSubmitting && (
+                                    <div className="flex justify-center">
+                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                            <p style={{ textAlign: "center", marginRight: "10px" }}>Nalaganje...</p>
+                                            <div className="loader"></div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <br></br>
             <Footer />
             <ToastContainer />

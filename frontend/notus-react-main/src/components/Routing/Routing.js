@@ -91,7 +91,7 @@ const Routing = () => {
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
                     <Route path="/urejanje-oglasa/:id" element={<div className="bg-blueGray-200 min-h-screen"><UrejanjeOglasa seznamOglasov={seznam} onEdit={handleEdit} /></div>} />
                     <Route path="/zamenjava/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Zamenjava /> </div>} />
-                    <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup /> </div>} />
+                    <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup izbris={handleDelete} /> </div>} />
                     <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega izbris={handleDelete} />} />
                     <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                     <Route path="/obvestila" element={<Obvestilo></Obvestilo>}></Route>

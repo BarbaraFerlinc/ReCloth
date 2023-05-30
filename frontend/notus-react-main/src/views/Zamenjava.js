@@ -8,6 +8,7 @@ import Footer from "components/Footers/Footer.js";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "../components/Dropdown.css";
 
 const initialState = {
     naslov: "",
@@ -36,6 +37,8 @@ export default function Zamenjava() {
     const [uporabnikovId, setUporabnikovId] = useState(0)
     const [uporabnikovEmail, setUporabnikovEmail] = useState("");
     const [errorIzBaze, setErrorIzBaze] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { user } = UserAuth();
 
@@ -162,6 +165,10 @@ export default function Zamenjava() {
         e.preventDefault();
 
         if (validateForm()) {
+
+            setLoading(true);
+            setIsSubmitting(true);
+
             try {
                 const formData = new FormData();
                 formData.append("naslov", oglas.naslov);
@@ -212,9 +219,6 @@ export default function Zamenjava() {
                         theme: "colored",
                     });
                 }
-
-
-                setOglas(initialState);
                 setErrors({})
 
                 setTimeout(() => {
@@ -321,6 +325,7 @@ export default function Zamenjava() {
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder="Naslov"
                                                     name="naslov" id="naslov" value={oglas.naslov} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.naslov}</small>
                                             </div>
@@ -333,6 +338,7 @@ export default function Zamenjava() {
                                                 </label>
                                                 <input type="text" placeholder="Opis" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                     name="opis" id="opis" value={oglas.opis} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.opis}</small>
                                             </div>
@@ -348,6 +354,7 @@ export default function Zamenjava() {
                                                             id="velikost"
                                                             value={oglas.velikost}
                                                             onChange={handleChange}
+                                                            disabled={isSubmitting}
                                                             className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                         >
                                                             {velikosti.map((v, index) => (
@@ -367,6 +374,7 @@ export default function Zamenjava() {
                                                             id="fk_kategorija_id"
                                                             value={oglas.fk_kategorija_id}
                                                             onChange={handleChange}
+                                                            disabled={isSubmitting}
                                                             className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                         >
                                                             {kategorija.map((k, index) => (
@@ -390,6 +398,7 @@ export default function Zamenjava() {
                                                     id="slika"
                                                     name="slika"
                                                     onChange={handleFileChange}
+                                                    disabled={isSubmitting}
                                                     className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 />
                                                 <small className="text-red-500">
@@ -405,6 +414,14 @@ export default function Zamenjava() {
                                                 </button>
                                             </div>
                                         </form>
+                                        {loading && isSubmitting && (
+                                            <div className="flex justify-center">
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <p style={{ textAlign: "center", marginRight: "10px" }}>Nalaganje...</p>
+                                                    <div className="loader"></div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -415,7 +432,6 @@ export default function Zamenjava() {
                 </div>
             )}
             <ToastContainer />
-
         </>
     )
 }

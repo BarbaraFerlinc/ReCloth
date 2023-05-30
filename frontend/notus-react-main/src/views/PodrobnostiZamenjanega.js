@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "services/api";
 import { UserAuth } from "context/AuthContext";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer";
@@ -184,7 +185,21 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .then(response => {
                 if (response.status === 200) {
                     izbris();
-                    navigate('/');
+
+                    toast.success(' Sprejeli ste zamenjavo! Podrobnosti o le tej lahko pogledate med obvestili.', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 3000);
                 }
             })
             .catch(error => {
@@ -192,6 +207,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 console.error(error);  // You can customize this part based on your needs
             });
         //posljiPotrdilo();
+
+
     };
 
     const handleZavrniClick = () => {
@@ -203,7 +220,21 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .then(response => {
                 if (response.status === 200) {
                     izbris();
-                    navigate('/');
+
+                    toast.error(' Zavrnili ste zamenjavo! Podrobnosti o le tej lahko pogledate med obvestili.', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 3000);
                 }
             })
             .catch(error => {
@@ -308,6 +339,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                     <Footer />
                 </div>
             )}
+            <ToastContainer />
         </>
     );
 

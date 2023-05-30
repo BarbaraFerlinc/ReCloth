@@ -5,6 +5,8 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserAuth } from "context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -41,7 +43,20 @@ export default function Login() {
 
     try {
       await signIn(email, password);
-      navigate("/profile")
+      toast.info(' Uspešno ste se prijavili!', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      setTimeout(() => {
+        navigate('/profile');
+      }, 3000);
     } catch (er) {
       if (er.message === "Firebase: Error (auth/user-not-found).") {
         setPasswordError("User with this email does not exist.");
@@ -185,6 +200,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <ToastContainer></ToastContainer>
     </>
   );
 }
