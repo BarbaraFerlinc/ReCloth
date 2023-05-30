@@ -89,7 +89,8 @@ export default function Profile({ izbris }) {
   const fetchZamenjani = async (id) => {
     try {
       const response = await api.get(`/zamenjava/zamenjanii/${id}`);
-      setZamenjaniOglasi(response.data);
+      const filteredZamenjani = response.data.filter(zamenjanOglas => zamenjanOglas.jePotrjen === 0);
+      setZamenjaniOglasi(filteredZamenjani);
     } catch (error) {
       console.error("Napaka pri pridobivanju zamenjanih uporabnika", error);
     }

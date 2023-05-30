@@ -86,7 +86,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [izbira.fk_uporabnik_id]);
 
-    
+
     const dobiKupca = async () => {
         try {
             const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
@@ -178,7 +178,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
         api.post('obvestilo/dodaj', {
             fk_oglas_id: izbira?.fk_oglas_id,
             fk_uporabnik_id: izbira?.fk_uporabnik_id,
-            jeSprejeto: 2
+            jeSprejeto: 2,
+            potrjenaZamenjava: izbira?.id
         })
             .then(response => {
                 if (response.status === 200) {
@@ -190,7 +191,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
-        posljiPotrdilo();
+        //posljiPotrdilo();
     };
 
     const handleZavrniClick = () => {
@@ -208,8 +209,13 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
-        posljiZavrnitev();
+        // posljiZavrnitev();
     };
+
+
+
+    //console.log(izbira);
+
 
     return (
         <>

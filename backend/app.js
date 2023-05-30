@@ -8,7 +8,7 @@ const pdf = require('html-pdf');
 
 // routerji
 var artikelRouter = require('./routes/artikel');
-var pdfRouter = require('./routes/createPdf');
+
 var kategorijaRouter = require('./routes/kategorija');
 var mailRouter = require('./routes/mailSender');
 var nakupRouter = require('./routes/nakup');
@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 
 // uporaba routerjev
 app.use('/artikel/', artikelRouter);
-app.use('/pdf/', pdfRouter);
+
 app.use('/kategorija/', kategorijaRouter);
 app.use('/mail/', mailRouter);
 app.use('/nakup/', nakupRouter);
