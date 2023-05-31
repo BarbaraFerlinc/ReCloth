@@ -10,6 +10,7 @@ import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik 
 
 const PodrobnostiObvestilaNakupa = () => {
     const [oglas, setOglas] = useState({});
+    const [uporabnikovId, setUporabnikovId] = useState("");
 
     const { user } = UserAuth();
     const { id } = useParams();
@@ -40,8 +41,37 @@ const PodrobnostiObvestilaNakupa = () => {
     }, [parsan_id]);
 
 
+    useEffect(() => {
+        const uporabnikovEmail = user.email;
+        console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-    console.log(oglas)
+        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+            .then(res => {
+                const userId = res.data.userId;
+                setUporabnikovId(userId);
+                console.log("Uporabnikov ID je: ", userId);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, [user]);
+
+    useEffect(() => {
+        const markNotificationAsRead = async () => {
+            try {
+                const response = await api.post('obvestilo/preberiNakup', {
+                    id: parsan_id,
+                    userId: uporabnikovId,
+                });
+                console.log(response.data.message);
+            } catch (error) {
+                console.error('Napaka pri označevanju obvestila kot prebrano', error);
+            }
+        };
+
+        markNotificationAsRead();
+    }, [uporabnikovId]);
+
 
 
 

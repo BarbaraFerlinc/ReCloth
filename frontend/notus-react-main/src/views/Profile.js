@@ -131,6 +131,7 @@ export default function Profile({ izbris }) {
     }
   };
 
+  console.log(zamenjaniOglasi)
 
   return (
     <>

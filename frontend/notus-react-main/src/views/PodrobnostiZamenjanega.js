@@ -26,6 +26,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     const [clicked, setClicked] = useState(null);
     const [uporabnikovEmail, setUporabnikovEmail] = useState("");
     const [errorIzBaze, setErrorIzBaze] = useState(null);
+    const [uporabnikovId, setUporabnikovId] = useState(0);
 
     const { user } = UserAuth();
     const { id } = useParams();
@@ -86,7 +87,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 console.error(err);
             });
     }, [izbira.fk_uporabnik_id]);
-
 
     const dobiKupca = async () => {
         try {
