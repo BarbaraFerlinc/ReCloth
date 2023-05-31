@@ -9,24 +9,42 @@ import api from "services/api";
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [notificationCount, setNotificationCount] = useState(0); // Dodali smo števec za obvestila
+  const [uporabnikovId, setUporabnikovId] = useState(0);
 
   const { user } = UserAuth();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const uporabnikovEmail = user.email;
+    console.log("Uporabnikov email je: ", uporabnikovEmail)
+
+    api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+      .then(res => {
+        const userId = res.data.userId;
+        setUporabnikovId(userId);
+        console.log("Uporabnikov ID je: ", userId);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [user]);
+
+
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
       try {
-        const response = await api.get('/obvestilo/prestej-neprebrane');
-        console.log(response.data.count);
-        setNotificationCount(response.data.count);
+        const response = await api.post('obvestilo/prestej-neprebraneNakup', { userId: uporabnikovId});
+        console.log(response.data.neprebranaObvestila);
+        setNotificationCount(response.data.neprebranaObvestila);
       } catch (error) {
-        console.error("Napaka pri pridobivanju obvestil", error);
+        console.error('Napaka pri pridobivanju obvestil', error);
       }
     };
 
     if (user) {
-      fetchNotifications();
+      fetchNotificationCount();
     }
-  }, [user]);
+  }, [uporabnikovId]);
+
   return (<>
     {user ?
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-6 py-3 navbar-expand-lg bg-white shadow">

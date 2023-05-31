@@ -86,6 +86,7 @@ const Routing = () => {
                 <Route path="/oglas/:id" element={<Podrobnosti />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />
+                <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                 <Route path="" element={<PrivateRouting />}>
                     <Route path="/objavaOglasa" element={<div className="bg-blueGray-200 min-h-screen"><ObjavaOglasa dodaj={handleAdd} /></div>} />
                     <Route path="/profile" element={<Profile izbris={izbris} />} />
@@ -93,7 +94,6 @@ const Routing = () => {
                     <Route path="/zamenjava/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Zamenjava /> </div>} />
                     <Route path="/nakup/:id" element={<div className="bg-blueGray-200 min-h-screen"> <Nakup izbris={handleDelete} /> </div>} />
                     <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega izbris={handleDelete} />} />
-                    <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />
                     <Route path="/obvestila" element={<Obvestilo></Obvestilo>}></Route>
                     <Route path="/obvestilo/:id" element={<PodrobnostiObvestila />} />
                 </Route>
