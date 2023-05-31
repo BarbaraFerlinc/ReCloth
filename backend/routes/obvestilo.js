@@ -125,37 +125,6 @@ router.post('/getVsaObvestila-zaKupca', async (req, res) => {
     }
 });
 
-router.get('/prestej-neprebrane', async (req, res) => {
-    try {
-        const count = await knex('obvestilo_zamenjava')
-            .count('id as count')
-            .where('prebrano', false)
-            .first();
-
-        if (!count) {
-            return res.status(404).json({ error: 'Obvestila ne obstajajo' });
-        }
-        res.status(200).json(count);
-    } catch (error) {
-        console.error('Napaka pri pridobivanju števila obvestil', error);
-        res.status(500).json({ error: 'Napaka pri pridobivanju števila obvestil' });
-    }
-});
-
-router.post('/preberi', async (req, res) => {
-    try {
-        await knex('obvestilo_zamenjava')
-            .where('prebrano', false)
-            .update({ prebrano: true });
-
-        res.status(200).json({ message: 'Vsa obvestila so prebrana' });
-    } catch (error) {
-        console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
-        res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
-    }
-});
-
-
 //sepravi jaz mam id od obvestila, mogu bom pogledat kdo je prijavljen in pol primerjat z fk_uporabnik_id in uporabnikom v oglasu in dobim vse o uporabniku in oglasu
 router.post('/podrobnostiObvestila', async (req, res) => {
     const { id } = req.body;
@@ -305,6 +274,160 @@ router.post('/getVsaObvestilaNakupa-zaKupca', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestil' });
     }
 });
+
+router.post('/preberiNakup', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const userId = req.body.userId;
+
+        if (!id || !userId) {
+            return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
+        }
+
+        const obvestilo = await knex('obvestilo_nakupa')
+            .where('id', id)
+            .first();
+
+        if (!obvestilo) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+
+        const oglas = await knex('oglas')
+            .where('id', obvestilo.fk_oglas_id)
+            .first();
+
+        if (!oglas) {
+            return res.status(404).json({ error: 'Oglas ne obstaja' });
+        }
+
+        let updateObj = {};
+
+        if (obvestilo.fk_uporabnik_id === userId) {
+            updateObj.prebrano_kupec = true;
+        }
+        else if (oglas.fk_uporabnik_id === userId) {
+            updateObj.prebrano_prodajalec = true;
+        }
+        else {
+            return res.status(400).json({ error: 'Uporabnik nima pravic za označitev obvestila kot prebrano' });
+        }
+
+        await knex('obvestilo_nakupa')
+            .where('id', id)
+            .update(updateObj);
+
+        res.status(200).json({ message: 'Obvestilo je prebrano' });
+    } catch (error) {
+        console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
+        res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
+    }
+});
+
+router.post('/prestej-neprebraneNakup', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'UserId manjka' });
+        }
+
+        const neprebranaObvestila = await knex('obvestilo_nakupa')
+            .join('oglas', 'obvestilo_nakupa.fk_oglas_id', '=', 'oglas.id')
+            .where(function () {
+                this.where('oglas.fk_uporabnik_id', userId)
+                    .andWhere('obvestilo_nakupa.prebrano_prodajalec', false);
+            })
+            .orWhere(function () {
+                this.where('obvestilo_nakupa.fk_uporabnik_id', userId)
+                    .andWhere('obvestilo_nakupa.prebrano_kupec', false);
+            })
+            .count('obvestilo_nakupa.id as neprebranaObvestila')
+            .first();
+
+        res.status(200).json({ neprebranaObvestila: neprebranaObvestila.neprebranaObvestila });
+    } catch (error) {
+        console.error('Napaka pri preštevanju neprebranih obvestil', error);
+        res.status(500).json({ error: 'Napaka pri preštevanju neprebranih obvestil' });
+    }
+});
+
+router.post('/prestej-neprebraneZamenjava', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'UserId manjka' });
+        }   
+
+        const neprebranaObvestila = await knex('obvestilo_zamenjava')
+            .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', '=', 'oglas.id')
+            .where(function () {
+                this.where('oglas.fk_uporabnik_id', userId)
+                    .andWhere('obvestilo_zamenjava.prebrano_prodajalec', false);
+            })
+            .orWhere(function () {
+                this.where('obvestilo_zamenjava.fk_uporabnik_id', userId)
+                    .andWhere('obvestilo_zamenjava.prebrano_kupec', false);
+            })
+            .count('obvestilo_zamenjava.id as neprebranaObvestila')
+            .first();
+
+        res.status(200).json({ neprebranaObvestila: neprebranaObvestila.neprebranaObvestila });
+    } catch (error) {
+        console.error('Napaka pri preštevanju neprebranih obvestil', error);
+        res.status(500).json({ error: 'Napaka pri preštevanju neprebranih obvestil' });
+    }
+});
+
+router.post('/preberiZamenjava', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const userId = req.body.userId;
+        
+        if (!id || !userId) {
+            return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
+        }
+
+        const obvestilo = await knex('obvestilo_zamenjava')
+            .where('id', id)
+            .first();
+
+        if (!obvestilo) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+
+        const oglas = await knex('oglas')
+            .where('id', obvestilo.fk_oglas_id)
+            .first();
+
+        if (!oglas) {
+            return res.status(404).json({ error: 'Oglas ne obstaja' });
+        }
+
+        let updateObj = {};
+
+        if (obvestilo.fk_uporabnik_id === userId) {
+            updateObj.prebrano_kupec = true;
+        }
+        else if (oglas.fk_uporabnik_id === userId) {
+            updateObj.prebrano_prodajalec = true;
+        }
+        else {  
+            return res.status(400).json({ error: 'Uporabnik nima pravic za označitev obvestila kot prebrano' });
+        }
+
+        await knex('obvestilo_zamenjava')
+            .where('id', id)
+            .update(updateObj);
+
+        res.status(200).json({ message: 'Obvestilo je prebrano' });
+    } catch (error) {
+        console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
+        res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
+    }
+});
+
+
 
 
 
