@@ -183,10 +183,22 @@ export default function Nakup({ izbris }) {
         return formIsValid;
     }
 
+    const postObvestiloNakupa = () => {
+        const obvestilo = {
+            fk_uporabnik_id: uporabnikovId,
+            fk_oglas_id: oglas.id,
+        };
+
+        api.post("obvestilo/dodaj/obvestilo-nakupa", obvestilo, {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        });
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        console.log(validateForm());
 
         if (validateForm()) {
             setLoading(true);
@@ -195,7 +207,6 @@ export default function Nakup({ izbris }) {
 
 
             try {
-                console.log(nakup);
                 let prevzem1 = "Dostava na dom";
                 if (nakup.osebni_prevzem) {
                     prevzem1 = "Osebni prevzem (" + oglas.lokacija + ")";
@@ -212,9 +223,6 @@ export default function Nakup({ izbris }) {
                     let kupecIme = kupec.ime + " " + kupec.priimek;
                     let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
                     let stevilkaRacuna = 'oglas_' + oglas.id;
-
-                    console.log(kupec)
-                    console.log(prodajalec)
 
                     const podatki = {
                         subject: 'Potrdilo nakupa',
@@ -233,7 +241,7 @@ export default function Nakup({ izbris }) {
                     });
 
                     if (res.status === 200) {
-                        console.log(200);
+                        postObvestiloNakupa();
                         izbris();
                         toast.success(' Uspešno ste opravili nakup!', {
                             position: "top-center",
@@ -266,7 +274,6 @@ export default function Nakup({ izbris }) {
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            //setNakup(initialState);
         }
     };
 

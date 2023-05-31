@@ -202,6 +202,75 @@ router.post('/podrobnostiObvestila', async (req, res) => {
     }
 });
 
+router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
+    const { fk_oglas_id, fk_uporabnik_id} = req.body;
+    console.log(req.body);
+    if (!fk_oglas_id || !fk_uporabnik_id || !jeSprejeto) {
+        return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
+    }
+
+
+
+    try {
+        const obvestilo = await knex.transaction(async (trx) => {
+            const currentDate = new Date()
+            // Insert the new record into the 'obvestilo_zamenjava' table
+            const insertedObvestilo = await trx('obvestilo_nakupa').insert({
+                fk_oglas_id: fk_oglas_id,
+                fk_uporabnik_id: fk_uporabnik_id,
+                datum: currentDate
+            });
+
+            if(!insertedObvestilo){
+                return res.status(400).json({ error: 'Napaka pri shranjevanju obvestila' });
+            }
+            
+            return insertedObvestilo;
+        });
+        
+
+        res.status(200).json({ message: 'ok', obvestilo: obvestilo });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Napaka pri shranjevanju zamenjave' });
+    }
+
+});
+
+
+router.post('/getVsaObvestilaNakupa-zaProdajalca', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const obvestila = await knex('obvestilo_nakupa')
+            .select('obvestilo_nakupa.*', 'oglas.*', "uporabnik.ime", "uporabnik.priimek", 'obvestilo_nakupa.id as idObvestila')
+            .join('oglas', 'obvestilo_nakupa.fk_oglas_id', 'oglas.id')
+            .join('uporabnik', 'obvestilo_nakupa.fk_uporabnik_id', 'uporabnik.id')
+            .where('oglas.fk_uporabnik_id', id);
+
+
+        console.log(obvestila)
+        res.status(200).json(obvestila);
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju obvestil' });
+    }
+});
+
+router.post('/getVsaObvestilaNakupa-zaKupca', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const obvestila = await knex('obvestilo_nakupa')
+            .select('obvestilo_nakupa.*', 'oglas.*', "uporabnik.ime as prodajalecIme", "uporabnik.priimek as prodajalecPriimek", 'obvestilo_nakupa.id as idObvestila')
+            .join('oglas', 'obvestilo_nakupa.fk_oglas_id', 'oglas.id')
+            .join('uporabnik', 'oglas.fk_uporabnik_id', 'uporabnik.id')
+            .where('obvestilo_nakupa.fk_uporabnik_id', id);
+
+        res.status(200).json(obvestila);
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju obvestil' });
+    }
+});
+
+
 
 
 

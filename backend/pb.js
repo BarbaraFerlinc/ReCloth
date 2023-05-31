@@ -4,6 +4,7 @@ async function baza() {
     await knex.schema.dropTableIfExists('slika_zamenjanih').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('slika').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('ocena').catch((err) => { console.log(err); throw err });
+    await knex.schema.dropTableIfExists('obvestilo_nakupa').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('obvestilo_zamenjava').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('zamenjani').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('nakup').catch((err) => { console.log(err); throw err });
@@ -88,8 +89,17 @@ async function baza() {
         table.integer('jeSprejeto').notNullable();
         table.datetime('datum').notNullable().defaultTo(knex.fn.now());
         table.boolean('prebrano').notNullable().defaultTo(false);
-    }).then(() => console.log('Tabela obvestilo ustvarjena.'))
+    }).then(() => console.log('Tabela obvestilo_zamenjave ustvarjena.'))
         .catch((err) => { console.log(err); throw err });
+
+    await knex.schema.createTable('obvestilo_nakupa', (table) => {
+        table.increments('id');
+        table.integer('fk_oglas_id').references('id').inTable('oglas').notNullable().unsigned().onDelete('CASCADE');
+        table.integer('fk_uporabnik_id').references('id').inTable('uporabnik').notNullable().unsigned().onDelete('CASCADE');
+        table.datetime('datum').notNullable().defaultTo(knex.fn.now());
+        table.boolean('prebrano').notNullable().defaultTo(false);
+    }).then(()=> console.log('Tabela obvestilo_nakupa ustvarjena.'))
+        .catch((err) => {console.log(err); throw err})
 
     await knex.schema.createTable('ocena', (table) => {
         table.increments('id');
