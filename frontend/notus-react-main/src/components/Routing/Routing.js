@@ -21,6 +21,7 @@ import { Navigate } from "react-router-dom";
 import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 import Obvestilo from "views/Obvestila";
 import PodrobnostiObvestila from "views/PodrobnostiObvestila";
+import PodrobnostiObvestilaNakupa from "views/podrobnostiObvestilaNakupa";
 
 
 const Routing = () => {
@@ -96,6 +97,7 @@ const Routing = () => {
                     <Route path="/oglas-zamenjan/:id" element={<PodrobnostiZamenjanega izbris={handleDelete} />} />
                     <Route path="/obvestila" element={<Obvestilo></Obvestilo>}></Route>
                     <Route path="/obvestilo/:id" element={<PodrobnostiObvestila />} />
+                    <Route path="/obvestilo-nakupa/:id" element={<PodrobnostiObvestilaNakupa />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

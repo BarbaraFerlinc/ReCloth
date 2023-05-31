@@ -202,6 +202,42 @@ router.post('/podrobnostiObvestila', async (req, res) => {
     }
 });
 
+
+router.post('/podrobnostiNakupa', async (req, res) => {
+    const { id } = req.body;
+    try {
+        const obvestiloNakupa = await knex('obvestilo_nakupa')
+            .select('oglas.*', 'oglas.naslov as naslovOglasa', 'oglas.id as idOglasa')
+            .join('oglas', 'obvestilo_nakupa.fk_oglas_id', 'oglas.id')
+            .where('obvestilo_nakupa.id', id)
+            .first();
+
+        const slike = await knex('slika')
+            .select('pot')
+            .where('fk_oglas_id', '=', obvestiloNakupa.id);
+            obvestiloNakupa.slike = slike.map(slika => slika.pot);
+
+        if (!obvestiloNakupa) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+
+        res.status(200).json({ obvestiloNakupa });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju obvestila iz baze', details: error.message });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
 router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
     const { fk_oglas_id, fk_uporabnik_id } = req.body;
     console.log(req.body);
@@ -345,6 +381,9 @@ router.post('/prestej-neprebraneNakup', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri preštevanju neprebranih obvestil' });
     }
 });
+
+
+
 
 
 
