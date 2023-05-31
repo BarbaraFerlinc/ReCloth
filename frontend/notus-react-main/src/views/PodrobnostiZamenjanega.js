@@ -221,7 +221,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 if (response.status === 200) {
                     izbris();
 
-                    toast.error(' Zavrnili ste zamenjavo! Podrobnosti o le tej lahko pogledate med obvestili.', {
+                    toast.warning(' Zavrnili ste zamenjavo! Podrobnosti o le tej lahko pogledate med obvestili.', {
                         position: "top-center",
                         autoClose: 3000,
                         hideProgressBar: false,

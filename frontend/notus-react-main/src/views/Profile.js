@@ -8,6 +8,8 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import api from "services/api";
 import { useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Profile({ izbris }) {
@@ -60,7 +62,7 @@ export default function Profile({ izbris }) {
           console.error(err);
         });
     }
-  }, [user]);
+  }, [user.email]);
 
   const steviloKomentarjev = () => { };
 
@@ -112,10 +114,23 @@ export default function Profile({ izbris }) {
       await api.delete(`/artikel/${id}`);
       fetchOglasi(uporabnikovId);
       izbris(id);
+
+      toast.warning(' Uspešno ste izbrisali oglas!', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
     } catch (error) {
       console.error("Error deleting advertisement", error);
     }
   };
+
 
   return (
     <>
@@ -301,13 +316,13 @@ export default function Profile({ izbris }) {
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </section>
       </main >
       <Footer />
+      <ToastContainer />
     </>
   );
 }

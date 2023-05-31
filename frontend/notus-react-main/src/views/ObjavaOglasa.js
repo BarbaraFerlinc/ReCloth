@@ -260,8 +260,8 @@ export default function ObjavaOglasa({ dodaj }) {
         }
     }
 
-    console.log("loading je " + loading)
-    console.log("isSumbiting je " + isSubmitting)
+    /* console.log("loading je " + loading)
+    console.log("isSumbiting je " + isSubmitting) */
     return (
         <>
 

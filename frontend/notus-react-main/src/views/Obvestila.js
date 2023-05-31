@@ -35,11 +35,9 @@ const Obvestilo = () => {
             try {
                 console.log("Uporabnikov ID je: ", uporabnikovId)
                 const responseProdajalec = await api.post('obvestilo/getVsaObvestila-zaProdajalca', { id: uporabnikovId });
-                console.log(responseProdajalec.data)
                 setObvestilaProdajalec(responseProdajalec.data);
 
                 const responseKupca = await api.post('obvestilo/getVsaObvestila-zaKupca', { id: uporabnikovId });
-                console.log(responseKupca.data)
                 setObvestilaKupca(responseKupca.data);
 
                 setLoading(false);
@@ -94,11 +92,11 @@ const Obvestilo = () => {
                                         {obvestilaProdajalec
                                             ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
                                             .map((obvestilo) => (
-                                                <div key={obvestilo.id}>
+                                                <div key={obvestilo.idObvestila}>
                                                     {obvestilo.jeSprejeto === 2 && (
                                                         <p>
 
-                                                            ✅<b>Sprejeli</b> ste <Link to={`/obvestilo/${obvestilo.id}`} style={{ textDecoration: 'underline' }}>zamenjavo</Link> s strani osebe <b>{obvestilo.ime} {obvestilo.priimek}</b>. {new Date(obvestilo.datum).toLocaleString()}
+                                                            ✅<b>Sprejeli</b> ste <Link to={`/obvestilo/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>zamenjavo</Link> s strani osebe <b>{obvestilo.ime} {obvestilo.priimek}</b>. {new Date(obvestilo.datum).toLocaleString()}
                                                         </p>
                                                     )}
                                                     {obvestilo.jeSprejeto === 1 && (
@@ -112,10 +110,10 @@ const Obvestilo = () => {
                                         {obvestilaKupca
                                             ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
                                             .map((obvestilo) => (
-                                                <div key={obvestilo.id}>
+                                                <div key={obvestilo.idObvestila}>
                                                     {obvestilo.jeSprejeto === 2 && (
                                                         <p>
-                                                            ✅Oseba <b>{obvestilo.prodajalecIme} {obvestilo.prodajalecPriimek}</b> je <b>sprejel/a</b> vašo <Link to={`/obvestilo/${obvestilo.id}`} style={{ textDecoration: 'underline' }}>zamenjavo</Link>. {new Date(obvestilo.datum).toLocaleString()}
+                                                            ✅Oseba <b>{obvestilo.prodajalecIme} {obvestilo.prodajalecPriimek}</b> je <b>sprejel/a</b> vašo <Link to={`/obvestilo/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>zamenjavo</Link>. {new Date(obvestilo.datum).toLocaleString()}
                                                         </p>
                                                     )}
                                                     {obvestilo.jeSprejeto === 1 && (

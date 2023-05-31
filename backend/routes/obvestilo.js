@@ -97,7 +97,7 @@ router.post('/getVsaObvestila-zaProdajalca', async (req, res) => {
     try {
         const { id } = req.body;
         const obvestila = await knex('obvestilo_zamenjava')
-            .select('obvestilo_zamenjava.*', 'oglas.*', "uporabnik.ime", "uporabnik.priimek")
+            .select('obvestilo_zamenjava.*', 'oglas.*', "uporabnik.ime", "uporabnik.priimek", 'obvestilo_zamenjava.id as idObvestila')
             .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', 'oglas.id')
             .join('uporabnik', 'obvestilo_zamenjava.fk_uporabnik_id', 'uporabnik.id')
             .where('oglas.fk_uporabnik_id', id);
@@ -114,7 +114,7 @@ router.post('/getVsaObvestila-zaKupca', async (req, res) => {
     try {
         const { id } = req.body;
         const obvestila = await knex('obvestilo_zamenjava')
-            .select('obvestilo_zamenjava.*', 'oglas.*', "uporabnik.ime as prodajalecIme", "uporabnik.priimek as prodajalecPriimek")
+            .select('obvestilo_zamenjava.*', 'oglas.*', "uporabnik.ime as prodajalecIme", "uporabnik.priimek as prodajalecPriimek", 'obvestilo_zamenjava.id as idObvestila')
             .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', 'oglas.id')
             .join('uporabnik', 'oglas.fk_uporabnik_id', 'uporabnik.id')
             .where('obvestilo_zamenjava.fk_uporabnik_id', id);
@@ -168,7 +168,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             .first();
         const slike = await knex('slika')
             .select('pot')
-            .where('fk_oglas_id', '=', obvestilo1.idOglasa);
+            .where('fk_oglas_id', '=', obvestilo1.id);
         obvestilo1.slike = slike.map(slika => slika.pot);
 
         if (!obvestilo1) {
@@ -191,6 +191,9 @@ router.post('/podrobnostiObvestila', async (req, res) => {
         if (!obvestilo2) {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
         }
+
+        console.log("tukaj smo")
+        console.log({obvestilo1, obvestilo2})
 
         res.status(200).json({ obvestilo1, obvestilo2 });
     }

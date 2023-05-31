@@ -4,6 +4,7 @@ import { UserAuth } from "context/AuthContext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "services/api";
+import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik slik
 
 const PodrobnostiObvestila = () => {
     const [obvestilo1, setObvestilo1] = useState({});
@@ -17,13 +18,21 @@ const PodrobnostiObvestila = () => {
     } else {
         parsan_id = undefined;
     }
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    };
+
+
     useEffect(() => {
         api.post('obvestilo/podrobnostiObvestila', { id: parsan_id })
             .then(res => {
                 const obvestilo1 = res.data.obvestilo1;
                 const obvestilo2 = res.data.obvestilo2;
-                console.log(obvestilo1);
-                console.log(obvestilo2);
                 setObvestilo1(obvestilo1);
                 setObvestilo2(obvestilo2);
             })
@@ -31,6 +40,10 @@ const PodrobnostiObvestila = () => {
                 console.error(err);
             });
     }, [parsan_id]);
+
+
+    console.log(obvestilo1);
+    console.log(obvestilo2)
 
     return (
         <>
@@ -44,22 +57,104 @@ const PodrobnostiObvestila = () => {
                                     <h3 class="text-4xl font-normal leading-normal mt-0 mb-2 text-pink-800">
                                         Podrobnosti zamenjave
                                     </h3>
+
                                     <div className="flex flex-wrap">
                                         <div className="w-full px-4 flex-1">
                                             <span className="text-sm block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100">
-                                                <h5 className="text-2xl font-normal leading-normal mt-0 mb-2 text-blueGray-800">
-                                                    {obvestilo1.ime} {obvestilo1.priimek}
-                                                </h5>
-                                                <div className="mb-2 text-blueGray-600 mt-4">
-                                                    <i className="mr-2 text-lg text-blueGray-400"></i>
-                                                    {obvestilo1.email} <br />
-                                                    {obvestilo1.telefon}
+                                                <div className="text-center mt-12">
+                                                    <h3 className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                                                        {obvestilo1?.naslovOglasa}
+                                                    </h3>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i class="fas fa-user mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo1?.ime} {obvestilo1?.priimek}
+                                                    </div>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo1?.email}
+                                                    </div>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo1?.telefon}
+                                                    </div>
+                                                    <br></br>
+                                                    <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-20 shadow-xl rounded-lg">
+                                                        <div className="px-6">
+                                                            <section className="relative block" style={{ height: "70vh" }}>
+                                                                <br></br>
+                                                                {<Slider {...settings}>
+                                                                    {obvestilo1?.slike?.map((slika, index) => {
+                                                                        const slikaPath = slika.split("\\uploads\\")[1];
+                                                                        return (
+                                                                            <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                                                <img
+                                                                                    alt={`slika-${index}`}
+                                                                                    className="w-full align-middle rounded-lg"
+                                                                                    src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                                    style={{
+                                                                                        objectFit: "cover",
+                                                                                        height: "60vh",
+                                                                                        width: "60%",
+                                                                                        margin: "auto",
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </Slider>}
+                                                            </section>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </span>
                                         </div>
                                         <div className="w-full px-4 flex-1">
                                             <span className="text-sm block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100">
-
+                                                <div className="text-center mt-12">
+                                                    <h3 className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                                                        {obvestilo2?.naslov}
+                                                    </h3>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i class="fas fa-user mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo2?.ime} {obvestilo2?.priimek}
+                                                    </div>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo2?.email}
+                                                    </div>
+                                                    <div className="mb-2 text-blueGray-600 mt-4">
+                                                        <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>
+                                                        {obvestilo2?.telefon}
+                                                    </div>
+                                                    <br></br>
+                                                    <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-20 shadow-xl rounded-lg">
+                                                        <div className="px-6">
+                                                            <section className="relative block" style={{ height: "70vh" }}>
+                                                                <br></br>
+                                                                {<Slider {...settings}>
+                                                                    {obvestilo2?.slike?.map((slika, index) => {
+                                                                        const slikaPath = slika.split("\\uploads\\")[1];
+                                                                        return (
+                                                                            <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                                                <img
+                                                                                    alt={`slika-${index}`}
+                                                                                    className="w-full align-middle rounded-lg"
+                                                                                    src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                                    style={{
+                                                                                        objectFit: "cover",
+                                                                                        height: "60vh",
+                                                                                        width: "60%",
+                                                                                        margin: "auto",
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </Slider>}
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </span>
                                         </div>
                                     </div>

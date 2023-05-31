@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { HighlightSpanKind } from "typescript";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import "../components/Dropdown.css";
+
+
 
 const initialState = {
     naslov: "",
@@ -51,6 +56,8 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     const [kategorija, setKategorija] = useState([]);
     const [zamenjava, setZamenjava] = useState(initialState.za_zamenjavo);
     const [uporabnikovId, setUporabnikovId] = useState(0)
+    const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { user } = UserAuth();
 
@@ -147,6 +154,9 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
         e.preventDefault();
 
         if (validateForm()) {
+            setLoading(true);
+            setIsSubmitting(true);
+
             try {
                 const formData = new FormData();
                 formData.append("naslov", oglas.naslov);
@@ -180,13 +190,35 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 });
 
                 if (response.status === 200) {
-                    alert("Oglas uspešno posodobljen!");
-                    navigate(`/`);
+                    toast.success(' Uspešno ste uredili oglas!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+
+
                 } else {
-                    alert("Napaka pri objavi oglasa!");
+                    toast.error(' Napaka pri urejanju oglasa!', {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 }
 
-                setOglas(initialState);
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000);
+
                 setErrors({});
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
@@ -283,7 +315,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative w-full mb-3">
                                         <div class="w-full"><label class="inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} checked={oglas.za_zamenjavo === 1} onChange={handleChange} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
+                                            <input type="checkbox" name="za_zamenjavo" id="za_zamenjavo" value={oglas.za_zamenjavo} checked={oglas.za_zamenjavo === 1} onChange={handleChange} disabled={isSubmitting} class="form-checkbox appearance-none ml-1 w-5 h-5 ease-linear transition-all duration-150 border border-blueGray-300 rounded checked:bg-blueGray-700 checked:border-blueGray-700 focus:border-blueGray-300" />
                                             <span class="ml-2 text-sm font-semibold text-blueGray-500">Ponujam tudi zamenjavo</span></label></div>
                                     </div>
 
@@ -299,6 +331,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                             className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                             placeholder="Naslov"
                                             name="naslov" id="naslov" value={oglas.naslov} onChange={handleChange}
+                                            disabled={isSubmitting}
                                         />
                                         <small className="text-red-500">{errors.naslov}</small>
                                     </div>
@@ -311,6 +344,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                         </label>
                                         <input type="text" placeholder="Opis" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                             name="opis" id="opis" value={oglas.opis} onChange={handleChange}
+                                            disabled={isSubmitting}
                                         />
                                         <small className="text-red-500">{errors.opis}</small>
                                     </div>
@@ -326,6 +360,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                                     id="velikost"
                                                     value={oglas.velikost}
                                                     onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
                                                     {velikosti.map((v, index) => (
@@ -345,6 +380,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                                     id="fk_kategorija_id"
                                                     value={oglas.fk_kategorija_id}
                                                     onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                 >
                                                     {kategorija.map((k, index) => (
@@ -367,6 +403,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder={zamenjava ? 'Okvirna cena v €' : 'Cena v €'}
                                                     name="cena" id="cena" value={oglas.cena} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.cena}</small>
                                             </div>
@@ -384,6 +421,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                                     placeholder="Lokacija"
                                                     name="lokacija" id="lokacija" value={oglas.lokacija} onChange={handleChange}
+                                                    disabled={isSubmitting}
                                                 />
                                                 <small className="text-red-500">{errors.lokacija}</small>
                                             </div>
@@ -402,6 +440,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                             id="slika"
                                             name="slika"
                                             onChange={handleFileChange}
+                                            disabled={isSubmitting}
                                             className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                                         />
                                         <small className="text-red-500">
@@ -425,6 +464,14 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                         </button>
                                     </div>
                                 </form>
+                                {loading && isSubmitting && (
+                                    <div className="flex justify-center">
+                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                            <p style={{ textAlign: "center", marginRight: "10px" }}>Nalaganje...</p>
+                                            <div className="loader"></div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -432,6 +479,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             </div>
             <br></br>
             <Footer />
+            <ToastContainer />
         </>
     )
 
