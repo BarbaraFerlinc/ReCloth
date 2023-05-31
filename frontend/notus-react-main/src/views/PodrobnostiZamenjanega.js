@@ -61,7 +61,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [parsan_id]);
 
-    console.log(izbira)
+
     useEffect(() => {
         const uporabnikovEmail = user.email;
         console.log("Uporabnikov email je: ", uporabnikovEmail)
@@ -245,7 +245,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
 
 
 
-    //console.log(izbira);
+    console.log(izbira)
 
 
     return (
@@ -281,10 +281,12 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                             <i className="fas fa-info-circle mr-2 text-lg text-blueGray-400"></i>
                                             Opis: <br></br>{izbira?.opis}
                                         </div>
-                                        <div className="mb-2 text-blueGray-900 mt-4">
-                                            <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
-                                            Rad bi zamenjal: {izbira?.uporabnik?.ime} {izbira?.uporabnik?.priimek}
-                                        </div>
+                                        <Link to={`/prodajalec/${izbira?.uporabnik?.id}`}>
+                                            <div className="mb-2 text-blueGray-900 mt-4">
+                                                <i className="fas fa-user mr-2 text-lg text-blueGray-900"></i>
+                                                Rad bi zamenjal: {izbira?.uporabnik?.ime} {izbira?.uporabnik?.priimek}
+                                            </div>
+                                        </Link >
                                         <br></br>
                                         <div className="relative flex flex-col min-w-0 break-words bg-blueGray-200 w-full md:w-3/4 mx-auto mb-20 shadow-xl rounded-lg">
                                             <div className="px-6">

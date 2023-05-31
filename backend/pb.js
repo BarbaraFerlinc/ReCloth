@@ -10,6 +10,7 @@ async function baza() {
     await knex.schema.dropTableIfExists('nakup').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('oglas').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('kategorija').catch((err) => { console.log(err); throw err });
+    await knex.schema.dropTableIfExists('nacin_placila').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('uporabnik').catch((err) => { console.log(err); throw err });
 
     await knex.schema.createTable('uporabnik', (table) => {

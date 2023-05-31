@@ -168,7 +168,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             .first();
         const slike = await knex('slika')
             .select('pot')
-            .where('fk_oglas_id', '=', obvestilo1.id);
+            .where('fk_oglas_id', '=', obvestilo1.idOglasa);
         obvestilo1.slike = slike.map(slika => slika.pot);
 
         if (!obvestilo1) {
@@ -184,7 +184,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
 
         const slike2 = await knex('slika_zamenjanih')
             .select('pot')
-            .where('fk_zamenjani_id', '=', obvestilo2.id);
+            .where('fk_zamenjani_id', '=', obvestilo2.idZamenjanih);
         obvestilo2.slike = slike2.map(slika => slika.pot);
 
 
