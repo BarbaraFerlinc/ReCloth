@@ -10,6 +10,8 @@ const Obvestilo = () => {
     const [uporabnikovId, setUporabnikovId] = useState("");
     const [obvestilaProdajalec, setObvestilaProdajalec] = useState([]);
     const [obvestilaKupca, setObvestilaKupca] = useState([]);
+    const [obvestilaNakupaProdajalca, setObvestilaNakupaProdajalca] = useState([]);
+    const [obvestilaNakupaKupca, setObvestilaNakupaKupca] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { user } = UserAuth();
@@ -35,11 +37,9 @@ const Obvestilo = () => {
             try {
                 console.log("Uporabnikov ID je: ", uporabnikovId)
                 const responseProdajalec = await api.post('obvestilo/getVsaObvestila-zaProdajalca', { id: uporabnikovId });
-                console.log(responseProdajalec.data)
                 setObvestilaProdajalec(responseProdajalec.data);
 
                 const responseKupca = await api.post('obvestilo/getVsaObvestila-zaKupca', { id: uporabnikovId });
-                console.log(responseKupca.data)
                 setObvestilaKupca(responseKupca.data);
 
                 setLoading(false);
@@ -50,6 +50,27 @@ const Obvestilo = () => {
         };
 
         fetchData();
+    }, [uporabnikovId]);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await api.post('/obvestilo/getVsaObvestilaNakupa-zaProdajalca', { id: uporabnikovId });
+                console.log(response.data);
+                setObvestilaNakupaProdajalca(response.data);
+
+                const response2 = await api.post('/obvestilo/getVsaObvestilaNakupa-zaKupca', { id: uporabnikovId });
+                console.log(response2.data);
+                setObvestilaNakupaKupca(response2.data);
+
+            } catch (error) {
+                console.error("Napaka pri pridobivanju obvestil", error);
+            }
+        };
+
+        if (user) {
+            fetchNotifications();
+        }
     }, [uporabnikovId]);
 
     useEffect(() => {
@@ -85,7 +106,7 @@ const Obvestilo = () => {
                             <div className="px-6">
                                 <div className="text-center mt-4 mb-12">
                                     <h3 class="text-4xl font-normal leading-normal mt-0 mb-2 text-pink-800">
-                                        Vaša obvestila
+                                        Vaša obvestila za zamenjave
                                     </h3>
                                     {obvestilaProdajalec.length === 0 && obvestilaKupca.length === 0 && (
                                         <p>Nimate nobenih obvestil.</p>
@@ -123,6 +144,36 @@ const Obvestilo = () => {
                                                             ❌Oseba <b>{obvestilo.prodajalecIme} {obvestilo.prodajalecPriimek}</b>je <b>zavrnil/a</b> vašo zamenjavo. {new Date(obvestilo.datum).toLocaleString()}
                                                         </p>
                                                     )}
+                                                </div>
+                                            ))}
+                                    </div>
+                                    <br />
+                                    <hr />
+                                    <h3 class="text-4xl font-normal leading-normal mt-0 mb-2 text-pink-800">
+                                        Vaša obvestila za Nakup
+                                    </h3>
+                                    {obvestilaNakupaProdajalca.length === 0 && obvestilaNakupaKupca.length === 0 && (
+                                        <p>Nimate nobenih obvestil.</p>
+                                    )}
+                                    <div>
+                                        {obvestilaNakupaProdajalca
+                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
+                                            .map((obvestilo) => (
+                                                <div key={obvestilo.idObvestila}>
+                                                    <p>
+                                                        🛒  Oseba <b>{obvestilo.ime} {obvestilo.priimek}</b> je <b>kupila</b> vaš <Link to={`/obvestilo-nakupa/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>oglas</Link>. {new Date(obvestilo.datum).toLocaleString()}
+                                                    </p>
+
+                                                </div>
+                                            ))}
+                                        {obvestilaNakupaKupca
+                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
+                                            .map((obvestilo) => (
+                                                <div key={obvestilo.idObvestila}>
+                                                    <p>
+                                                        🛒 <b>Kupili</b> ste <Link to={`/obvestilo-nakupa/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>oglas</Link> od osebe <b>{obvestilo.prodajalecIme} {obvestilo.prodajalecPriimek}</b>. {new Date(obvestilo.datum).toLocaleString()}
+                                                    </p>
+
                                                 </div>
                                             ))}
                                     </div>
