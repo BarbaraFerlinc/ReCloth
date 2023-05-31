@@ -205,7 +205,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
 router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
     const { fk_oglas_id, fk_uporabnik_id} = req.body;
     console.log(req.body);
-    if (!fk_oglas_id || !fk_uporabnik_id || !jeSprejeto) {
+    if (!fk_oglas_id || !fk_uporabnik_id) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 

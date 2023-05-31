@@ -113,12 +113,11 @@ const Obvestilo = () => {
                                     )}
                                     <div>
                                         {obvestilaProdajalec
-                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
+                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) 
                                             .map((obvestilo) => (
                                                 <div key={obvestilo.idObvestila}>
                                                     {obvestilo.jeSprejeto === 2 && (
                                                         <p>
-
                                                             ✅<b>Sprejeli</b> ste <Link to={`/obvestilo/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>zamenjavo</Link> s strani osebe <b>{obvestilo.ime} {obvestilo.priimek}</b>. {new Date(obvestilo.datum).toLocaleString()}
                                                         </p>
                                                     )}
@@ -173,7 +172,6 @@ const Obvestilo = () => {
                                                     <p>
                                                         🛒 <b>Kupili</b> ste <Link to={`/obvestilo-nakupa/${obvestilo.idObvestila}`} style={{ textDecoration: 'underline' }}>oglas</Link> od osebe <b>{obvestilo.prodajalecIme} {obvestilo.prodajalecPriimek}</b>. {new Date(obvestilo.datum).toLocaleString()}
                                                     </p>
-
                                                 </div>
                                             ))}
                                     </div>
