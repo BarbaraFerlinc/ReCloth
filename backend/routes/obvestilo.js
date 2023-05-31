@@ -193,7 +193,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
         }
 
         console.log("tukaj smo")
-        console.log({obvestilo1, obvestilo2})
+        console.log({ obvestilo1, obvestilo2 })
 
         res.status(200).json({ obvestilo1, obvestilo2 });
     }
@@ -202,8 +202,44 @@ router.post('/podrobnostiObvestila', async (req, res) => {
     }
 });
 
+
+router.post('/podrobnostiNakupa', async (req, res) => {
+    const { id } = req.body;
+    try {
+        const obvestiloNakupa = await knex('obvestilo_nakupa')
+            .select('oglas.*', 'oglas.naslov as naslovOglasa', 'oglas.id as idOglasa')
+            .join('oglas', 'obvestilo_nakupa.fk_oglas_id', 'oglas.id')
+            .where('obvestilo_nakupa.id', id)
+            .first();
+
+        const slike = await knex('slika')
+            .select('pot')
+            .where('fk_oglas_id', '=', obvestiloNakupa.id);
+            obvestiloNakupa.slike = slike.map(slika => slika.pot);
+
+        if (!obvestiloNakupa) {
+            return res.status(404).json({ error: 'Obvestilo ne obstaja' });
+        }
+
+        res.status(200).json({ obvestiloNakupa });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju obvestila iz baze', details: error.message });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
 router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
-    const { fk_oglas_id, fk_uporabnik_id} = req.body;
+    const { fk_oglas_id, fk_uporabnik_id } = req.body;
     console.log(req.body);
     if (!fk_oglas_id || !fk_uporabnik_id) {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
@@ -221,13 +257,13 @@ router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
                 datum: currentDate
             });
 
-            if(!insertedObvestilo){
+            if (!insertedObvestilo) {
                 return res.status(400).json({ error: 'Napaka pri shranjevanju obvestila' });
             }
-            
+
             return insertedObvestilo;
         });
-        
+
 
         res.status(200).json({ message: 'ok', obvestilo: obvestilo });
     } catch (error) {
@@ -269,6 +305,9 @@ router.post('/getVsaObvestilaNakupa-zaKupca', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestil' });
     }
 });
+
+
+
 
 
 
