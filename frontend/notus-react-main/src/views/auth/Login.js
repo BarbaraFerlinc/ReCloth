@@ -94,7 +94,7 @@ export default function Login() {
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
                   <h6 className="text-blueGray-500 text-sm font-bold">
-                    Sign in with
+                    Prijavi se z
                   </h6>
                 </div>
                 <div className="btn-wrapper text-center">
@@ -149,7 +149,7 @@ export default function Login() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Password
+                      Geslo
                     </label>
                     <input
                       type={showPassword ? "text" : "password"}
@@ -175,7 +175,7 @@ export default function Login() {
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="submit"
                     >
-                      Sign In
+                      Prijavi se
                     </button>
                   </div>
                 </form>
@@ -188,12 +188,12 @@ export default function Login() {
                   onClick={(e) => e.preventDefault()}
                   className="text-blueGray-800"
                 >
-                  <small>Forgot password?</small>
+                  <small>Pozabljeno geslo?</small>
                 </a>
               </div>
               <div className="w-1/2 text-right">
                 <Link to="/register" className="text-blueGray-800">
-                  <small>Create new account</small>
+                  <small>Ustvari si račun!</small>
                 </Link>
               </div>
             </div>

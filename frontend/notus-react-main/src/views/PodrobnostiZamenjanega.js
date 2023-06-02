@@ -206,7 +206,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
-        //posljiPotrdilo();
+        posljiPotrdilo();
 
 
     };
@@ -240,7 +240,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
-        //posljiZavrnitev();
+        posljiZavrnitev();
     };
 
 
@@ -256,7 +256,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                         Ta izmenjava ne obstaja
                     </h3>
                     <Link to="/">
-                        <button className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                        <button className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded-full shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onClick={izbris()}>
                             Pojdi nazaj
                         </button>
                     </Link>

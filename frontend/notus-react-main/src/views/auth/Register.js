@@ -198,7 +198,7 @@ export default function Register() {
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
                   <h6 className="text-blueGray-500 text-sm font-bold">
-                    Create an account
+                    Ustvari si račun
                   </h6>
                 </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
@@ -210,7 +210,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="first_name"
                     >
-                      First Name
+                      Ime
                     </label>
                     <input
                       type="text"
@@ -229,7 +229,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="last_name"
                     >
-                      Last Name
+                      Priimek
                     </label>
                     <input
                       type="text"
@@ -247,7 +247,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
-                      Phone
+                      Telefon
                     </label>
                     <input
                       type="tel"
@@ -265,7 +265,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="adress"
                     >
-                      Address
+                      Naslov
                     </label>
                     <input
                       type="text"
@@ -283,7 +283,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="postal_code"
                     >
-                      Postal Code
+                      Poštna številka in pošta
                     </label>
                     <input
                       type="text"
@@ -302,7 +302,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="country"
                     >
-                      Country
+                      Država
                     </label>
                     <input
                       type="text"
@@ -337,7 +337,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="password"
                     >
-                      Password
+                      Geslo
                     </label>
 
                     <input
@@ -364,13 +364,13 @@ export default function Register() {
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="submit"
                     >
-                      Create Account
+                      Registriraj se
                     </button>
                   </div>
                   <div className="flex flex-wrap mt-6 relative">
                     <div className="w-1/2">
                       <Link to="/login" className="text-blueGray-800">
-                        <small>Already have an account? Sign In</small>
+                        <small>Že imaš račun? Prijavi se!</small>
                       </Link>
                     </div>
                   </div>

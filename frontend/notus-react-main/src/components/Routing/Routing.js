@@ -53,6 +53,7 @@ const Routing = () => {
         fetchZamenjani();
     }, []);
 
+
     const fetchArtikle = async () => {
         try {
             const response = await api.get('/artikel/vsi');
@@ -84,7 +85,7 @@ const Routing = () => {
         <AuthContextProvider>
             <Routes>
                 <Route path="/" element={<Index seznamOglasov={seznam} />} />
-                <Route path="/oglas/:id" element={<Podrobnosti />} />
+                <Route path="/oglas/:id" element={<Podrobnosti izbris={handleDelete} />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />
                 <Route path="/prodajalec/:id" element={<ProdajalecProfil />} />

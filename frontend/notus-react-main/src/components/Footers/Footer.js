@@ -35,7 +35,7 @@ export default function Footer() {
         <hr className="my-2 border-blueGray-300" />
         <div className="flex justify-center">
           <div className="text-xs text-blueGray-500">
-            © {new Date().getFullYear()} ReCloth. All Rights Reserved.
+            © {new Date().getFullYear()} ReCloth. Vse pravice pridržane.
           </div>
         </div>
       </div>

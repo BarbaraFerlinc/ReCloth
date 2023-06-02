@@ -39,6 +39,8 @@ export default function Zamenjava() {
     const [errorIzBaze, setErrorIzBaze] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [naslovCount, setNaslovCount] = useState(0);
+    const [opisCount, setOpisCount] = useState(0);
 
     const { user } = UserAuth();
 
@@ -227,7 +229,7 @@ export default function Zamenjava() {
             } catch (error) {
                 console.error("Napaka pri posredovanju zahteve POST", error);
             }
-            setOglas(initialState);
+
         }
     };
 
@@ -253,6 +255,14 @@ export default function Zamenjava() {
             };
             return nextState;
         });
+
+        if (name === "naslov") {
+            setNaslovCount(value.length);
+        }
+
+        if (name === "opis") {
+            setOpisCount(value.length);
+        }
     };
 
     const handleFileChange = (e) => {
@@ -326,8 +336,10 @@ export default function Zamenjava() {
                                                     placeholder="Naslov"
                                                     name="naslov" id="naslov" value={oglas.naslov} onChange={handleChange}
                                                     disabled={isSubmitting}
+                                                    maxLength={50}
                                                 />
                                                 <small className="text-red-500">{errors.naslov}</small>
+                                                <small className="text-gray-500">{`${naslovCount}/50`}</small>
                                             </div>
                                             <div className="relative w-full mb-3">
                                                 <label
@@ -339,8 +351,10 @@ export default function Zamenjava() {
                                                 <input type="text" placeholder="Opis" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-base shadow outline-none focus:outline-none focus:shadow-outline w-full" ž
                                                     name="opis" id="opis" value={oglas.opis} onChange={handleChange}
                                                     disabled={isSubmitting}
+                                                    maxLength={300}
                                                 />
                                                 <small className="text-red-500">{errors.opis}</small>
+                                                <small className="text-gray-500">{`${opisCount}/300`}</small>
                                             </div>
                                             <br></br>
                                             <div className="flex justify-between">

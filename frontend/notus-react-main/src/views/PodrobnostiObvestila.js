@@ -187,9 +187,6 @@ const PodrobnostiObvestila = () => {
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </section >
                 <Footer />
