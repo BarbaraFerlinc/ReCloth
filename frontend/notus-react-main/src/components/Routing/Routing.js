@@ -22,6 +22,7 @@ import PodrobnostiZamenjanega from "views/PodrobnostiZamenjanega";
 import Obvestilo from "views/Obvestila";
 import PodrobnostiObvestila from "views/PodrobnostiObvestila";
 import PodrobnostiObvestilaNakupa from "views/podrobnostiObvestilaNakupa";
+import About from "views/About";
 
 
 const Routing = () => {
@@ -85,6 +86,7 @@ const Routing = () => {
         <AuthContextProvider>
             <Routes>
                 <Route path="/" element={<Index seznamOglasov={seznam} />} />
+                <Route path="/about" element={<About></About>}/>
                 <Route path="/oglas/:id" element={<Podrobnosti izbris={handleDelete} />} />
                 <Route path="/login" element={<div className="bg-blueGray-200 min-h-screen"><Login /></div>} />
                 <Route path="/register" element={<div className="bg-blueGray-200 min-h-screen"><Register /></div>} />

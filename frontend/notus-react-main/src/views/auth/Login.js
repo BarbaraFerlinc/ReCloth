@@ -154,7 +154,7 @@ export default function Login() {
                     <input
                       type={showPassword ? "text" : "password"}
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      placeholder="Geslo"
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <button

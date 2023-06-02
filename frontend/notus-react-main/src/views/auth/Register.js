@@ -215,7 +215,7 @@ export default function Register() {
                     <input
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="First Name"
+                      placeholder="Ime"
                       name="ime"
                       id="ime"
                       onChange={handleChange}
@@ -234,7 +234,7 @@ export default function Register() {
                     <input
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Last Name"
+                      placeholder="Priimek"
                       name="priimek"
                       id="priimek"
                       onChange={handleChange}
@@ -252,7 +252,7 @@ export default function Register() {
                     <input
                       type="tel"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Phone"
+                      placeholder="Telefon"
                       name="telefon"
                       id="telefon"
                       onChange={handleChange}
@@ -270,7 +270,7 @@ export default function Register() {
                     <input
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Address"
+                      placeholder="Naslov"
                       name="naslov"
                       id="naslov"
                       onChange={handleChange}
@@ -288,7 +288,7 @@ export default function Register() {
                     <input
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Postal Code"
+                      placeholder="Poštna številka in pošta"
                       name="posta"
                       id="posta"
                       onChange={handleChange}
@@ -307,7 +307,7 @@ export default function Register() {
                     <input
                       type="text"
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Country"
+                      placeholder="Država"
                       name="drzava"
                       id="drzava"
                       onChange={handleChange}
@@ -343,7 +343,7 @@ export default function Register() {
                     <input
                       type={showPassword ? "text" : "password"}
                       className="border border-blueGray-300 bg-blueGray-100 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      placeholder="Geslo"
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={isSubmitting}
                     />
