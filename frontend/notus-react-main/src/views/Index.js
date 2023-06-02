@@ -10,7 +10,7 @@ import "../components/Dropdown.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
+export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, imeDrugegaArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
   var doc = new jsPDF('portrait', 'px', 'a4', 'false');
   
   doc.setFont('Arial', 'bold');
@@ -58,6 +58,7 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
   
   const items = [
     { name: imeArtikla, price: cena },
+    
   ];
   
   if (nacinPlacila) {
@@ -73,10 +74,11 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
       },
     });
   } else {
+    items.push({ name: imeDrugegaArtikla, price: "/" });
     doc.autoTable({
       startY: 200,
       margin: { top: 180 },
-      head: [['Artikel', 'Okvirna cena']],
+      head: [['Zamenjana artikla', 'Okvirna cena']],
       body: items.map(item => [item.name, item.price + ' €']),
       theme: 'grid',
       columnStyles: {

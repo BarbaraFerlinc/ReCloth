@@ -1,5 +1,3 @@
 node_modules/
 uploads/
-knexConfig.js
-secret.js
-
+.env

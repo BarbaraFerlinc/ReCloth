@@ -49,5 +49,5 @@ app.use('/obvestilo', obvestiloRouter);
 // Dodajanje statične poti za dostop do slik
 app.use('/uploads', express.static('uploads'));
 
-app.listen(9000);
+app.listen(process.env.PORT || 9000);
 module.exports = app;
