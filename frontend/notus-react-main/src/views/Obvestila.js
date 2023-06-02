@@ -17,7 +17,6 @@ const Obvestilo = () => {
     const { user } = UserAuth();
 
     useEffect(() => {
-
         const uporabnikovEmail = user.email;
         console.log("Uporabnikov email je: ", uporabnikovEmail)
 
@@ -98,7 +97,7 @@ const Obvestilo = () => {
                                     )}
                                     <div>
                                         {obvestilaProdajalec
-                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) 
+                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum))
                                             .map((obvestilo) => (
                                                 <div key={obvestilo.idObvestila}>
                                                     {obvestilo.jeSprejeto === 2 && (
