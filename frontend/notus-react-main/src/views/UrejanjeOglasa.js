@@ -223,6 +223,18 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
                 setErrors({});
             } catch (error) {
+                setLoading(false)
+                setIsSubmitting(false)
+                toast.error(' Napaka pri objavi oglasa za zamenjavo!', {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 console.error("Napaka pri posredovanju zahteve POST", error);
                 let errorMessages = {};
                 if (error.response && error.response.data && error.response.data.error) {
@@ -230,6 +242,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                 } else {
                     errorMessages["slika"] = "Napaka pri objavi oglasa!";
                 }
+
                 setErrors(errorMessages);
 
             }
