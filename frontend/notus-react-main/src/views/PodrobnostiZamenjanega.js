@@ -129,7 +129,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             to: [kupec.email, prodajalec.email],
         }
 
-        const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov);
+        const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov, izbira.naslov);
         podatki.pdfDataUri = pdfDataUri;
 
         const res = await api.post("/mail/poslji", podatki, {
@@ -152,8 +152,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
 
         //console.log(kupec)
         //console.log(prodajalec)
-
-
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',

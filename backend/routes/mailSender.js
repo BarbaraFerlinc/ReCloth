@@ -1,22 +1,22 @@
 var express = require('express');
 var router = express.Router();
 const nodemailer = require('nodemailer');
-var secret = require('../secret');
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.office365.com',
-    port: 587,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     secure: false,
     requireTLS: true,
     auth: {
-      user: secret.user_name,
-      pass: secret.password,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
   });
 
 async function sendEmail(to, subject, body, attachments) {
   const mailOptions = {
-    from: secret.user_name,
+    from: process.env.SMTP_USER,
     to: to,
     subject: subject,
     text: body,

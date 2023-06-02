@@ -3,7 +3,6 @@ var knex = require('./knexConfig');
 async function baza() {
     await knex.schema.dropTableIfExists('slika_zamenjanih').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('slika').catch((err) => { console.log(err); throw err });
-    await knex.schema.dropTableIfExists('ocena').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('obvestilo_nakupa').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('obvestilo_zamenjava').catch((err) => { console.log(err); throw err });
     await knex.schema.dropTableIfExists('zamenjani').catch((err) => { console.log(err); throw err });
@@ -103,14 +102,6 @@ async function baza() {
     }).then(()=> console.log('Tabela obvestilo_nakupa ustvarjena.'))
         .catch((err) => {console.log(err); throw err})
 
-    await knex.schema.createTable('ocena', (table) => {
-        table.increments('id');
-        table.integer('ocena').notNullable();
-        table.string('komentar').notNullable();
-        table.integer('fk_nakup_id').references('id').inTable('nakup').notNullable().unsigned().onDelete('CASCADE');
-    }).then(() => console.log('Tabela ocena ustvarjena.'))
-        .catch((err) => { console.log(err); throw err });
-
     const kategorija = [
         { naziv: 'Otroške majice' },
         { naziv: 'Otroške hlače' },
@@ -122,14 +113,7 @@ async function baza() {
         { naziv: 'Dodatki' }
     ]
 
-    const nacin_placila = [
-        { naziv: 'Skreditno kartico' },
-        { naziv: 'Po prevzemu' }
-    ]
-
     await knex('kategorija').insert(kategorija).then(() => console.log('Vstavljena kategorija.'))
-        .catch((err) => { console.log(err); throw err });
-    await knex('nacin_placila').insert(nacin_placila).then(() => console.log('Vstavljen način_plačila.'))
         .catch((err) => { console.log(err); throw err });
 
     knex.destroy();
