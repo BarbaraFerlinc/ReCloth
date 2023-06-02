@@ -21,7 +21,8 @@ export default function ProdajalecProfil() {
         const fetchProdajalec = async () => {
             try {
                 const response = await api.get(`/uporabnik/${parsan_id}`);
-                setProdajalec(response.data[0])
+                console.log(response.data)
+                setProdajalec(response.data)
             } catch (error) {
                 console.error("Napaka pri pridobivanju prodajalca", error);
             }

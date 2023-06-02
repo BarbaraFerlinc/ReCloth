@@ -10,9 +10,8 @@ var artikelRouter = require('./routes/artikel');
 var kategorijaRouter = require('./routes/kategorija');
 var mailRouter = require('./routes/mailSender');
 var nakupRouter = require('./routes/nakup');
-var pogovorRouter = require('./routes/pogovor');
 var profilRouter = require('./routes/profil');
-var uporabnikRouter = require('./routes/uporabnik');
+var uporabnikRouter = require('./routes/uporabnikRouter');
 var zamenjavaRouter = require('./routes/zamenjava');
 var obvestiloRouter = require('./routes/obvestilo')
 
@@ -40,7 +39,6 @@ app.use('/artikel/', artikelRouter);
 app.use('/kategorija/', kategorijaRouter);
 app.use('/mail/', mailRouter);
 app.use('/nakup/', nakupRouter);
-app.use('/pogovor/', pogovorRouter);
 app.use('/profil/', profilRouter);
 app.use('/uporabnik/', uporabnikRouter);
 app.use('/zamenjava', zamenjavaRouter);

@@ -208,7 +208,7 @@ export default function Zamenjava() {
                         theme: "colored",
                     });
                 } else {
-                    toast.error(' Napaka pri objavi oglasa za zamenjavo!', {
+                    toast.error('Napaka pri objavi oglasa za zamenjavo!', {
                         position: "top-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -225,7 +225,27 @@ export default function Zamenjava() {
                     navigate('/');
                 }, 3000);
             } catch (error) {
+                setLoading(false)
+                setIsSubmitting(false)
+                toast.error(' Napaka pri objavi oglasa za zamenjavo!', {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 console.error("Napaka pri posredovanju zahteve POST", error);
+                let errorMessages = {};
+                if (error.response && error.response.data && error.response.data.error) {
+                    errorMessages["slika"] = error.response.data.error;
+                } else {
+                    errorMessages["slika"] = "Napaka pri objavi oglasa!";
+                }
+
+                setErrors(errorMessages);
             }
 
         }
