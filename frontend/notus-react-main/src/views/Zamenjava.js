@@ -104,8 +104,6 @@ export default function Zamenjava() {
             });
     }, [user]);
 
-
-
     if (user.email == uporabnikovEmail) {
         navigate("/");
     }

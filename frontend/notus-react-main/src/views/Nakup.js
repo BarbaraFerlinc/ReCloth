@@ -11,8 +11,6 @@ import { Link } from "react-router-dom";
 import { generatePdf } from "./Index";
 import "../components/Dropdown.css";
 
-
-
 const initialState = {
     osebni_prevzem: 0,
     nacin_placila: "",
@@ -50,8 +48,6 @@ export default function Nakup({ izbris }) {
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-
     const { user } = UserAuth();
 
     const navigate = useNavigate();
@@ -76,6 +72,14 @@ export default function Nakup({ izbris }) {
                         console.log("error message: Napaka pri pridobivanju podatkov");
                         setErrorIzBaze("Napaka pri pridobivanju podatkov");
                     }
+                });
+            api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
+                .then(res => {
+                    const uporabnik_profil = res.data.user;
+                    setKupec(uporabnik_profil);
+                })
+                .catch(err => {
+                    console.error(err);
                 });
         }
     }, [user.email]);
@@ -204,8 +208,6 @@ export default function Nakup({ izbris }) {
             setLoading(true);
             setIsSubmitting(true);
 
-
-
             try {
                 let prevzem1 = "Dostava na dom";
                 if (nakup.osebni_prevzem) {
@@ -230,7 +232,7 @@ export default function Nakup({ izbris }) {
                         to: [kupec.email, prodajalec.email],
                     }
 
-                    const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov, nakup.nacin_placila, prevzem, oglas.lokacija);
+                    const pdfDataUri = generatePdf(kupecIme, prodajalecIme, oglas.cena, stevilkaRacuna, oglas.naslov, "", nakup.nacin_placila, prevzem, oglas.lokacija);
                     podatki.pdfDataUri = pdfDataUri;
 
                     const res = await api.post("/mail/poslji", podatki, {
