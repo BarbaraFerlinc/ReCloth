@@ -24,7 +24,7 @@ class Uporabnik {
             throw new Error('Napaka pri vstavljanju uporabnika v bazo: ' + error.message);
         }
     }
-
+    
     static async vsi() {
         try {
             const users = await knex('uporabnik').select('*');
