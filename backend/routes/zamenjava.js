@@ -180,4 +180,51 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.post('/prestej-neprebrane', async (req, res) => {
+    try {   
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'UserId manjka' });
+        }
+
+        const neprebranaObvestila = await knex('zamenjani')
+            .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
+            .where(function () {
+                this.where('oglas.fk_uporabnik_id', userId)
+                    .andWhere('zamenjani.prebrano', false);
+            })
+            .count('zamenjani.prebrano as neprebranaObvestila');
+        
+        console.log(neprebranaObvestila);
+
+        res.status(200).json(neprebranaObvestila);
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri pridobivanju neprebranih obvestil', details: error.message });
+    }
+});
+
+router.post('/preberi', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'UserId manjka' });
+        }
+
+        await knex('zamenjani')
+            .join('oglas', 'zamenjani.fk_oglas_id', '=', 'oglas.id')
+            .where(function () {
+                this.where('oglas.fk_uporabnik_id', userId)
+
+            })
+            .update({ prebrano: true });
+
+        res.status(200).json({ message: 'Obvestila označena kot prebrana' });
+    } catch (error) {
+        res.status(500).json({ error: 'Napaka pri označevanju obvestil kot prebrana', details: error.message });
+    }
+});
+
+
 module.exports = router;

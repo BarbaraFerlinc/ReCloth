@@ -9,6 +9,7 @@ import api from "services/api";
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [notificationCount, setNotificationCount] = useState(0); // Dodali smo števec za obvestila
+  const [notificationCount2, setNotificationCount2] = useState(0); // Dodali smo števec za obvestila  
   const [uporabnikovId, setUporabnikovId] = useState(0);
 
   const { user } = UserAuth();
@@ -50,6 +51,23 @@ export default function Navbar(props) {
       fetchNotificationCount();
     }
   }, [uporabnikovId]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await api.post('zamenjava/prestej-neprebrane', { userId: uporabnikovId });
+        console.log(response.data[0].neprebranaObvestila);
+        setNotificationCount2(response.data[0].neprebranaObvestila);
+      } catch (error) {
+        console.error('Napaka pri pridobivanju obvestil', error);
+      }
+    };  
+
+    if (user) {
+      fetchNotifications();
+    }
+  }, [uporabnikovId]);
+
 
   return (<>
     {user ?
@@ -103,6 +121,9 @@ export default function Navbar(props) {
                 >
                   <i className="fas fa-user-circle text-lg leading-lg mr-2"></i>
                   <span className="lg:hidden inline-block ml-2">Moj profil</span>
+                  {notificationCount2 > 0 &&
+                    <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold ml-1">{notificationCount2}</span>
+                  }
                 </Link>
               </li>
               <li className="flex items-center">

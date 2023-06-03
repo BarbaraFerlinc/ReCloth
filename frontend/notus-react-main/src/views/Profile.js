@@ -98,16 +98,23 @@ export default function Profile({ izbris }) {
     }
   };
 
+  const fetchPreberiNotifikacije = async (id) => {
+    try {
+      const response = await api.post(`/zamenjava/preberi`, { userId: id });
+      console.log(response.data);
+    } catch (error) {
+      console.error("Napaka pri pridobivanju zamenjanih uporabnika", error);
+    }
+  };
+
   useEffect(() => {
     fetchUser(uporabnikovId);
     fetchOglasi(uporabnikovId);
     fetchZamenjani(uporabnikovId);
+    fetchPreberiNotifikacije(uporabnikovId);
     steviloKomentarjev();
     izracunajOceno();
   }, [uporabnikovId]);
-
-  console.log(oglasi);
-  //console.log(zamenjaniOglasi);
 
   const handleDelete = async (id) => {
     try {

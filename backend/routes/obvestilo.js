@@ -12,6 +12,8 @@ router.post('/dodaj', async (req, res) => {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
+    
+
     try {
         const obvestilo = await knex.transaction(async (trx) => {
             const currentDate = new Date()
@@ -125,9 +127,9 @@ router.post('/getVsaObvestila-zaKupca', async (req, res) => {
     }
 });
 
-//sepravi jaz mam id od obvestila, mogu bom pogledat kdo je prijavljen in pol primerjat z fk_uporabnik_id in uporabnikom v oglasu in dobim vse o uporabniku in oglasu
 router.post('/podrobnostiObvestila', async (req, res) => {
     const { id } = req.body;
+    console.log(id + "toti sem")
     try {
         const obvestilo1 = await knex('obvestilo_zamenjava')
             .select('oglas.*', 'uporabnik.*', 'oglas.naslov as naslovOglasa', 'oglas.id as idOglasa')
@@ -139,6 +141,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             .select('pot')
             .where('fk_oglas_id', '=', obvestilo1.idOglasa);
         obvestilo1.slike = slike.map(slika => slika.pot);
+
 
         if (!obvestilo1) {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
@@ -161,8 +164,7 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
         }
 
-        console.log("tukaj smo")
-        console.log({ obvestilo1, obvestilo2 })
+        console.log(obvestilo2)
 
         res.status(200).json({ obvestilo1, obvestilo2 });
     }
@@ -184,7 +186,7 @@ router.post('/podrobnostiNakupa', async (req, res) => {
         const slike = await knex('slika')
             .select('pot')
             .where('fk_oglas_id', '=', obvestiloNakupa.id);
-            obvestiloNakupa.slike = slike.map(slika => slika.pot);
+        obvestiloNakupa.slike = slike.map(slika => slika.pot);
 
         if (!obvestiloNakupa) {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
@@ -196,16 +198,6 @@ router.post('/podrobnostiNakupa', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestila iz baze', details: error.message });
     }
 });
-
-
-
-
-
-
-
-
-
-
 
 router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
     const { fk_oglas_id, fk_uporabnik_id } = req.body;
@@ -357,7 +349,7 @@ router.post('/prestej-neprebraneZamenjava', async (req, res) => {
 
         if (!userId) {
             return res.status(400).json({ error: 'UserId manjka' });
-        }   
+        }
 
         const neprebranaObvestila = await knex('obvestilo_zamenjava')
             .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', '=', 'oglas.id')
@@ -383,7 +375,7 @@ router.post('/preberiZamenjava', async (req, res) => {
     try {
         const { id } = req.body;
         const userId = req.body.userId;
-        
+
         if (!id || !userId) {
             return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
         }
@@ -412,7 +404,7 @@ router.post('/preberiZamenjava', async (req, res) => {
         else if (oglas.fk_uporabnik_id === userId) {
             updateObj.prebrano_prodajalec = true;
         }
-        else {  
+        else {
             return res.status(400).json({ error: 'Uporabnik nima pravic za označitev obvestila kot prebrano' });
         }
 
@@ -426,6 +418,31 @@ router.post('/preberiZamenjava', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
     }
 });
+
+router.post('/preberiVseZamenjave', async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'UserId manjka' });
+        }
+
+        await knex('obvestilo_zamenjava')
+            .join('oglas', 'obvestilo_zamenjava.fk_oglas_id', '=', 'oglas.id')
+            .where('oglas.fk_uporabnik_id', userId)
+            .update({ prebrano_prodajalec: true });
+
+        await knex('obvestilo_zamenjava')
+            .where('obvestilo_zamenjava.fk_uporabnik_id', userId)
+            .update({ prebrano_kupec: true });
+
+        res.status(200).json({ message: 'Obvestila označena kot prebrana' });
+    } catch (error) {
+        console.error('Napaka pri označevanju vseh obvestil kot prebrana', error);
+        res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
+    }
+});
+
 
 
 

@@ -55,21 +55,21 @@ const PodrobnostiObvestila = () => {
             });
     }, [user]);
 
-    useEffect(() => {
-        const markNotificationAsRead = async () => {
-            try {
-                const response = await api.post('obvestilo/preberiZamenjava', {
-                    id: parsan_id,
-                    userId: uporabnikovId,
-                });
-                console.log(response.data.message);
-            } catch (error) {
-                console.error('Napaka pri označevanju obvestila kot prebrano', error);
-            }
-        };
+    // useEffect(() => {
+    //     const markNotificationAsRead = async () => {
+    //         try {
+    //             const response = await api.post('obvestilo/preberiZamenjava', {
+    //                 id: parsan_id,
+    //                 userId: uporabnikovId,
+    //             });
+    //             console.log(response.data.message);
+    //         } catch (error) {
+    //             console.error('Napaka pri označevanju obvestila kot prebrano', error);
+    //         }
+    //     };
 
-        markNotificationAsRead();
-    }, [uporabnikovId]);
+    //     markNotificationAsRead();
+    // }, [uporabnikovId]);
 
     return (
         <>
@@ -85,7 +85,7 @@ const PodrobnostiObvestila = () => {
                                     </h3>
 
                                     <div className="flex flex-wrap">
-                                        <div className="w-full px-4 flex-1">
+                                        <div className="w-full md:w-6/12 px-4">
                                             <span className="text-sm block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100">
                                                 <div className="text-center mt-12">
                                                     <h3 className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
@@ -120,7 +120,7 @@ const PodrobnostiObvestila = () => {
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",
-                                                                                        width: "60%",
+                                                                                        width: "100%",
                                                                                         margin: "auto",
                                                                                     }}
                                                                                 />
@@ -134,7 +134,7 @@ const PodrobnostiObvestila = () => {
                                                 </div>
                                             </span>
                                         </div>
-                                        <div className="w-full px-4 flex-1">
+                                        <div className="w-full md:w-6/12 px-4">
                                             <span className="text-sm block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100">
                                                 <div className="text-center mt-12">
                                                     <h3 className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
@@ -169,7 +169,7 @@ const PodrobnostiObvestila = () => {
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",
-                                                                                        width: "60%",
+                                                                                        width: "100%",
                                                                                         margin: "auto",
                                                                                     }}
                                                                                 />
@@ -187,6 +187,9 @@ const PodrobnostiObvestila = () => {
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
                 </section >
                 <Footer />

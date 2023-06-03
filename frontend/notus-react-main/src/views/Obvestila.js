@@ -72,6 +72,23 @@ const Obvestilo = () => {
         }
     }, [uporabnikovId]);
 
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await api.post('obvestilo/preberiVseZamenjave', { userId: uporabnikovId });
+                console.log("nekaj se je zgodilo");
+                console.log(response.data);
+            } catch (error) {
+                console.error("Napaka pri pridobivanju obvestil", error);
+            }
+        };
+
+        if (user) {
+            fetchNotifications();
+        }
+    }, [uporabnikovId]);
+
+
     if (loading) {
         return <div>Nalaganje...</div>;
     }
@@ -114,7 +131,7 @@ const Obvestilo = () => {
                                             ))}
 
                                         {obvestilaKupca
-                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum)) // Razvrsti obvestila po padajočem vrstnem redu datuma
+                                            ?.sort((b, a) => new Date(b.datum) - new Date(a.datum))
                                             .map((obvestilo) => (
                                                 <div key={obvestilo.idObvestila}>
                                                     {obvestilo.jeSprejeto === 2 && (
