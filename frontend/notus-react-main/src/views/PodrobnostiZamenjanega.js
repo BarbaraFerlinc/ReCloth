@@ -77,7 +77,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [user]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
             .then(res => {
                 const uporabnik_profil = res.data.user;
@@ -86,12 +86,12 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(err => {
                 console.error(err);
             });
-    }, [izbira.fk_uporabnik_id]);
+    }, [izbira.fk_uporabnik_id]);*/
 
     const dobiKupca = async () => {
         try {
             const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
-            setKupec(response.data[0])
+            setKupec(response.data)
         } catch (error) {
             console.error("Napaka pri pridobivanju kupca", error);
         }
@@ -116,12 +116,12 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }, [izbira]);
 
     const posljiPotrdilo = async (e) => {
+        console.log(kupec);
+        console.log(prodajalec);
+
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
         let stevilkaRacuna = 'oglas_' + oglas.id;
-
-        console.log(kupec)
-        console.log(prodajalec)
 
         const podatki = {
             subject: 'Potrdilo zamenjave',
@@ -147,11 +147,11 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }
 
     const posljiZavrnitev = async () => {
+        console.log(kupec);
+        console.log(prodajalec);
+
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
-
-        //console.log(kupec)
-        //console.log(prodajalec)
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',
@@ -204,9 +204,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 // Handle the error
                 console.error(error);  // You can customize this part based on your needs
             });
-        //posljiPotrdilo();
-
-
+        posljiPotrdilo();
     };
 
     const handleZavrniClick = () => {
@@ -238,7 +236,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
-        //posljiZavrnitev();
+        posljiZavrnitev();
     };
 
 
@@ -292,13 +290,13 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                                     <br></br>
                                                     {<Slider {...settings}>
                                                         {izbira?.slike?.map((slika, index) => {
-                                                            const slikaPath = slika.split("\\uploads\\")[1];
+                                                            const slikaPath = slika.split("/").pop();
                                                             return (
                                                                 <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                     <img
                                                                         alt={`slika-${index}`}
                                                                         className="w-full align-middle rounded-lg"
-                                                                        src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                        src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
                                                                         style={{
                                                                             objectFit: "cover",
                                                                             height: "60vh",
