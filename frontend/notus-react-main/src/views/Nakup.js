@@ -87,6 +87,7 @@ export default function Nakup({ izbris }) {
     useEffect(() => {
         api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmailizOglasa })
             .then(res => {
+                
                 const uporabnik_profil = res.data.user;
                 setProdajalec(uporabnik_profil);
             })
@@ -224,6 +225,7 @@ export default function Nakup({ izbris }) {
                 });
 
                 if (response.status === 200) {
+
                     let kupecIme = kupec.ime + " " + kupec.priimek;
                     let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
                     let stevilkaRacuna = 'oglas_' + oglas.id;
@@ -280,8 +282,25 @@ export default function Nakup({ izbris }) {
                 if (error.response && error.response.data && error.response.data.error) {
                     console.log("error message:", error.response.data.error);
                     setErrorIzBaze(error.response.data.error);
+
+                    toast.warning(error.response.data.error, {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+
+                    izbris();
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 3000);
+
                 }
-                
+
             }
         }
     };

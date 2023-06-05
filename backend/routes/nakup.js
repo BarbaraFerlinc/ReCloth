@@ -12,6 +12,11 @@ router.post('/dodaj', async (req, res) => {
     }
 
     try {
+        const oglas = await knex('oglas').select('jeZamenjan').where('id', fk_oglas_id).first();
+        if (oglas.jeZamenjan === 1) {
+            return res.status(400).json({ error: 'Oglas ni več na voljo!' });
+        }
+
         const novNakup = await knex('nakup').insert({
             osebni_prevzem: osebni_prevzem,
             nacin_placila: nacin_placila,

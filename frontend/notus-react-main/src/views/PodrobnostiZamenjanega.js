@@ -26,6 +26,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     const [clicked, setClicked] = useState(null);
     const [uporabnikovEmail, setUporabnikovEmail] = useState("");
     const [errorIzBaze, setErrorIzBaze] = useState(null);
+    const [errorIzBaze2, setErrorIzBaze2] = useState(null);
     const [uporabnikovId, setUporabnikovId] = useState(0);
 
     const { user } = UserAuth();
@@ -70,6 +71,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
         api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
             .then(res => {
                 const uporabnik_profil = res.data.user;
+                console.log("to je prodajalec v useEfeectu" + uporabnik_profil)
                 setProdajalec(uporabnik_profil);
             })
             .catch(err => {
@@ -77,25 +79,27 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [user]);
 
-    useEffect(() => {
-        api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
-            .then(res => {
-                const uporabnik_profil = res.data.user;
-                setKupec(uporabnik_profil);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [izbira.fk_uporabnik_id]);
+    // useEffect(() => {
+    //     api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
+    //         .then(res => {
+    //             const uporabnik_profil = res.data.user;
+    //             console.log("to je kupec v useEfeectu" + uporabnik_profil)
+    //             setKupec(uporabnik_profil);
+    //         })
+    //         .catch(err => {
+    //             console.error(err);
+    //         });
+    // }, [izbira.fk_uporabnik_id]);
 
-    const dobiKupca = async () => {
-        try {
-            const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
-            setKupec(response.data[0])
-        } catch (error) {
-            console.error("Napaka pri pridobivanju kupca", error);
-        }
-    };
+     const dobiKupca = async () => {
+         try {
+             const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
+             console.log("to je kupec v useEfeectu" + response.data)
+             setKupec(response.data)
+         } catch (error) {
+             console.error("Napaka pri pridobivanju kupca", error);
+         }
+     };
 
     useEffect(() => {
         api.get(`/artikel/${izbira?.fk_oglas_id}`)
@@ -150,8 +154,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
 
-        //console.log(kupec)
-        //console.log(prodajalec)
+        console.log(kupec)
+        console.log(prodajalec)
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',
@@ -201,10 +205,33 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 }
             })
             .catch(error => {
-                // Handle the error
-                console.error(error);  // You can customize this part based on your needs
+                console.error(error);
+                if (error.response && error.response.data && error.response.data.error) {
+                    console.log("error message:", error.response.data.error);
+                    setErrorIzBaze2(error.response.data.error);
+
+                    toast.warning(error.response.data.error, {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    
+                    izbris();
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 3000);
+
+                } else {
+                    console.log("error message: Napaka pri pridobivanju podatkov");
+                    setErrorIzBaze2("Napaka pri pridobivanju podatkov");
+                }
             });
-        //posljiPotrdilo();
+        posljiPotrdilo();
 
 
     };
@@ -238,7 +265,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
             });
-        //posljiZavrnitev();
+        posljiZavrnitev();
     };
 
 
