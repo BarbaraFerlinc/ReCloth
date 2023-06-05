@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../knexConfig')
 
-// shrani (post)/uredi (post - shrani)/zbrisi (delete) oceno
-
 router.post('/dodaj', async (req, res) => {
     const { osebni_prevzem, nacin_placila, fk_uporabnik_id, fk_oglas_id } = req.body;
 

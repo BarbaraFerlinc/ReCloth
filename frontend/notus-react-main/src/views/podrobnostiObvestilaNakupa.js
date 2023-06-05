@@ -117,13 +117,13 @@ const PodrobnostiObvestilaNakupa = () => {
                                                                 <br></br>
                                                                 {<Slider {...settings}>
                                                                     {oglas?.slike?.map((slika, index) => {
-                                                                        const slikaPath = slika.split("\\uploads\\")[1];
+                                                                        const slikaPath = slika.split("/").pop();
                                                                         return (
                                                                             <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                                 <img
                                                                                     alt={`slika-${index}`}
                                                                                     className="w-full align-middle rounded-lg"
-                                                                                    src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                                    src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",

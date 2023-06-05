@@ -66,7 +66,6 @@ router.post('/dodaj', upload.array('slika'), async (req, res) => {
     }
 });
 
-
 router.get('/zamenjani/:fk_oglas_id', async (req, res) => {
     const { fk_oglas_id } = req.params;
     //dodaj še validacijo če ta id od oglasa ne obstaja
@@ -90,7 +89,6 @@ router.get('/zamenjani/:fk_oglas_id', async (req, res) => {
     }
 });
 
-
 router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
     const fk_uporabnik_id = req.params.fk_uporabnik_id;
 
@@ -109,7 +107,6 @@ router.get('/zamenjanii/:fk_uporabnik_id', async (req, res) => {
         res.status(500).json({ error: 'An error occurred' });
     }
 });
-
 
 router.get('/vsi', async (req, res) => {
     try {
@@ -131,7 +128,6 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju oglasov iz baze', details: error.message });
     }
 });
-
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
@@ -225,6 +221,5 @@ router.post('/preberi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri označevanju obvestil kot prebrana', details: error.message });
     }
 });
-
 
 module.exports = router;

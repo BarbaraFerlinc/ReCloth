@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../knexConfig')
 
-
 router.get('/vsi', async (req, res) => {
     try {
         const kategorije = await knex('kategorija').select('*');
@@ -12,10 +11,5 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju kategorij iz baze', details: error.message });
     }
 });
-
-
-
-
-
 
 module.exports = router;

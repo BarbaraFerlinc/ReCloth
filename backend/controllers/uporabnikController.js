@@ -148,8 +148,9 @@ async function getEmailFromOglasId(req, res) {
     if (!user) {
       return res.status(404).send({ error: 'No user found with this id' });
     }
-    console.log(user.email)
-    return res.status(200).send({ userEmail: user.email });
+    console.log("tuki sem")
+    console.log(user)
+    return res.status(200).send({ userEmail: user.userEmail });
 
   } catch (err) {
     console.error(err);

@@ -239,7 +239,7 @@ export default function Index({ seznamOglasov }) {
         ) : (
           <div className="flex flex-wrap -mx-4">
             {filteredOglasi.map((oglas, index) => {
-              const slikaPath = oglas.slike[0].split("\\uploads\\")[1];
+              const slikaPath = oglas.slike[0].split("/").pop();
               return (
                 <div
                   key={oglas.id}
@@ -251,7 +251,7 @@ export default function Index({ seznamOglasov }) {
                         <img
                           alt="..."
                           className="w-full align-middle rounded-lg"
-                          src={`http://localhost:9000/uploads/${slikaPath}`}
+                          src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
                           style={{ objectFit: "cover", objectPosition: "center", height: "400px", width: "100%" }}
                         />
                       </Link>

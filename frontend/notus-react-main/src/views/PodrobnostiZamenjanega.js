@@ -79,27 +79,15 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
     }, [user]);
 
-    // useEffect(() => {
-    //     api.post('uporabnik/prijavljen-profil', { email: izbira.fk_uporabnik_id })
-    //         .then(res => {
-    //             const uporabnik_profil = res.data.user;
-    //             console.log("to je kupec v useEfeectu" + uporabnik_profil)
-    //             setKupec(uporabnik_profil);
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //         });
-    // }, [izbira.fk_uporabnik_id]);
 
-     const dobiKupca = async () => {
-         try {
-             const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
-             console.log("to je kupec v useEfeectu" + response.data)
-             setKupec(response.data)
-         } catch (error) {
-             console.error("Napaka pri pridobivanju kupca", error);
-         }
-     };
+    const dobiKupca = async () => {
+        try {
+            const response = await api.get(`/uporabnik/${izbira?.fk_uporabnik_id}`);
+            setKupec(response.data)
+        } catch (error) {
+            console.error("Napaka pri pridobivanju kupca", error);
+        }
+    };
 
     useEffect(() => {
         api.get(`/artikel/${izbira?.fk_oglas_id}`)
@@ -120,12 +108,12 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }, [izbira]);
 
     const posljiPotrdilo = async (e) => {
+        console.log(kupec);
+        console.log(prodajalec);
+
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
         let stevilkaRacuna = 'oglas_' + oglas.id;
-
-        console.log(kupec)
-        console.log(prodajalec)
 
         const podatki = {
             subject: 'Potrdilo zamenjave',
@@ -151,11 +139,13 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }
 
     const posljiZavrnitev = async () => {
+        console.log(kupec);
+        console.log(prodajalec);
+
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
 
-        console.log(kupec)
-        console.log(prodajalec)
+
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',
@@ -319,13 +309,13 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                                     <br></br>
                                                     {<Slider {...settings}>
                                                         {izbira?.slike?.map((slika, index) => {
-                                                            const slikaPath = slika.split("\\uploads\\")[1];
+                                                            const slikaPath = slika.split("/").pop();
                                                             return (
                                                                 <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                     <img
                                                                         alt={`slika-${index}`}
                                                                         className="w-full align-middle rounded-lg"
-                                                                        src={`http://localhost:9000/uploads/${slikaPath}`}
+                                                                        src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
                                                                         style={{
                                                                             objectFit: "cover",
                                                                             height: "60vh",

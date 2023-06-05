@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../knexConfig')
 
-// metode
-
 router.get('/artikli/:id', async (req, res) => {
     const {id} = req.params;
     try {

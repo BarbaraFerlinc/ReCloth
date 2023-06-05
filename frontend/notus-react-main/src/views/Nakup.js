@@ -151,7 +151,7 @@ export default function Nakup({ izbris }) {
         const regex = /^[0-9]{3}$/;
         const regex1 = /^(0[1-9]|1[0-2])\/\d{2}$/;
 
-        if (!nakup.nacin_placila) {
+        if (!nakup.nacin_placila || nakup.nacin_placila == "Nacin placila") {
             formIsValid = false;
             formErrors["nacin_placila"] = "Prosimo, izberite nacin placila.";
         }

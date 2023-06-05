@@ -4,7 +4,6 @@ var router = express.Router();
 var knex = require('../knexConfig');
 var path = require('path');
 
-
 router.post('/dodaj', async (req, res) => {
     const { fk_oglas_id, fk_uporabnik_id, jeSprejeto, potrjenaZamenjava } = req.body;
 
@@ -44,9 +43,6 @@ router.post('/dodaj', async (req, res) => {
 
 });
 
-
-
-
 router.get('/vsi', async (req, res) => {
     try {
         const obvestilo_zamenjava = await knex('obvestilo_zamenjava').select('*');
@@ -56,7 +52,6 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestil iz baze', details: error.message });
     }
 });
-
 
 router.post('/dodaj2', async (req, res) => {
     const { fk_oglas_id, fk_uporabnik_id, jeSprejeto } = req.body;
@@ -89,7 +84,6 @@ router.post('/dodaj2', async (req, res) => {
 
 });
 
-
 router.get('/vsi', async (req, res) => {
     try {
         const obvestilo_zamenjava = await knex('obvestilo_zamenjava').select('*');
@@ -99,7 +93,6 @@ router.get('/vsi', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestil iz baze', details: error.message });
     }
 });
-
 
 router.post('/getVsaObvestila-zaProdajalca', async (req, res) => {
     try {
@@ -148,7 +141,6 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             .where('fk_oglas_id', '=', obvestilo1.idOglasa);
         obvestilo1.slike = slike.map(slika => slika.pot);
 
-
         if (!obvestilo1) {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
         }
@@ -165,7 +157,6 @@ router.post('/podrobnostiObvestila', async (req, res) => {
             .where('fk_zamenjani_id', '=', obvestilo2.idZamenjanih);
         obvestilo2.slike = slike2.map(slika => slika.pot);
 
-
         if (!obvestilo2) {
             return res.status(404).json({ error: 'Obvestilo ne obstaja' });
         }
@@ -178,7 +169,6 @@ router.post('/podrobnostiObvestila', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri pridobivanju obvestila iz baze', details: error.message });
     }
 });
-
 
 router.post('/podrobnostiNakupa', async (req, res) => {
     const { id } = req.body;
@@ -212,8 +202,6 @@ router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
         return res.status(400).json({ error: 'Vsa polja morajo biti izpolnjena' });
     }
 
-
-
     try {
         const obvestilo = await knex.transaction(async (trx) => {
             const currentDate = new Date()
@@ -231,7 +219,6 @@ router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
             return insertedObvestilo;
         });
 
-
         res.status(200).json({ message: 'ok', obvestilo: obvestilo });
     } catch (error) {
         console.error(error);
@@ -239,7 +226,6 @@ router.post('/dodaj/obvestilo-nakupa', async (req, res) => {
     }
 
 });
-
 
 router.post('/getVsaObvestilaNakupa-zaProdajalca', async (req, res) => {
     try {
@@ -448,18 +434,5 @@ router.post('/preberiVseZamenjave', async (req, res) => {
         res.status(500).json({ error: 'Napaka pri označevanju vseh obvestil kot prebrana' });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
