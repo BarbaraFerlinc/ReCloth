@@ -476,7 +476,7 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                                         <b>Vaše trenutne slike so: </b>{oglas?.slika.length > 0 ? oglas?.slika?.map((slika, index) => (
                                             <p> Slika {index + 1}: {slika.name} </p>
                                         )) : izbira?.slike?.map((slika, index) => (
-                                            <p> Slika {index + 1}: {slika.split("\\uploads\\")[1]}</p>
+                                            <p> Slika {index + 1}: {slika.split("/").pop()}</p>
                                         ))}
                                     </small>
                                     <div className="text-center mt-6">

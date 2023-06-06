@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import { generatePdf } from "./Index";
 
+import dotenv from 'dotenv';
+
 export default function PodrobnostiZamenjanega({ izbris }) {
     const [izbira, setIzbira] = useState("");
     const [oglas, setOglas] = useState();
@@ -37,6 +39,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     } else {
         parsan_id = undefined;
     }
+
+    dotenv.config();
 
     const settings = {
         dots: true,
@@ -321,7 +325,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                                                     <img
                                                                         alt={`slika-${index}`}
                                                                         className="w-full align-middle rounded-lg"
-                                                                        src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
+                                                                        src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                                                                         style={{
                                                                             objectFit: "cover",
                                                                             height: "60vh",

@@ -10,6 +10,8 @@ import "../components/Dropdown.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+import dotenv from 'dotenv';
+
 export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, imeDrugegaArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
   var doc = new jsPDF('portrait', 'px', 'a4', 'false');
 
@@ -122,6 +124,7 @@ export default function Index({ seznamOglasov }) {
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
 
+  dotenv.config();
 
   console.log(seznamOglasov);
   let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 0)
@@ -236,6 +239,7 @@ export default function Index({ seznamOglasov }) {
 
       </div>
 
+
       <section className="pt-10 pb-15 px-4 md:px-0">
         <br></br>
         {seznamOglasov.length === 0 || filteredOglasi.length === 0 ? (
@@ -257,7 +261,7 @@ export default function Index({ seznamOglasov }) {
                         <img
                           alt="..."
                           className="w-full align-middle rounded-lg"
-                          src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
+                          src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                           style={{ objectFit: "cover", objectPosition: "center", height: "400px", width: "100%" }}
                         />
                       </Link>
