@@ -1,2 +1,2 @@
 # ReCloth
-### [Stran v živo](https://reacloth.netlify.app)
+### [Stran v živo](https://recloth.netlify.app)
