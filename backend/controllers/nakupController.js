@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var knex = require('../knexConfig')
+const Nakup = require('../models/nakup');
+const knex = require('../knexConfig');
 
-router.post('/dodaj', async (req, res) => {
+async function dodajNakup(req, res) {
+
     const { osebni_prevzem, nacin_placila, fk_uporabnik_id, fk_oglas_id } = req.body;
 
     if (!nacin_placila) {
@@ -15,16 +15,10 @@ router.post('/dodaj', async (req, res) => {
             return res.status(400).json({ error: 'Oglas ni več na voljo!' });
         }
 
-        const novNakup = await knex('nakup').insert({
-            osebni_prevzem: osebni_prevzem,
-            nacin_placila: nacin_placila,
-            fk_uporabnik_id: fk_uporabnik_id,
-            fk_oglas_id: fk_oglas_id,
-        });
+        const novNakup = await Nakup.dodaj(osebni_prevzem, nacin_placila, fk_uporabnik_id, fk_oglas_id);
 
         await knex('oglas').where('id', fk_oglas_id).update('jeZamenjan', 1);
         await knex('zamenjani').where('fk_oglas_id', fk_oglas_id).update('jePotrjen', 1);
-
 
 
         res.status(200).json({ message: 'ok', nakup: novNakup });
@@ -32,6 +26,9 @@ router.post('/dodaj', async (req, res) => {
         console.error(error)
         res.status(500).json({ error: 'Napaka pri shranjevanju nakupa' });
     }
-});
 
-module.exports = router;
+}
+
+module.exports = {
+    dodajNakup
+};

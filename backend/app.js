@@ -7,10 +7,10 @@ const bodyParser = require('body-parser');
 
 // routerji
 var artikelRouter = require('./routes/artikel');
-var kategorijaRouter = require('./routes/kategorija');
+var kategorijaRouter = require('./routes/kategorijaRouter');
 var mailRouter = require('./routes/mailSender');
-var nakupRouter = require('./routes/nakup');
-var profilRouter = require('./routes/profil');
+var nakupRouter = require('./routes/nakupRouter');
+//var profilRouter = require('./routes/profil');
 var uporabnikRouter = require('./routes/uporabnikRouter');
 var zamenjavaRouter = require('./routes/zamenjava');
 var obvestiloRouter = require('./routes/obvestilo')
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://recloth.netlify.app');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
@@ -39,7 +39,7 @@ app.use('/artikel/', artikelRouter);
 app.use('/kategorija/', kategorijaRouter);
 app.use('/mail/', mailRouter);
 app.use('/nakup/', nakupRouter);
-app.use('/profil/', profilRouter);
+//app.use('/profil/', profilRouter);
 app.use('/uporabnik/', uporabnikRouter);
 app.use('/zamenjava', zamenjavaRouter);
 app.use('/obvestilo', obvestiloRouter);
