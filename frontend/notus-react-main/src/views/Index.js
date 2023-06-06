@@ -10,25 +10,27 @@ import "../components/Dropdown.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+import dotenv from 'dotenv';
+
 export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, imeDrugegaArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
   var doc = new jsPDF('portrait', 'px', 'a4', 'false');
-  
+
   doc.setFont('Arial', 'bold');
   doc.setFontSize(36);
   doc.setTextColor('#333');
-  
+
   doc.text('Racun', 30, 60);
-  
+
   doc.setFont('Arial', 'normal');
   doc.setFontSize(16);
   doc.setTextColor('#555');
-  
+
   doc.text('Kupec:', 30, 100);
   doc.text(imeKupca, 150, 100);
-  
+
   doc.text('Prodajalec:', 30, 120);
   doc.text(imeProdajalca, 150, 120);
-  
+
   doc.text('Stevilka racuna:', 30, 140);
   doc.text(stevilkaRacuna, 150, 140);
 
@@ -50,17 +52,17 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
       doc.text("Dostava na dom", 150, 180);
     }
   }
-  
+
   const currentDate = new Date().toLocaleDateString('sl-SI');
   doc.setTextColor('#777');
   doc.setFontSize(12);
   doc.text(currentDate, doc.internal.pageSize.getWidth() - 30, 40, { align: 'right' });
-  
+
   const items = [
     { name: imeArtikla, price: cena },
-    
+
   ];
-  
+
   if (nacinPlacila) {
     doc.autoTable({
       startY: 200,
@@ -87,7 +89,7 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
       },
     });
   }
-  
+
   doc.setTextColor('#555');
   doc.setFontSize(16);
 
@@ -95,11 +97,11 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
     doc.text('Koncna cena:', 30, doc.autoTable.previous.finalY + 20);
     doc.text(cena + ' €', 150, doc.autoTable.previous.finalY + 20);
   }
-  
+
   doc.setDrawColor('#ccc');
   doc.setLineWidth(1);
   doc.rect(20, 80, doc.internal.pageSize.getWidth() - 40, doc.autoTable.previous.finalY - 80 + 40);
-  
+
   doc.setFont('Arial', 'bold');
   doc.setFontSize(24);
   doc.setTextColor('#333');
@@ -122,6 +124,7 @@ export default function Index({ seznamOglasov }) {
   const [searchLocation, setSearchLocation] = useState("");
   const [selectedVelikost, setSelectedVelikost] = useState("");
 
+  dotenv.config();
 
   console.log(seznamOglasov);
   let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 0)
@@ -148,7 +151,7 @@ export default function Index({ seznamOglasov }) {
     (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
     (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
     (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
-    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase()) 
+    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
   );
 
   return (
@@ -251,7 +254,7 @@ export default function Index({ seznamOglasov }) {
                         <img
                           alt="..."
                           className="w-full align-middle rounded-lg"
-                          src={`${process.env.REACT_APP_BASE_URL}/uploads/${slikaPath}`}
+                          src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                           style={{ objectFit: "cover", objectPosition: "center", height: "400px", width: "100%" }}
                         />
                       </Link>

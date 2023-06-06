@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import api from "services/api";
 import Slider from "react-slick"; // uvozite knjižnico "react-slick" za drsnik slik
 
+import dotenv from 'dotenv';
+
 const PodrobnostiObvestila = () => {
     const [obvestilo1, setObvestilo1] = useState({});
     const [obvestilo2, setObvestilo2] = useState({});
@@ -19,6 +21,8 @@ const PodrobnostiObvestila = () => {
     } else {
         parsan_id = undefined;
     }
+
+    dotenv.config();
 
     const settings = {
         dots: true,
@@ -104,7 +108,7 @@ const PodrobnostiObvestila = () => {
                                                                                 <img
                                                                                     alt={`slika-${index}`}
                                                                                     className="w-full align-middle rounded-lg"
-                                                                                    src={`${process.env.REACT_APP_BASE_URL}/uploads/${slikaPath}`}
+                                                                                    src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",
@@ -153,7 +157,7 @@ const PodrobnostiObvestila = () => {
                                                                                 <img
                                                                                     alt={`slika-${index}`}
                                                                                     className="w-full align-middle rounded-lg"
-                                                                                    src={`${process.env.REACT_APP_BASE_URL}/uploads/${slikaPath}`}
+                                                                                    src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",

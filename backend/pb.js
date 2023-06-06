@@ -111,6 +111,10 @@ async function baza() {
         { naziv: 'Kratke hlače' },
         { naziv: 'Dolge hlače' },
         { naziv: 'Obleke' },
+        { naziv: 'Jakne' },
+        { naziv: 'Puloverji' },
+        { naziv: 'Srajce' },
+        { naziv: 'Krila' },
         { naziv: 'Dodatki' }
     ]
 

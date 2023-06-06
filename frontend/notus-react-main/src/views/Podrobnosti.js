@@ -11,7 +11,7 @@ import { UserAuth } from "context/AuthContext";
 import { useEffect, useState } from "react";
 import api from "services/api";
 
-
+import dotenv from 'dotenv';
 
 export default function Podrobnosti({ izbris }) {
     const [uporabnikovEmail, setUporabnikovEmail] = useState("");
@@ -26,7 +26,7 @@ export default function Podrobnosti({ izbris }) {
         parsan_id = undefined;
     }
 
-
+    dotenv.config();
 
     useEffect(() => {
         if (parsan_id === undefined) return;
@@ -142,7 +142,7 @@ export default function Podrobnosti({ izbris }) {
                                                                     <img
                                                                         alt={`slika-${index}`}
                                                                         className="w-full align-middle rounded-lg"
-                                                                        src={`${process.env.REACT_APP_BASE_URL}/uploads/${slikaPath}`}
+                                                                        src={`${process.env.REACT_APP_BASE_URL}uploads/${slikaPath}`}
                                                                         style={{
                                                                             objectFit: "cover",
                                                                             height: "60vh",
