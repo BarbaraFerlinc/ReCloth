@@ -123,7 +123,7 @@ const PodrobnostiObvestilaNakupa = () => {
                                                                                 <img
                                                                                     alt={`slika-${index}`}
                                                                                     className="w-full align-middle rounded-lg"
-                                                                                    src={`https://recloth-backend.herokuapp.com/uploads/${slikaPath}`}
+                                                                                    src={`${process.env.REACT_APP_BASE_URL}/uploads/${slikaPath}`}
                                                                                     style={{
                                                                                         objectFit: "cover",
                                                                                         height: "60vh",
