@@ -1,8 +1,6 @@
 # ReCloth
 ## O aplikaciji
-Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil.
-
-Uporabniki so hkrati kupci in prodajalci, za to funkcijo morajo biti registrirani.
+Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil. Uporabnik je lahko hkrati kupec in prodajalec, vendar mora biti za to funkcijo registriran v aplikacijo. Ko je uporabnik prijavljen v sistem, ima možnost ustvarjanja novih oglasov in urejanja že ustvarjenih. Lahko kupi artikle drugih uporabnikov ali pošlje nek svoj artikel, ki bi ga zamenjal z artiklom nekoga drugega.
 ## Uporabljene tehnologije
 | JavaScript | ExpressJS | ReactJS | MySql | TailwindCSS | Firebase |
 | :--------: | :-------: | :-----: | :---: | :---------: | :------: |
