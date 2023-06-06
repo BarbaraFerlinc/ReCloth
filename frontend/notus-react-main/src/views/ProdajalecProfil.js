@@ -18,6 +18,7 @@ export default function ProdajalecProfil() {
     }
 
     useEffect(() => {
+        if(parsan_id === undefined) return;
         const fetchProdajalec = async () => {
             try {
                 const response = await api.get(`/uporabnik/${parsan_id}`);

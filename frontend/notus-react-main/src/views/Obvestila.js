@@ -17,73 +17,78 @@ const Obvestilo = () => {
     const { user } = UserAuth();
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                console.log("Uporabnikov ID je: ", uporabnikovId)
-                const responseProdajalec = await api.post('obvestilo/getVsaObvestila-zaProdajalca', { id: uporabnikovId });
-                setObvestilaProdajalec(responseProdajalec.data);
+        if (user.email && uporabnikovId) {
+            const fetchData = async () => {
+                try {
+                    console.log("Uporabnikov ID je: ", uporabnikovId)
+                    const responseProdajalec = await api.post('obvestilo/getVsaObvestila-zaProdajalca', { id: uporabnikovId });
+                    setObvestilaProdajalec(responseProdajalec.data);
 
-                const responseKupca = await api.post('obvestilo/getVsaObvestila-zaKupca', { id: uporabnikovId });
-                setObvestilaKupca(responseKupca.data);
+                    const responseKupca = await api.post('obvestilo/getVsaObvestila-zaKupca', { id: uporabnikovId });
+                    setObvestilaKupca(responseKupca.data);
 
-                setLoading(false);
-            } catch (error) {
-                setError('Napaka pri pridobivanju obvestil');
-                setLoading(false);
-            }
-        };
+                    setLoading(false);
+                } catch (error) {
+                    setError('Napaka pri pridobivanju obvestil');
+                    setLoading(false);
+                }
+            };
 
-        fetchData();
+            fetchData();
+
+        }
     }, [uporabnikovId]);
 
     useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await api.post('/obvestilo/getVsaObvestilaNakupa-zaProdajalca', { id: uporabnikovId });
-                console.log(response.data);
-                setObvestilaNakupaProdajalca(response.data);
+        if (user.email && uporabnikovId) {
+            const fetchNotifications = async () => {
+                try {
+                    const response = await api.post('/obvestilo/getVsaObvestilaNakupa-zaProdajalca', { id: uporabnikovId });
+                    console.log(response.data);
+                    setObvestilaNakupaProdajalca(response.data);
 
-                const response2 = await api.post('/obvestilo/getVsaObvestilaNakupa-zaKupca', { id: uporabnikovId });
-                console.log(response2.data);
-                setObvestilaNakupaKupca(response2.data);
+                    const response2 = await api.post('/obvestilo/getVsaObvestilaNakupa-zaKupca', { id: uporabnikovId });
+                    console.log(response2.data);
+                    setObvestilaNakupaKupca(response2.data);
 
-            } catch (error) {
-                console.error("Napaka pri pridobivanju obvestil", error);
-            }
-        };
+                } catch (error) {
+                    console.error("Napaka pri pridobivanju obvestil", error);
+                }
+            };
 
-        if (user) {
             fetchNotifications();
         }
     }, [uporabnikovId]);
 
     useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await api.post('obvestilo/preberiVseZamenjave', { userId: uporabnikovId });
-                console.log("nekaj se je zgodilo");
-                console.log(response.data);
-            } catch (error) {
-                console.error("Napaka pri pridobivanju obvestil", error);
-            }
-        };
+        if (user.email && uporabnikovId) {
+            const fetchNotifications = async () => {
+                try {
+                    const response = await api.post('obvestilo/preberiVseZamenjave', { userId: uporabnikovId });
+                    console.log("nekaj se je zgodilo");
+                    console.log(response.data);
+                } catch (error) {
+                    console.error("Napaka pri pridobivanju obvestil", error);
+                }
+            };
 
-        if (user) {
             fetchNotifications();
         }
     }, [uporabnikovId]);

@@ -31,6 +31,7 @@ const PodrobnostiObvestilaNakupa = () => {
 
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         api.post('obvestilo/podrobnostiNakupa', { id: parsan_id })
             .then(res => {
                 setOglas(res.data.obvestiloNakupa);
@@ -42,21 +43,24 @@ const PodrobnostiObvestilaNakupa = () => {
 
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
+        if (parsan_id === undefined || uporabnikovId === "") return;
         const markNotificationAsRead = async () => {
             try {
                 const response = await api.post('obvestilo/preberiNakup', {

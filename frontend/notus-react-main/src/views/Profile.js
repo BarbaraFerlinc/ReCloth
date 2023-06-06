@@ -39,7 +39,7 @@ export default function Profile({ izbris }) {
   let artikli = [];
 
   useEffect(() => {
-    if (user) {
+    if (user.email) {
       const uporabnikovEmail = user.email;
       console.log("Uporabnikov email je: ", uporabnikovEmail)
 
@@ -108,12 +108,15 @@ export default function Profile({ izbris }) {
   };
 
   useEffect(() => {
-    fetchUser(uporabnikovId);
-    fetchOglasi(uporabnikovId);
-    fetchZamenjani(uporabnikovId);
-    fetchPreberiNotifikacije(uporabnikovId);
-    steviloKomentarjev();
-    izracunajOceno();
+    if (user.email && uporabnikovId) {
+      fetchUser(uporabnikovId);
+      fetchOglasi(uporabnikovId);
+      fetchZamenjani(uporabnikovId);
+      fetchPreberiNotifikacije(uporabnikovId);
+      steviloKomentarjev();
+      izracunajOceno();
+    }
+
   }, [uporabnikovId]);
 
   const handleDelete = async (id) => {

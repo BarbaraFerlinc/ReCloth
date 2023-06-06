@@ -49,21 +49,17 @@ export default function Zamenjava() {
     useEffect(() => {
         if (user.email) {
             const uporabnikovEmail = user.email;
-            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
             api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
                 .then(res => {
                     const userId = res.data.userId;
                     setUporabnikovId(userId);
-                    console.log("Uporabnikov ID je: ", userId);
                 })
                 .catch(err => {
                     console.error(err);
                     if (err.response && err.response.data && err.response.data.error) {
-                        console.log("error message:", err.response.data.error);
                         setErrorIzBaze(err.response.data.error);
                     } else {
-                        console.log("error message: Napaka pri pridobivanju podatkov");
                         setErrorIzBaze("Napaka pri pridobivanju podatkov");
                     }
                 });
@@ -74,7 +70,6 @@ export default function Zamenjava() {
         const fetchKategorije = async () => {
             try {
                 const response = await api.get('/kategorija/vsi');
-                console.log(response)
                 setKategorija(response.data);
             } catch (error) {
                 console.error("Napaka pri pridobivanju kategorij", error);
@@ -85,22 +80,19 @@ export default function Zamenjava() {
     }, []);
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         const oglasId = parsan_id;
-        console.log("Oglas Id je: ", oglasId)
 
         api.post('uporabnik/get-email-from-oglas-id', { id: oglasId })
             .then(res => {
                 const uporabnikovEmailizOglasa = res.data.userEmail;
                 setUporabnikovEmail(uporabnikovEmailizOglasa);
-                console.log("Uporabnikov email iz oglasa je: ", uporabnikovEmailizOglasa);
             })
             .catch(err => {
                 console.error(err);
                 if (err.response && err.response.data && err.response.data.error) {
-                    console.log("error message:", err.response.data.error);
                     setErrorIzBaze(err.response.data.error);
                 } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
                     setErrorIzBaze("Napaka pri pridobivanju podatkov");
                 }
             });

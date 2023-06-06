@@ -43,19 +43,21 @@ export default function ObjavaOglasa({ dodaj }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
         const fetchKategorije = async () => {
@@ -282,8 +284,6 @@ export default function ObjavaOglasa({ dodaj }) {
         }
     }
 
-    /* console.log("loading je " + loading)
-    console.log("isSumbiting je " + isSubmitting) */
     return (
         <>
 
