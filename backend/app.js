@@ -5,6 +5,8 @@ var logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+require('dotenv').config();
+
 // routerji
 var artikelRouter = require('./routes/artikel');
 var kategorijaRouter = require('./routes/kategorija');
@@ -28,7 +30,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://recloth.netlify.app');
+  res.setHeader('Access-Control-Allow-Origin', process.env.ACCESS_CORS);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
