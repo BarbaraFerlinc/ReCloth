@@ -29,6 +29,7 @@ export default function Podrobnosti({ izbris }) {
 
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         api.get(`/artikel/${parsan_id}`)
             .then(res => {
                 console.log("Izbira je: ", res.data)
@@ -60,6 +61,7 @@ export default function Podrobnosti({ izbris }) {
     };
 
     useEffect(() => {
+        if(!izbira) return;
         const uporabnikovId = izbira && izbira.uporabnik.id;
 
 

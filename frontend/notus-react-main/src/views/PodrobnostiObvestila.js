@@ -30,6 +30,7 @@ const PodrobnostiObvestila = () => {
 
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         api.post('obvestilo/podrobnostiObvestila', { id: parsan_id })
             .then(res => {
                 const obvestilo1 = res.data.obvestilo1;
@@ -43,33 +44,19 @@ const PodrobnostiObvestila = () => {
     }, [parsan_id]);
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [user]);
-
-    // useEffect(() => {
-    //     const markNotificationAsRead = async () => {
-    //         try {
-    //             const response = await api.post('obvestilo/preberiZamenjava', {
-    //                 id: parsan_id,
-    //                 userId: uporabnikovId,
-    //             });
-    //             console.log(response.data.message);
-    //         } catch (error) {
-    //             console.error('Napaka pri označevanju obvestila kot prebrano', error);
-    //         }
-    //     };
-
-    //     markNotificationAsRead();
-    // }, [uporabnikovId]);
+        if (user.email) {
+            const uporabnikovEmail = user.email;
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                    console.log("Uporabnikov ID je: ", userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user.email]);
 
     return (
         <>

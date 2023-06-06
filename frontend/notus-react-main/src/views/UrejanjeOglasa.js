@@ -66,25 +66,24 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
+        if (user.email) {
+            const uporabnikovEmail = user.email;
 
-        api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
-            .then(res => {
-                const userId = res.data.userId;
-                setUporabnikovId(userId);
-                console.log("Uporabnikov ID je: ", userId);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [user]);
+            api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
+                .then(res => {
+                    const userId = res.data.userId;
+                    setUporabnikovId(userId);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user.email]);
 
     useEffect(() => {
         const fetchKategorije = async () => {
             try {
                 const response = await api.get('/kategorija/vsi');
-                console.log(response)
                 setKategorija(response.data);
             } catch (error) {
                 console.error("Napaka pri pridobivanju kategorij", error);
@@ -172,7 +171,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
                 if (izbira.slike.length > 0 && oglas.slika.length === 0) {
                     formData.append("slikeNespremenjene", 'true');
-                    console.log("slike nespremenjene")
                 } else {
                     if (Array.isArray(oglas.slika)) {
                         oglas.slika.forEach((slika) => {
@@ -183,7 +181,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
                     }
                 }
                 for (const entry of formData.entries()) {
-                    console.log("to je entry" + entry);
                 }
                 const response = await api.put(`/artikel/${id}`, formData, {
                     headers: {
@@ -259,7 +256,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
         if (type === "checkbox" && name === "za_zamenjavo") {
             valueToUse = checked ? 1 : 0;
-            console.log(valueToUse)
             setZamenjava(valueToUse);
         } else if (name === "fk_kategorija_id") {
             const selectedKategorija = kategorija.find((k) => k.id === value);

@@ -8,14 +8,14 @@ import api from "services/api";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const [notificationCount, setNotificationCount] = useState(0); // Dodali smo števec za obvestila
-  const [notificationCount2, setNotificationCount2] = useState(0); // Dodali smo števec za obvestila  
+  const [notificationCount, setNotificationCount] = useState(0); 
+  const [notificationCount2, setNotificationCount2] = useState(0);  
   const [uporabnikovId, setUporabnikovId] = useState(0);
 
   const { user } = UserAuth();
 
   useEffect(() => {
-    if (user) {
+    if (user.email) {
       const uporabnikovEmail = user.email;
       console.log("Uporabnikov email je: ", uporabnikovEmail)
 
@@ -29,42 +29,43 @@ export default function Navbar(props) {
           console.error(err);
         });
     }
-  }, [user]);
+  }, [user.email]);
 
 
   useEffect(() => {
-    const fetchNotificationCount = async () => {
-      try {
-        const response = await api.post('obvestilo/prestej-neprebraneNakup', { userId: uporabnikovId });
-        console.log(response.data.neprebranaObvestila);
-        setNotificationCount(response.data.neprebranaObvestila);
+    if (user.email && uporabnikovId	) {
+      const fetchNotificationCount = async () => {
+        try {
+          const response = await api.post('obvestilo/prestej-neprebraneNakup', { userId: uporabnikovId });
+          console.log(response.data.neprebranaObvestila);
+          setNotificationCount(response.data.neprebranaObvestila);
 
-        const response2 = await api.post('obvestilo/prestej-neprebraneZamenjava', { userId: uporabnikovId });
-        console.log(response2.data.neprebranaObvestila);
-        setNotificationCount(prevCount => prevCount + response2.data.neprebranaObvestila);
-      } catch (error) {
-        console.error('Napaka pri pridobivanju obvestil', error);
-      }
-    };
+          const response2 = await api.post('obvestilo/prestej-neprebraneZamenjava', { userId: uporabnikovId });
+          console.log(response2.data.neprebranaObvestila);
+          setNotificationCount(prevCount => prevCount + response2.data.neprebranaObvestila);
+        } catch (error) {
+          console.error('Napaka pri pridobivanju obvestil', error);
+        }
+      };
 
-    if (user) {
       fetchNotificationCount();
     }
+
   }, [uporabnikovId]);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await api.post('zamenjava/prestej-neprebrane', { userId: uporabnikovId });
-        console.log(response.data[0].neprebranaObvestila);
-        setNotificationCount2(response.data[0].neprebranaObvestila);
-      } catch (error) {
-        console.error('Napaka pri pridobivanju obvestil', error);
-      }
-    };  
-
-    if (user) {
+    if (user.email && uporabnikovId) {
+      const fetchNotifications = async () => {
+        try {
+          const response = await api.post('zamenjava/prestej-neprebrane', { userId: uporabnikovId });
+          console.log(response.data[0].neprebranaObvestila);
+          setNotificationCount2(response.data[0].neprebranaObvestila);
+        } catch (error) {
+          console.error('Napaka pri pridobivanju obvestil', error);
+        }
+      };
       fetchNotifications();
+
     }
   }, [uporabnikovId]);
 
