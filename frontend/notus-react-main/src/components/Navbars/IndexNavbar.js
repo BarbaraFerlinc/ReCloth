@@ -15,7 +15,7 @@ export default function Navbar(props) {
   const { user } = UserAuth();
 
   useEffect(() => {
-    if (user.email) {
+    if (user) {
       const uporabnikovEmail = user.email;
       console.log("Uporabnikov email je: ", uporabnikovEmail)
 
@@ -29,7 +29,7 @@ export default function Navbar(props) {
           console.error(err);
         });
     }
-  }, [user.email]);
+  }, [user]);
 
 
   useEffect(() => {

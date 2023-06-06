@@ -12,23 +12,23 @@ import "jspdf-autotable";
 
 export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeArtikla, imeDrugegaArtikla, nacinPlacila, osebniPrevzem, lokacijaPrevzema) => {
   var doc = new jsPDF('portrait', 'px', 'a4', 'false');
-  
+
   doc.setFont('Arial', 'bold');
   doc.setFontSize(36);
   doc.setTextColor('#333');
-  
+
   doc.text('Racun', 30, 60);
-  
+
   doc.setFont('Arial', 'normal');
   doc.setFontSize(16);
   doc.setTextColor('#555');
-  
+
   doc.text('Kupec:', 30, 100);
   doc.text(imeKupca, 150, 100);
-  
+
   doc.text('Prodajalec:', 30, 120);
   doc.text(imeProdajalca, 150, 120);
-  
+
   doc.text('Stevilka racuna:', 30, 140);
   doc.text(stevilkaRacuna, 150, 140);
 
@@ -50,17 +50,17 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
       doc.text("Dostava na dom", 150, 180);
     }
   }
-  
+
   const currentDate = new Date().toLocaleDateString('sl-SI');
   doc.setTextColor('#777');
   doc.setFontSize(12);
   doc.text(currentDate, doc.internal.pageSize.getWidth() - 30, 40, { align: 'right' });
-  
+
   const items = [
     { name: imeArtikla, price: cena },
-    
+
   ];
-  
+
   if (nacinPlacila) {
     doc.autoTable({
       startY: 200,
@@ -87,7 +87,7 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
       },
     });
   }
-  
+
   doc.setTextColor('#555');
   doc.setFontSize(16);
 
@@ -95,11 +95,11 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
     doc.text('Koncna cena:', 30, doc.autoTable.previous.finalY + 20);
     doc.text(cena + ' €', 150, doc.autoTable.previous.finalY + 20);
   }
-  
+
   doc.setDrawColor('#ccc');
   doc.setLineWidth(1);
   doc.rect(20, 80, doc.internal.pageSize.getWidth() - 40, doc.autoTable.previous.finalY - 80 + 40);
-  
+
   doc.setFont('Arial', 'bold');
   doc.setFontSize(24);
   doc.setTextColor('#333');
@@ -148,86 +148,92 @@ export default function Index({ seznamOglasov }) {
     (selectedCategory ? oglas.kategorijaNaziv === selectedCategory : true) &&
     (selectedZamenjava ? oglas.za_zamenjavo.toString() === selectedZamenjava : true) &&
     (selectedVelikost ? oglas.velikost === selectedVelikost : true) &&
-    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase()) 
+    oglas.lokacija.toLowerCase().includes(searchLocation.toLowerCase())
   );
 
   return (
     <>
       <IndexNavbar fixed={true}></IndexNavbar>
       <div className="flex items-center mb-8 px-4 pt-20 ml-4" style={{ marginLeft: "17px" }}>
-        <select
-          value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md mr-4 custom-select"
-        >
-          <option value="">Vse</option>
-          {kategorije.map(kategorija => (
-            <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
-          ))}
-        </select>
-        <select
-          value={selectedZamenjava}
-          onChange={e => setSelectedZamenjava(e.target.value)}
-          className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select"
-        >
-          <option value="">Način nakupa</option>
-          <option value="0">Fiksna cena</option>
-          <option value="1">Možna zamenjava</option>
-        </select>
-        <select
-          value={selectedVelikost}
-          onChange={e => setSelectedVelikost(e.target.value)}
-          className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select"
-        >
-          <option value="">Velikost</option>
-          <option value="XS">XS</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-          <option value="XXL">XXL</option>
-          <option value="110">110</option>
-          <option value="116">116</option>
-          <option value="122">122</option>
-          <option value="128">128</option>
-          <option value="134">134</option>
-          <option value="140">140</option>
-          <option value="146">146</option>
-          <option value="152">152</option>
-          <option value="158">158</option>
-          <option value="164">164</option>
-        </select>
+        <div className="w-full sm:w-5/12 px-4">
+          <select
+            value={selectedCategory}
+            onChange={e => setSelectedCategory(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md mr-4 custom-select mt-4"
+          >
+            <option value="">Vse</option>
+            {kategorije.map(kategorija => (
+              <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
+            ))}
+          </select>
 
-        <input
-          type="text"
-          value={searchLocation}
-          onChange={e => setSearchLocation(e.target.value)}
-          placeholder="Vnesite lokacijo"
-          className="px-4 py-2 border border-gray-300 rounded-md custom-input"
-        />
+          <select
+            value={selectedZamenjava}
+            onChange={e => setSelectedZamenjava(e.target.value)}
+            className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select mt-4"
+          >
+            <option value="">Način nakupa</option>
+            <option value="0">Ni možna zamenjava</option>
+            <option value="1">Možna zamenjava</option>
+          </select>
 
-        <div className="flex-grow"></div>
+          <select
+            value={selectedVelikost}
+            onChange={e => setSelectedVelikost(e.target.value)}
+            className="px-10 py-2 border border-gray-300 rounded-md mr-4 custom-select mt-4"
+          >
+            <option value="">Velikost</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            <option value="110">110</option>
+            <option value="116">116</option>
+            <option value="122">122</option>
+            <option value="128">128</option>
+            <option value="134">134</option>
+            <option value="140">140</option>
+            <option value="146">146</option>
+            <option value="152">152</option>
+            <option value="158">158</option>
+            <option value="164">164</option>
+          </select>
+          <input
+            type="text"
+            value={searchLocation}
+            onChange={e => setSearchLocation(e.target.value)}
+            placeholder="Vnesite lokacijo"
+            className="px-4 py-2 border border-gray-300 rounded-md custom-input mr-4 mt-4"
+          />
 
-        <button
-          onClick={handleRefresh}
-          style={{
-            //light blue 
-            backgroundColor: "#60A5FA",
-            color: "white",
-            border: "none",
-            borderRadius: "20px",
-            padding: "10px 20px",
-            fontSize: "16px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s ease",
-            marginLeft: "15px"
-          }}
-          type="button"
-        >
-          Prikaži vse
-        </button>
+          <div className="flex-grow"></div>
+
+          <button
+            onClick={handleRefresh}
+            style={{
+              //light blue 
+              backgroundColor: "#60A5FA",
+              color: "white",
+              border: "none",
+              borderRadius: "20px",
+              padding: "10px", // Adjusted padding
+              fontSize: "15px", // Adjusted font size
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+              transition: "background-color 0.3s ease",
+              marginTop: "15px"
+              //marginLeft: "15px"
+            }}
+            type="button"
+          >
+            Prikaži vse
+          </button>
+        </div>
+
+
       </div>
 
       <section className="pt-10 pb-15 px-4 md:px-0">
