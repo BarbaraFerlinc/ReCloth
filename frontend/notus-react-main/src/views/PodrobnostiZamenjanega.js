@@ -47,6 +47,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     };
 
     useEffect(() => {
+        if(parsan_id === undefined) return;
         api.get(`/zamenjava/${parsan_id}`)
             .then(res => {
                 setIzbira(res.data)
@@ -65,6 +66,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
 
 
     useEffect(() => {
+        if(user.email){
         const uporabnikovEmail = user.email;
         console.log("Uporabnikov email je: ", uporabnikovEmail)
 
@@ -77,7 +79,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(err => {
                 console.error(err);
             });
-    }, [user]);
+        }
+    }, [user.email]);
 
 
     const dobiKupca = async () => {
@@ -90,6 +93,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     };
 
     useEffect(() => {
+        if (!izbira) return;
         api.get(`/artikel/${izbira?.fk_oglas_id}`)
             .then(res => {
                 console.log("Oglas je: ", res.data)
@@ -168,6 +172,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }
 
     const handleSprejmiClick = () => {
+        if(!izbira) return;
         api.post('obvestilo/dodaj', {
             fk_oglas_id: izbira?.fk_oglas_id,
             fk_uporabnik_id: izbira?.fk_uporabnik_id,
@@ -227,6 +232,7 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     };
 
     const handleZavrniClick = () => {
+        if(!izbira) return;
         api.post('obvestilo/dodaj2', {
             fk_oglas_id: izbira?.fk_oglas_id,
             fk_uporabnik_id: izbira?.fk_uporabnik_id,

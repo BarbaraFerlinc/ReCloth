@@ -85,18 +85,21 @@ export default function Nakup({ izbris }) {
     }, [user.email]);
 
     useEffect(() => {
-        api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmailizOglasa })
-            .then(res => {
-                
-                const uporabnik_profil = res.data.user;
-                setProdajalec(uporabnik_profil);
-            })
-            .catch(err => {
-                console.error(err);
-            });
+        if (user.email) {
+            api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmailizOglasa })
+                .then(res => {
+
+                    const uporabnik_profil = res.data.user;
+                    setProdajalec(uporabnik_profil);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
     }, [uporabnikovEmailizOglasa]);
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         const oglasId = parsan_id;
         console.log("Oglas Id je: ", oglasId)
 
@@ -116,9 +119,10 @@ export default function Nakup({ izbris }) {
                     setErrorIzBaze("Napaka pri pridobivanju podatkov");
                 }
             });
-    }, [user]);
+    }, [user.email]);
 
     useEffect(() => {
+        if (parsan_id === undefined) return;
         api.get(`/artikel/${parsan_id}`)
             .then(res => {
                 console.log("Oglas je: ", res.data)
