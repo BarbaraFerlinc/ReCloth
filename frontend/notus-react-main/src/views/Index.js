@@ -239,6 +239,7 @@ export default function Index({ seznamOglasov }) {
 
       </div>
 
+
       <section className="pt-10 pb-15 px-4 md:px-0">
         <br></br>
         {seznamOglasov.length === 0 || filteredOglasi.length === 0 ? (
