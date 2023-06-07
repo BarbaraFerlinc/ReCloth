@@ -61,7 +61,7 @@ export default function Podrobnosti({ izbris }) {
     };
 
     useEffect(() => {
-        if(!izbira) return;
+        if (!izbira) return;
         const uporabnikovId = izbira && izbira.uporabnik.id;
 
 

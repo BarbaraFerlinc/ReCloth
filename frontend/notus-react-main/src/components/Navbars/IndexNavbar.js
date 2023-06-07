@@ -33,7 +33,7 @@ export default function Navbar(props) {
 
 
   useEffect(() => {
-    if (user.email && uporabnikovId	) {
+    if (user && uporabnikovId	) {
       const fetchNotificationCount = async () => {
         try {
           const response = await api.post('obvestilo/prestej-neprebraneNakup', { userId: uporabnikovId });
@@ -54,7 +54,7 @@ export default function Navbar(props) {
   }, [uporabnikovId]);
 
   useEffect(() => {
-    if (user.email && uporabnikovId) {
+    if (user && uporabnikovId) {
       const fetchNotifications = async () => {
         try {
           const response = await api.post('zamenjava/prestej-neprebrane', { userId: uporabnikovId });
