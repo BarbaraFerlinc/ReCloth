@@ -6,7 +6,7 @@ Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil. Uporabnik je la
 | :--------: | :-----: | :-----: | :---: | :---------: | :------: |
 | <a href="https://developer.mozilla.org/en-US/docs/Web/javascript" title="JavaScript"><img src="https://github.com/get-icon/geticon/blob/master/icons/javascript.svg" alt="JavaScript" width="50px" height="50px"></a> | <a href="https://expressjs.com/" title="Express"><img src="https://github.com/get-icon/geticon/blob/master/icons/express.svg" alt="Express" width="50px" height="50px"></a> | <a href="https://react.dev/" title="ReactJS"><img src="https://github.com/get-icon/geticon/raw/master/icons/react.svg" alt="React" width="50px" height="50px"></a> | <a href="https://www.mysql.com/" title="MySql"><img src="https://github.com/get-icon/geticon/blob/master/icons/mysql.svg" alt="MySql" width="50px" height="50px"></a> | <a href="https://tailwindcss.com/" title="TailwindCSS"><img src="https://github.com/get-icon/geticon/raw/master/icons/tailwindcss-icon.svg" alt="MySql" width="50px" height="50px"></a> | <a href="https://www.firebase.com/" title="Firebase"><img src="https://github.com/get-icon/geticon/raw/master/icons/firebase.svg" alt="Firebase" width="50px" height="50px"></a> |
 ## Zagon aplikacije
-Priporočena verzija `Node.js`:
+Potrebna verzija `Node.js`:
 ```
 16.20.0
 ```
@@ -29,13 +29,13 @@ Zaženite zaledje z ukazom:
 ```
 nodemon app.js
 ```
-Zaledje bo na `localhost:9000`
+Zaledje bo na `http://localhost:9000/`
 ### Pročelje (frontend/notus-react-main):
 Ustvarite `node_modules` z ukazom:
 ```
 npm install
 ```
-Če še nimate ustvarjenega projekta na `FireBase` to naredite in v `Project settings/General` poiščite podatke svojega projekta.
+Če še nimate ustvarjenega projekta na `FireBase` to naredite. Vzpostavite avtentikacijo uporabnika z emailom in geslom. V `Project settings/General` izberite možnost `</>` oziroma Web App in poiščite podatke svojega projekta.
 
 Spremenite `.env` datoteko:
 
@@ -45,7 +45,7 @@ Zaženite pročelje z ukazom:
 ```
 npm start
 ```
-Pročelje bo na `localhost:3000`
+Pročelje bo na `http://localhost:3000`
 ## Avtorji
 - Gašper Košenina
 - Luka Prepadnik
