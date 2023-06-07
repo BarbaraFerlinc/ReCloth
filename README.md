@@ -6,6 +6,10 @@ Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil. Uporabnik je la
 | :--------: | :-----: | :-----: | :---: | :---------: | :------: |
 | <a href="https://developer.mozilla.org/en-US/docs/Web/javascript" title="JavaScript"><img src="https://github.com/get-icon/geticon/blob/master/icons/javascript.svg" alt="JavaScript" width="50px" height="50px"></a> | <a href="https://expressjs.com/" title="Express"><img src="https://github.com/get-icon/geticon/blob/master/icons/express.svg" alt="Express" width="50px" height="50px"></a> | <a href="https://react.dev/" title="ReactJS"><img src="https://github.com/get-icon/geticon/raw/master/icons/react.svg" alt="React" width="50px" height="50px"></a> | <a href="https://www.mysql.com/" title="MySql"><img src="https://github.com/get-icon/geticon/blob/master/icons/mysql.svg" alt="MySql" width="50px" height="50px"></a> | <a href="https://tailwindcss.com/" title="TailwindCSS"><img src="https://github.com/get-icon/geticon/raw/master/icons/tailwindcss-icon.svg" alt="MySql" width="50px" height="50px"></a> | <a href="https://www.firebase.com/" title="Firebase"><img src="https://github.com/get-icon/geticon/raw/master/icons/firebase.svg" alt="Firebase" width="50px" height="50px"></a> |
 ## Zagon aplikacije
+Priporočena verzija `Node.js`:
+```
+16.20.0
+```
 ### Zaledje (backend):
 Ustvarite `node_modules` z ukazom:
 ```
