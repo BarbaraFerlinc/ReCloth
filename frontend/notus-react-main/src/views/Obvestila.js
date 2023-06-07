@@ -19,13 +19,11 @@ const Obvestilo = () => {
     useEffect(() => {
         if (user.email) {
             const uporabnikovEmail = user.email;
-            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
             api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
                 .then(res => {
                     const userId = res.data.userId;
                     setUporabnikovId(userId);
-                    console.log("Uporabnikov ID je: ", userId);
                 })
                 .catch(err => {
                     console.error(err);
@@ -37,7 +35,6 @@ const Obvestilo = () => {
         if (user.email && uporabnikovId) {
             const fetchData = async () => {
                 try {
-                    console.log("Uporabnikov ID je: ", uporabnikovId)
                     const responseProdajalec = await api.post('obvestilo/getVsaObvestila-zaProdajalca', { id: uporabnikovId });
                     setObvestilaProdajalec(responseProdajalec.data);
 
@@ -61,11 +58,9 @@ const Obvestilo = () => {
             const fetchNotifications = async () => {
                 try {
                     const response = await api.post('/obvestilo/getVsaObvestilaNakupa-zaProdajalca', { id: uporabnikovId });
-                    console.log(response.data);
                     setObvestilaNakupaProdajalca(response.data);
 
                     const response2 = await api.post('/obvestilo/getVsaObvestilaNakupa-zaKupca', { id: uporabnikovId });
-                    console.log(response2.data);
                     setObvestilaNakupaKupca(response2.data);
 
                 } catch (error) {
@@ -82,8 +77,6 @@ const Obvestilo = () => {
             const fetchNotifications = async () => {
                 try {
                     const response = await api.post('obvestilo/preberiVseZamenjave', { userId: uporabnikovId });
-                    console.log("nekaj se je zgodilo");
-                    console.log(response.data);
                 } catch (error) {
                     console.error("Napaka pri pridobivanju obvestil", error);
                 }

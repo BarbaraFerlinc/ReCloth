@@ -59,10 +59,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(err => {
                 console.error(err);
                 if (err.response && err.response.data && err.response.data.error) {
-                    console.log("error message:", err.response.data.error);
                     setErrorIzBaze(err.response.data.error);
                 } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
                     setErrorIzBaze("Napaka pri pridobivanju podatkov");
                 }
             });
@@ -72,12 +70,10 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     useEffect(() => {
         if(user.email){
         const uporabnikovEmail = user.email;
-        console.log("Uporabnikov email je: ", uporabnikovEmail)
 
         api.post('uporabnik/prijavljen-profil', { email: uporabnikovEmail })
             .then(res => {
                 const uporabnik_profil = res.data.user;
-                console.log("to je prodajalec v useEfeectu" + uporabnik_profil)
                 setProdajalec(uporabnik_profil);
             })
             .catch(err => {
@@ -100,7 +96,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
         if (!izbira) return;
         api.get(`/artikel/${izbira?.fk_oglas_id}`)
             .then(res => {
-                console.log("Oglas je: ", res.data)
                 setOglas(res.data);
             })
 
@@ -116,9 +111,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
     }, [izbira]);
 
     const posljiPotrdilo = async (e) => {
-        console.log(kupec);
-        console.log(prodajalec);
-
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
         let stevilkaRacuna = 'oglas_' + oglas.id;
@@ -138,22 +130,11 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 Accept: "application/json",
             },
         });
-
-        if (res.status === 200) {
-            console.log(200);
-        } else {
-            console.log(res.status);
-        }
     }
 
     const posljiZavrnitev = async () => {
-        console.log(kupec);
-        console.log(prodajalec);
-
         let kupecIme = kupec.ime + " " + kupec.priimek;
         let prodajalecIme = prodajalec.ime + " " + prodajalec.priimek;
-
-
 
         const podatki = {
             subject: 'Zavrnitev zamenjave',
@@ -167,12 +148,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                 Accept: "application/json",
             },
         });
-
-        if (res.status === 200) {
-            console.log(200);
-        } else {
-            console.log(res.status);
-        }
     }
 
     const handleSprejmiClick = () => {
@@ -206,7 +181,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             .catch(error => {
                 console.error(error);
                 if (error.response && error.response.data && error.response.data.error) {
-                    console.log("error message:", error.response.data.error);
                     setErrorIzBaze2(error.response.data.error);
 
                     toast.warning(error.response.data.error, {
@@ -226,7 +200,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                     }, 3000);
 
                 } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
                     setErrorIzBaze2("Napaka pri pridobivanju podatkov");
                 }
             });
@@ -267,11 +240,6 @@ export default function PodrobnostiZamenjanega({ izbris }) {
             });
         posljiZavrnitev();
     };
-
-
-
-    console.log(izbira)
-
 
     return (
         <>
@@ -319,7 +287,8 @@ export default function PodrobnostiZamenjanega({ izbris }) {
                                                     <br></br>
                                                     {<Slider {...settings}>
                                                         {izbira?.slike?.map((slika, index) => {
-                                                            const slikaPath = slika.split("/").pop();
+                                                            const delimiter = slika.includes("\\") ? "\\" : "/";
+                                                            const slikaPath = slika.split(delimiter).pop();
                                                             return (
                                                                 <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                     <img

@@ -27,7 +27,6 @@ export default function Profile({ izbris }) {
   const handleLogout = async () => {
     try {
       await logout();
-      console.log("use: " + user);
       navigate("/login");
     } catch (e) {
       console.log(e.message);
@@ -41,13 +40,11 @@ export default function Profile({ izbris }) {
   useEffect(() => {
     if (user.email) {
       const uporabnikovEmail = user.email;
-      console.log("Uporabnikov email je: ", uporabnikovEmail)
 
       api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
         .then(res => {
           const userId = res.data.userId;
           setUporabnikovId(userId);
-          console.log("Uporabnikov ID je: ", userId);
         })
         .catch(err => {
           console.error(err);
@@ -71,7 +68,6 @@ export default function Profile({ izbris }) {
   const fetchUser = async (id) => {
     try {
       const response = await api.get(`/uporabnik/${id}`);
-      //console.log(response.data[0]);
       setUporabnik(response.data[0]);
     } catch (error) {
       console.error("Napaka pri pridobivanju uporabika", error);
@@ -101,7 +97,6 @@ export default function Profile({ izbris }) {
   const fetchPreberiNotifikacije = async (id) => {
     try {
       const response = await api.post(`/zamenjava/preberi`, { userId: id });
-      console.log(response.data);
     } catch (error) {
       console.error("Napaka pri pridobivanju zamenjanih uporabnika", error);
     }
@@ -140,8 +135,6 @@ export default function Profile({ izbris }) {
       console.error("Error deleting advertisement", error);
     }
   };
-
-  console.log(zamenjaniOglasi)
 
   return (
     <>

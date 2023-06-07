@@ -45,13 +45,11 @@ export default function ObjavaOglasa({ dodaj }) {
     useEffect(() => {
         if (user.email) {
             const uporabnikovEmail = user.email;
-            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
             api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
                 .then(res => {
                     const userId = res.data.userId;
                     setUporabnikovId(userId);
-                    console.log("Uporabnikov ID je: ", userId);
                 })
                 .catch(err => {
                     console.error(err);
@@ -63,7 +61,6 @@ export default function ObjavaOglasa({ dodaj }) {
         const fetchKategorije = async () => {
             try {
                 const response = await api.get('/kategorija/vsi');
-                console.log(response)
                 setKategorija(response.data);
             } catch (error) {
                 console.error("Napaka pri pridobivanju kategorij", error);

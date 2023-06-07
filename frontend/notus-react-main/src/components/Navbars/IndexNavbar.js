@@ -17,13 +17,11 @@ export default function Navbar(props) {
   useEffect(() => {
     if (user) {
       const uporabnikovEmail = user.email;
-      console.log("Uporabnikov email je: ", uporabnikovEmail)
 
       api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
         .then(res => {
           const userId = res.data.userId;
           setUporabnikovId(userId);
-          console.log("Uporabnikov ID je: ", userId);
         })
         .catch(err => {
           console.error(err);
@@ -37,11 +35,9 @@ export default function Navbar(props) {
       const fetchNotificationCount = async () => {
         try {
           const response = await api.post('obvestilo/prestej-neprebraneNakup', { userId: uporabnikovId });
-          console.log(response.data.neprebranaObvestila);
           setNotificationCount(response.data.neprebranaObvestila);
 
           const response2 = await api.post('obvestilo/prestej-neprebraneZamenjava', { userId: uporabnikovId });
-          console.log(response2.data.neprebranaObvestila);
           setNotificationCount(prevCount => prevCount + response2.data.neprebranaObvestila);
         } catch (error) {
           console.error('Napaka pri pridobivanju obvestil', error);
@@ -58,7 +54,6 @@ export default function Navbar(props) {
       const fetchNotifications = async () => {
         try {
           const response = await api.post('zamenjava/prestej-neprebrane', { userId: uporabnikovId });
-          console.log(response.data[0].neprebranaObvestila);
           setNotificationCount2(response.data[0].neprebranaObvestila);
         } catch (error) {
           console.error('Napaka pri pridobivanju obvestil', error);

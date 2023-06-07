@@ -5,17 +5,21 @@ ReCloth je spletna aplikacija za prodajo in izmenjavo rabljenih oblačil.
 Leto izdelave: 2023
 
 Avtorji:
-Barbara Ferlinc
-Gašper Košenina
-Luka Prepadnik
+- Barbara Ferlinc
+- Gašper Košenina
+- Luka Prepadnik
 
 Domača stran: https://recloth.netlify.app/
-Vir podatkov: https://recloth-backend.herokuapp.com/
+
+Vir podatkov:
+- template: https://www.creative-tim.com/product/notus-react
+- deployment: https://www.heroku.com/ (podatkovna baza, zaledje), https://www.netlify.com/ (pročelje)
+- https://recloth-backend.herokuapp.com/ (podatkovna baza in zaledje aplikacije)
 
 Koda: https://github.com/BarbaraFerlinc/ReCloth
 
 Kategorizacija: celovita informacijska rešitev
 
-Oznake: ReactJS, Express, NodeJS, MySql, GitHub, FireBase, JavaScript
+Oznake: ReactJS, Express, NodeJS, MySql, GitHub, FireBase, JavaScript, REST
 
-Opis: Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil. Uporabnik je lahko hkrati kupec in prodajalec, vendar mora biti za to funkcijo registriran v aplikacijo. Ko je uporabnik prijavljen v sistem, ima možnost ustvarjanja novih oglasov in urejanja ter brisanja že ustvarjenih. Na začetni strani so prikazani vsi objavljeni oglasi. Prikaz je možno tudi filtrirati glede na kategorijo, velikost, ali je možna zamenjava in na lokacijo. Lahko kupi artikle drugih uporabnikov ali pošlje predlog za zamenjavo artikla iz oglasa, ki bi ga zamenjal z nekim svojim artiklom. Ta predlog se pošlje kot obvestilo prodajalcu in ga ta lahko potrdi ali zavrne. Pri nakupu in zamenjavi se kupcu in prodajalcu na mail pošljejo podatki nakupa/zamenjave in račun v pdf obliki. Prav tako se na uporabnikov profil prilepi obvestilo.
+Opis: Aplikacija je namenjena prodaji in zamenjavi rabljenih oblačil. Uporabnik je lahko hkrati kupec in prodajalec, vendar mora biti za to funkcijo registriran v aplikacijo. Ko je uporabnik prijavljen v sistem, ima možnost ustvarjanja novih oglasov in urejanja ter brisanja že ustvarjenih. Na začetni strani so prikazani vsi objavljeni oglasi. V podrobnostih so izpisani vsi podatki oglasa in ustvarjalca le-tega. Prikaz je možno tudi filtrirati glede na kategorijo, velikost, ali je možna zamenjava in na lokacijo. Lahko kupi artikle drugih uporabnikov ali pošlje predlog za zamenjavo artikla iz oglasa, ki bi ga zamenjal z nekim svojim artiklom. Ta predlog se pošlje kot obvestilo prodajalcu, ki ga lahko potrdi ali zavrne. Pri nakupu in zamenjavi se kupcu in prodajalcu na mail pošljejo podatki nakupa/zamenjave in račun v pdf obliki. Prav tako se na uporabnikov profil prilepi obvestilo o nakupu/zamenjavi.

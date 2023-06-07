@@ -11,8 +11,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../components/Dropdown.css";
 
-
-
 const initialState = {
     naslov: "",
     velikost: "XS",
@@ -24,7 +22,6 @@ const initialState = {
     fk_uporabnik_id: 0,
     fk_kategorija_id: 1,
 }
-
 
 export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
@@ -38,7 +35,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
     let izbira = seznamOglasov.find((i) => i.id === parsan_id);
 
-
     initialState.naslov = izbira?.naslov;
     initialState.velikost = izbira?.velikost;
     initialState.opis = izbira?.opis;
@@ -47,9 +43,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
     initialState.za_zamenjavo = izbira?.za_zamenjavo;
     initialState.fk_uporabnik_id = izbira?.fk_uporabnik_id;
     initialState.fk_kategorija_id = izbira?.fk_kategorija_id;
-
-
-
 
     const [oglas, setOglas] = useState(initialState);
     const [errors, setErrors] = useState({ slika: [] });
@@ -92,7 +85,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
 
         fetchKategorije();
     }, []);
-
 
     const velikosti = [
         { naziv: 'XS' },
@@ -247,9 +239,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
         }
     };
 
-
-
-
     const handleChange = (e) => {
         const { value, name, type, checked } = e.target;
         let valueToUse = value;
@@ -282,7 +271,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
         }
     };
 
-
     const handleFileChange = (e) => {
         let fileErrors = [];
         let files = Array.from(e.target.files);
@@ -303,7 +291,6 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             setErrors(prevState => ({ ...prevState, slika: [] }));
         }
     }
-
 
     if (uporabnikovId !== oglas.fk_uporabnik_id) {
         navigate('/');
@@ -506,12 +493,4 @@ export default function UrejanjeOglasa({ seznamOglasov, onEdit }) {
             <ToastContainer />
         </>
     )
-
 }
-
-
-
-
-
-
-

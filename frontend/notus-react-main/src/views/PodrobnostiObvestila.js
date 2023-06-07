@@ -54,7 +54,6 @@ const PodrobnostiObvestila = () => {
                 .then(res => {
                     const userId = res.data.userId;
                     setUporabnikovId(userId);
-                    console.log("Uporabnikov ID je: ", userId);
                 })
                 .catch(err => {
                     console.error(err);
@@ -101,8 +100,8 @@ const PodrobnostiObvestila = () => {
                                                                 <br></br>
                                                                 {<Slider {...settings}>
                                                                     {obvestilo1?.slike?.map((slika, index) => {
-                                                                        console.log(slika);
-                                                                        const slikaPath = slika.split("/").pop();
+                                                                        const delimiter = slika.includes("\\") ? "\\" : "/";
+                                                                        const slikaPath = slika.split(delimiter).pop();
                                                                         return (
                                                                             <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                                 <img
@@ -151,7 +150,8 @@ const PodrobnostiObvestila = () => {
                                                                 <br></br>
                                                                 {<Slider {...settings}>
                                                                     {obvestilo2?.slike?.map((slika, index) => {
-                                                                        const slikaPath = slika.split("/").pop();
+                                                                        const delimiter = slika.includes("\\") ? "\\" : "/";
+                                                                        const slikaPath = slika.split(delimiter).pop();
                                                                         return (
                                                                             <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                                 <img

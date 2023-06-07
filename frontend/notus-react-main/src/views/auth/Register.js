@@ -57,7 +57,6 @@ export default function Register() {
   const validateForm = () => {
     let formErrors = {};
     let formIsValid = true;
-    console.log(user)
 
     if (!user.ime) {
       formIsValid = false;
@@ -125,8 +124,6 @@ export default function Register() {
       try {
         user.email = email;
 
-        console.log(user);
-
         const response = await api.post("/uporabnik/dodaj", user, {
           headers: {
             "Content-Type": "application/json",
@@ -157,7 +154,6 @@ export default function Register() {
         }, 3000);
       } catch (er) {
         setError(er.message);
-        console.log(er.message);
       }
     }
   }

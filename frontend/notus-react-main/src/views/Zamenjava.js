@@ -239,7 +239,6 @@ export default function Zamenjava() {
 
                 setErrors(errorMessages);
             }
-
         }
     };
 

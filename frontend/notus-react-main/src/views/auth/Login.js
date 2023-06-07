@@ -61,11 +61,9 @@ export default function Login() {
       if (er.message === "Firebase: Error (auth/user-not-found).") {
         setPasswordError("User with this email does not exist.");
       } else if (er.message === "Firebase: Error (auth/wrong-password).") {
-        console.log("wrong password")
         setPasswordError("Email or password is incorrect.");
       } else if (er.message === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).") {
         setPasswordError("Too many failed login attempts. Please try again later.");
-        console.log(er.message);
       }
 
     };

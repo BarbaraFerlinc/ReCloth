@@ -32,17 +32,14 @@ export default function Podrobnosti({ izbris }) {
         if (parsan_id === undefined) return;
         api.get(`/artikel/${parsan_id}`)
             .then(res => {
-                console.log("Izbira je: ", res.data)
                 setIzbira(res.data);
             })
 
             .catch(err => {
                 console.error(err);
                 if (err.response && err.response.data && err.response.data.error) {
-                    console.log("error message:", err.response.data.error);
                     setError(err.response.data.error);
                 } else {
-                    console.log("error message: Napaka pri pridobivanju podatkov");
                     setError("Napaka pri pridobivanju podatkov");
                 }
             });
@@ -136,7 +133,8 @@ export default function Podrobnosti({ izbris }) {
                                                     <br></br>
                                                     <Slider {...settings}>
                                                         {izbira?.slike?.map((slika, index) => {
-                                                            const slikaPath = slika.split("/").pop();
+                                                            const delimiter = slika.includes("\\") ? "\\" : "/";
+                                                            const slikaPath = slika.split(delimiter).pop();
                                                             return (
                                                                 <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                     <img

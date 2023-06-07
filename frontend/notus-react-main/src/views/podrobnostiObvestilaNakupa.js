@@ -47,13 +47,11 @@ const PodrobnostiObvestilaNakupa = () => {
     useEffect(() => {
         if (user.email) {
             const uporabnikovEmail = user.email;
-            console.log("Uporabnikov email je: ", uporabnikovEmail)
 
             api.post('uporabnik/prijavljen-uporabnik', { email: uporabnikovEmail })
                 .then(res => {
                     const userId = res.data.userId;
                     setUporabnikovId(userId);
-                    console.log("Uporabnikov ID je: ", userId);
                 })
                 .catch(err => {
                     console.error(err);
@@ -69,7 +67,6 @@ const PodrobnostiObvestilaNakupa = () => {
                     id: parsan_id,
                     userId: uporabnikovId,
                 });
-                console.log(response.data.message);
             } catch (error) {
                 console.error('Napaka pri označevanju obvestila kot prebrano', error);
             }
@@ -123,7 +120,8 @@ const PodrobnostiObvestilaNakupa = () => {
                                                                 <br></br>
                                                                 {<Slider {...settings}>
                                                                     {oglas?.slike?.map((slika, index) => {
-                                                                        const slikaPath = slika.split("/").pop();
+                                                                        const delimiter = slika.includes("\\") ? "\\" : "/";
+                                                                        const slikaPath = slika.split(delimiter).pop();
                                                                         return (
                                                                             <div key={index} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                                                                 <img

@@ -116,8 +116,6 @@ export const generatePdf = (imeKupca, imeProdajalca, cena, stevilkaRacuna, imeAr
 }
 
 export default function Index({ seznamOglasov }) {
-  const [imageSrcs, setImageSrcs] = useState({});
-  const [error, setError] = useState(null);
   const [kategorije, setKategorije] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedZamenjava, setSelectedZamenjava] = useState("");
@@ -126,9 +124,7 @@ export default function Index({ seznamOglasov }) {
 
   dotenv.config();
 
-  console.log(seznamOglasov);
   let nov = seznamOglasov.filter(filteredOglas => filteredOglas.jeZamenjan === 0)
-  console.log(nov)
 
   const handleRefresh = () => {
     window.location.reload();
@@ -249,7 +245,8 @@ export default function Index({ seznamOglasov }) {
         ) : (
           <div className="flex flex-wrap -mx-4">
             {filteredOglasi.map((oglas, index) => {
-              const slikaPath = oglas.slike[0].split("/").pop();
+              const delimiter = oglas.slike[0].includes("\\") ? "\\" : "/";
+              const slikaPath = oglas.slike[0].split(delimiter).pop();
               return (
                 <div
                   key={oglas.id}

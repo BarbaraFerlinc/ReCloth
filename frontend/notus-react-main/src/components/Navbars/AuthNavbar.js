@@ -18,7 +18,6 @@ export default function Navbar(props) {
   const handleLogout = async () => {
     try {
       await logout();
-      console.log("use: " + user);
       navigate("/login");
     } catch (e) {
       console.log(e.message);
