@@ -15,6 +15,7 @@ Vir podatkov:
 - template: https://www.creative-tim.com/product/notus-react
 - deployment: https://www.heroku.com/ (podatkovna baza, zaledje), https://www.netlify.com/ (pročelje)
 - https://recloth-backend.herokuapp.com/ (podatkovna baza in zaledje aplikacije)
+- avtentikacija: https://firebase.google.com/
 
 Koda: https://github.com/BarbaraFerlinc/ReCloth
 
