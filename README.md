@@ -30,7 +30,11 @@ Zaženite zaledje z ukazom:
 nodemon app.js
 ```
 Zaledje bo na `http://localhost:9000/`
-### Pročelje (frontend/notus-react-main):
+### Pročelje (frontend):
+Pomaknite se v mapo `notus-react-main` z ukazom:
+```
+cd notus-react-main
+```
 Ustvarite `node_modules` z ukazom:
 ```
 npm install
